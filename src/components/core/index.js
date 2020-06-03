@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
 
-import { isLogged,getUser } from './../../actions';
+import { isLogged,getAll } from './../../actions';
 
 // components ....
 import Login from '../login';
@@ -15,7 +15,7 @@ class Core extends React.Component {
     render() {
         if(this.props.logged === true){
             // request dos dados
-            this.props.getUser();
+            this.props.getAll();
         } else {
             // redireciona para o login
         };
@@ -44,4 +44,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { isLogged,getUser })(Core);
+export default connect(mapStateToProps, { isLogged,getAll })(Core);

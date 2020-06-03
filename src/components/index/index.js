@@ -3,10 +3,12 @@ import { connect } from 'react-redux';
 
 class Index extends React.Component {
     render() {
+        const { user, currentTrack } = this.props.data;
         return (
             <>
                 <div className="index">
-                    <p>user : {this.props.user.display_name}</p>
+                    <p>user : {(user || {}).display_name}</p>
+                    <p>playing : {((currentTrack || {}).item || {}).name}</p>
                 </div>
             </>
         )
@@ -15,7 +17,7 @@ class Index extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        user : state.user
+        data : state.data
     };
 }
 

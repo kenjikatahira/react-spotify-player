@@ -1,19 +1,26 @@
-import service from './../service';
-import { setSession,logout as Logout, isAuthenticated } from './../auth';
+import Service from './../service';
+import Auth from './../auth';
+
+const { setSession, Logout, isAuthenticated } = new Auth();
+const service = new Service();
+
+
 
 /**
  * Responsavel por trazer os dados do usuario
- * @function getUser
+ * @function getAll
  *
  */
-export const getUser = () => {
+export const getAll = () => {
     return dispatch => {
-        service.getUser().then(({data}) => {
-            dispatch({
-                type : 'GET_USER',
-                payload : data
-            });
-        });
+        service.getAll().then(data => {
+            const formatedData = {
+                user : data[0].data,
+                currentTrack : data[1].data || false
+            }
+            console.log(formatedData)
+            dispatch({type: 'GET_DATA', payload : formatedData})
+        })
     }
 }
 
