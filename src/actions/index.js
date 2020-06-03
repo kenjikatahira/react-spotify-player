@@ -1,10 +1,6 @@
-import Service from './../service';
 import Auth from './../auth';
-
+import { spotify } from './../service';
 const { setSession, Logout, isAuthenticated } = new Auth();
-const service = new Service();
-
-
 
 /**
  * Responsavel por trazer os dados do usuario
@@ -13,14 +9,14 @@ const service = new Service();
  */
 export const getAll = () => {
     return dispatch => {
-        service.getAll().then(data => {
+        spotify().then(data => {
             const formatedData = {
                 user : data[0].data,
                 currentTrack : data[1].data || false
             }
             console.log(formatedData)
             dispatch({type: 'GET_DATA', payload : formatedData})
-        })
+        });
     }
 }
 
