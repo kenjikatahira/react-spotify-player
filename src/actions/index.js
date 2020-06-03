@@ -1,14 +1,16 @@
 import service from './../service';
+
 /**
- * Responsavel por trazer os dados de todos os paises
- * @function getCountries
+ * Responsavel por trazer os dados do usuario
+ * @function getUser
  *
  */
-export const getCountries = () => {
+export const getUser = () => {
     return dispatch => {
-        service.getList().then(({data}) => {
+        service.getUser().then(({data}) => {
+            console.log(data)
             dispatch({
-                type : 'GET_COUNTRIES',
+                type : 'GET_USER',
                 payload : data
             });
         });

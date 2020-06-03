@@ -1,14 +1,14 @@
 import { combineReducers } from 'redux';
 
-const GET_COUNTRIES = 'GET_COUNTRIES';
+const GET_USER = 'GET_USER';
 
-const countriesReducer = (state=[],action) => {
-    if(action.type === GET_COUNTRIES) {
+const userReducer = (state=[],action) => {
+    if(action.type === GET_USER) {
         return action.payload;
     }
     return state;
 }
 
 export default combineReducers({
-    countries : countriesReducer
+    user : userReducer
 });

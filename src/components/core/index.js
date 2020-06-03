@@ -2,31 +2,37 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
 
+
+import { isAuthenticated } from './../../auth';
+
 // actions
-import {getCountries} from './../../actions';
+import {getUser} from './../../actions';
 
 // components ....
-import List from '../list';
+import Login from '../login';
 
 class Core extends React.Component {
     componentDidMount() {
-        this.props.getCountries();
+        if(isAuthenticated()){
+            this.props.getUser();
+        };
     }
     render() {
-        console.log(this.props.countries)
         return (
             <Router>
                 <div className="ui container">
-                    <h2>react-redux-router-starter</h2>
+                    <h2>Player</h2>
+                    <h1>{this.props.user.country}</h1>
+
                     <div className="menu">
                         <ul>
                             <li><Link to="/">index</Link></li>
-                            <li><Link to="/list">list</Link></li>
+                            <li><Link to="/login">login</Link></li>
                         </ul>
                     </div>
                     <Switch>
+                        <Route exact path="/login" component={Login} />
                         <Route exact path="/" component={() => (<div>index</div>)} />
-                        <Route exact path="/list" component={List} />
                     </Switch>
                 </div>
             </Router>
@@ -36,8 +42,8 @@ class Core extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        countries : state.countries
+        user : state.user
     };
 }
 
-export default connect(mapStateToProps,{ getCountries })(Core);
+export default connect(mapStateToProps,{ getUser })(Core);
