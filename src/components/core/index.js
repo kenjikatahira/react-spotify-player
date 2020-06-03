@@ -2,28 +2,26 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
 
-
-import { isAuthenticated } from './../../auth';
-
-// actions
-import {getUser} from './../../actions';
+import { isLogged,getUser } from './../../actions';
 
 // components ....
 import Login from '../login';
+import Index from '../index';
 
 class Core extends React.Component {
     componentDidMount() {
-        if(isAuthenticated()){
-            this.props.getUser();
-        };
+        this.props.isLogged();
     }
     render() {
+        if(this.props.logged === true){
+            // request dos dados
+            this.props.getUser();
+        } else {
+            // redireciona para o login
+        };
         return (
             <Router>
-                <div className="ui container">
-                    <h2>Player</h2>
-                    <h1>{this.props.user.country}</h1>
-
+                <div>
                     <div className="menu">
                         <ul>
                             <li><Link to="/">index</Link></li>
@@ -32,7 +30,7 @@ class Core extends React.Component {
                     </div>
                     <Switch>
                         <Route exact path="/login" component={Login} />
-                        <Route exact path="/" component={() => (<div>index</div>)} />
+                        <Route exact path="/" component={Index} />
                     </Switch>
                 </div>
             </Router>
@@ -42,8 +40,8 @@ class Core extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        user : state.user
+        logged : state.logged
     };
 }
 
-export default connect(mapStateToProps,{ getUser })(Core);
+export default connect(mapStateToProps, { isLogged,getUser })(Core);

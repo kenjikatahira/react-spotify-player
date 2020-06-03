@@ -1,11 +1,12 @@
 import React from 'react';
+import './style.css';
 
 // App Core
 import Core from './components/core';
 
 function App() {
   return (
-    <div className="App">
+    <div className="app">
       <Core></Core>
     </div>
   );

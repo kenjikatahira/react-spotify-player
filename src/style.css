@@ -1,0 +1,22 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #e5e5ec;
+}
+
+.index {
+    max-width: 96vw;
+    height: 96vh;
+    margin: 2vh auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.login {
+    max-width: 320px;
+    height: 320px;
+    margin: 2vh auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+}

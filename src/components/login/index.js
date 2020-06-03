@@ -2,15 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import SpotifyLogin from 'react-spotify-login';
 
-import { setSession,logout } from './../../auth';
-
 import { clientId, redirectUri } from './../../config';
 
-import { getUser } from './../../actions';
+import { getUser, logout, login } from './../../actions';
 
 class Login extends React.Component {
     onSuccess(response) {
-        setSession(response);
+        this.props.login(response);
         this.props.getUser();
     }
     onFailure(err) {
@@ -22,7 +20,6 @@ class Login extends React.Component {
     render() {
         return (
             <>
-                <button onClick={this.logout}>LOGOUT</button>
                 <div className="login">
                 <SpotifyLogin
                     clientId={clientId}
@@ -30,6 +27,7 @@ class Login extends React.Component {
                     onSuccess={(d) => { this.onSuccess(d) }}
                     onFailure={this.onFailure}
                 />
+                <button onClick={() => {this.logout()}}>LOGOUT</button>
                 </div>
             </>
         )
@@ -42,4 +40,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getUser })(Login);
+export default connect(mapStateToProps, { getUser,login,logout })(Login);
