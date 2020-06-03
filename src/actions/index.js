@@ -9,14 +9,18 @@ const { setSession, Logout, isAuthenticated } = new Auth();
  */
 export const getAll = () => {
     return dispatch => {
-        spotify().then(data => {
-            const formatedData = {
-                user : data[0].data,
-                currentTrack : data[1].data || false
+        spotify().then((responses) => {
+        const [user,currentTrack,topArtist] = responses;
+            const obj = {
+                user : user.data,
+                currentTrack : (currentTrack || {}).data || false,
+                topArtist : (topArtist || {}).data || false
             }
-            console.log(formatedData)
-            dispatch({type: 'GET_DATA', payload : formatedData})
-        });
+            console.log(obj)
+            dispatch({type: 'GET_DATA', payload : obj});
+        }).catch(err => {
+            console.log(`actions ${err}`)
+        })
     }
 }
 

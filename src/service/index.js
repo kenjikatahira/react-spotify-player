@@ -2,7 +2,8 @@ import axios from 'axios';
 
 const endpoint = {
     user : 'https://api.spotify.com/v1/me',
-    playing : 'https://api.spotify.com/v1/me/player/currently-playing'
+    playing : 'https://api.spotify.com/v1/me/player/currently-playing',
+    topArtist : 'https://api.spotify.com/v1/me/top/artists'
 }
 
 const requests = Object.values(endpoint);
@@ -10,6 +11,7 @@ const requests = Object.values(endpoint);
 const getPromises = (requests=[]) => {
     const token_type = localStorage.getItem('token_type');
     const access_token = localStorage.getItem('access_token');
+
     let promises = [];
     const setPromises = (url) => {
         return axios({
@@ -20,13 +22,13 @@ const getPromises = (requests=[]) => {
                 'authorization' : `${token_type} ${access_token}`
             }
         })
+        .catch(err => console.log(`ERROR -> ${url}`,err));
     }
 
     promises = requests.map(setPromises);
-
     return promises;
 }
 
 export const spotify = () => {
-    return axios.all(getPromises(requests));
+    return Promise.all(getPromises(requests));
 }

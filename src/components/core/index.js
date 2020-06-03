@@ -6,7 +6,7 @@ import { isLogged,getAll } from './../../actions';
 
 // components ....
 import Login from '../login';
-import Index from '../index';
+import Main from '../main/index';
 
 class Core extends React.Component {
     componentDidMount() {
@@ -30,7 +30,7 @@ class Core extends React.Component {
                     </div>
                     <Switch>
                         <Route exact path="/login" component={Login} />
-                        <Route exact path="/" component={Index} />
+                        <Route exact path="/" component={Main} />
                     </Switch>
                 </div>
             </Router>

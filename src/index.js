@@ -15,7 +15,7 @@ import App from './App';
 const store = createStore(
   reducers,applyMiddleware(
     thunk,
-    logger
+    // logger
   )
 );
 
