@@ -4,6 +4,8 @@ import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
 
 import { isLogged,getAll } from './../../actions';
 
+import './style.css';
+
 // components ....
 import Login from '../login';
 import Main from '../main/index';
@@ -19,6 +21,7 @@ class Core extends React.Component {
         } else {
             // redireciona para o login
         };
+        console.log('---->>>>>',this.props.data)
         return (
             <Router>
                 <div>
@@ -26,7 +29,15 @@ class Core extends React.Component {
                         <ul>
                             <li><Link to="/">index</Link></li>
                             <li><Link to="/login">login</Link></li>
+                            <p>
+                                <code>status : {this.props.logged ? 'logged' : 'not logged'}</code>
+                            </p>
+                            <p>
+                                <code> track progress :{((this.props.data || {}).currentTrack || {}).progress_ms}</code>
+                            </p>
                         </ul>
+                    </div>
+                    <div>
                     </div>
                     <Switch>
                         <Route exact path="/login" component={Login} />
@@ -40,6 +51,7 @@ class Core extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
+        data : state.data,
         logged : state.logged
     };
 }

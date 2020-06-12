@@ -3,7 +3,9 @@ import axios from 'axios';
 const endpoint = {
     user : 'https://api.spotify.com/v1/me',
     playing : 'https://api.spotify.com/v1/me/player/currently-playing',
-    topArtist : 'https://api.spotify.com/v1/me/top/artists'
+    topArtist : 'https://api.spotify.com/v1/me/top/artists',
+    recently : 'https://api.spotify.com/v1/me/player/recently-played',
+    player_devices : 'https://api.spotify.com/v1/me/player/devices'
 }
 
 const requests = Object.values(endpoint);

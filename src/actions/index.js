@@ -1,6 +1,6 @@
-import Auth from './../auth';
+import { Storage } from '../utils';
 import { spotify } from './../service';
-const { setSession, Logout, isAuthenticated } = new Auth();
+const { setSession,removeSession,isAuthenticated } = new Storage();
 
 /**
  * Responsavel por trazer os dados do usuario
@@ -61,7 +61,7 @@ export const login = (response) => {
  */
 export const logout = () => {
     return dispatch => {
-        Logout();
+        removeSession();
         dispatch({
             type : 'LOGOUT',
             payload : false
