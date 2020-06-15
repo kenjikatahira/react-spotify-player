@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import { isLogged,getAll } from './../../actions';
 
@@ -15,30 +15,12 @@ class Core extends React.Component {
         this.props.isLogged();
     }
     render() {
-        if(this.props.logged === true){
-            // request dos dados
+        if(Object.values(this.props.data).length === 0 && (this.props.logged || {}).status) {
             this.props.getAll();
-        } else {
-            // redireciona para o login
-        };
-        console.log('---->>>>>',this.props.data)
+        }
         return (
             <Router>
                 <div>
-                    <div className="menu">
-                        <ul>
-                            <li><Link to="/">index</Link></li>
-                            <li><Link to="/login">login</Link></li>
-                            <p>
-                                <code>status : {this.props.logged ? 'logged' : 'not logged'}</code>
-                            </p>
-                            <p>
-                                <code> track progress :{((this.props.data || {}).currentTrack || {}).progress_ms}</code>
-                            </p>
-                        </ul>
-                    </div>
-                    <div>
-                    </div>
                     <Switch>
                         <Route exact path="/login" component={Login} />
                         <Route exact path="/" component={Main} />

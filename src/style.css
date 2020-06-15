@@ -3,7 +3,7 @@ body {
     background: #e5e5ec;
 }
 
-.index {
+main {
     max-width: 96vw;
     height: 96vh;
     margin: 2vh auto;
@@ -19,4 +19,41 @@ body {
     background: #fff;
     padding: 20px;
     border-radius: 10px;
+}
+
+.nav.primary {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    justify-content: flex-end;
+    height: 80px;
+}
+.nav.primary .avatar {
+    display: block;
+    position: relative;
+}
+
+.nav.primary .avatar .icon img {
+    width: 30px;
+    height: 30px;
+    border-radius: 100%;
+}
+
+.nav.primary .avatar .menu.hide {
+    display: none;
+}
+.nav.primary .avatar .menu ul {
+    display: block;
+    position: absolute;
+    right: 0;
+    text-align: right;
+    list-style: none;
+}
+
+.nav.primary .avatar .menu li:first-child {
+    font-size:13px;
+}
+
+.list li.selected {
+    background: #eee;
 }

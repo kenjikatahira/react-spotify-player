@@ -1,7 +1,6 @@
-import { Storage } from '../utils';
-import { spotify } from './../service';
-const { setSession,removeSession,isAuthenticated } = new Storage();
-
+import { setSession,getSession, removeSession,isAuthenticated } from '../utils';
+import { getData,updateData } from './../service';
+import delay from 'delay';
 /**
  * Responsavel por trazer os dados do usuario
  * @function getAll
@@ -9,18 +8,34 @@ const { setSession,removeSession,isAuthenticated } = new Storage();
  */
 export const getAll = () => {
     return dispatch => {
-        spotify().then((responses) => {
-        const [user,currentTrack,topArtist] = responses;
+        getData().then((responses) => {
+        const [user,currentTrack,topArtist,recently,player_devices] = responses;
             const obj = {
                 user : user.data,
-                currentTrack : (currentTrack || {}).data || false,
-                topArtist : (topArtist || {}).data || false
+                currentTrack : (currentTrack || {}).data || {},
+                topArtist : (topArtist || {}).data || false,
+                recently : (recently || {}).data || false,
+                player_devices : (player_devices || {}).data || false
             }
-            console.log(obj)
             dispatch({type: 'GET_DATA', payload : obj});
         }).catch(err => {
             console.log(`actions ${err}`)
         })
+    }
+}
+
+export const update = () => {
+    return async dispatch => {
+        await delay(500);
+        updateData().playing().then(response => {
+            const {data} = response;
+            updateData().album(data.item.album.id).then(album => {
+                data._album_tracks = album.data.tracks;
+                dispatch({type : 'UPDATE_CURRENT_TRACK' , payload : { currentTrack : data }});
+            });
+        }).catch(err => {
+            console.log(`actions ${err}`)
+        });
     }
 }
 
@@ -33,7 +48,10 @@ export const isLogged = () => {
     return dispatch => {
         dispatch({
             type : 'ISLOGGED',
-            payload : isAuthenticated()
+            payload : {
+                status : isAuthenticated(),
+                access_token : getSession().access_token
+            }
         });
     }
 }
@@ -48,7 +66,10 @@ export const login = (response) => {
         setSession(response);
         dispatch({
             type : 'LOGIN',
-            payload : true
+            payload : {
+                status : true,
+                access_token : getSession().access_token
+            }
         });
     }
 }
@@ -64,7 +85,10 @@ export const logout = () => {
         removeSession();
         dispatch({
             type : 'LOGOUT',
-            payload : false
+            payload : {
+                status : false,
+                access_token : false
+            }
         });
     }
 }

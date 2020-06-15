@@ -7,7 +7,6 @@ import { clientId, redirectUri } from './../../config';
 import { getAll, logout, login } from './../../actions';
 
 import { scope } from './../../service/scopes';
-console.log(`scope---> `,scope);
 class Login extends React.Component {
     onSuccess(response) {
         this.props.login(response);
@@ -28,7 +27,7 @@ class Login extends React.Component {
                     redirectUri={redirectUri}
                     onSuccess={(d) => { this.onSuccess(d) }}
                     onFailure={this.onFailure}
-                    score={scope}
+                    scope={scope}
                 />
                 <button onClick={() => {this.logout()}}>LOGOUT</button>
                 </div>
