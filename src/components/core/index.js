@@ -15,9 +15,6 @@ class Core extends React.Component {
         this.props.isLogged();
     }
     render() {
-        if(Object.values(this.props.data).length === 0 && (this.props.logged || {}).status) {
-            this.props.getAll();
-        }
         return (
             <Router>
                 <div>

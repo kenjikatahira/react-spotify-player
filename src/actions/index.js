@@ -10,14 +10,15 @@ export const getAll = () => {
     return dispatch => {
         getData().then((responses) => {
         const [user,currentTrack,topArtist,recently,player_devices] = responses;
-            const obj = {
-                user : user.data,
-                currentTrack : (currentTrack || {}).data || {},
-                topArtist : (topArtist || {}).data || false,
-                recently : (recently || {}).data || false,
-                player_devices : (player_devices || {}).data || false
-            }
-            dispatch({type: 'GET_DATA', payload : obj});
+        const obj = {
+            user : user.data,
+            currentTrack : (currentTrack || {}).data || ((recently || {}).data || {}).items[0].track || {},
+            topArtist : (topArtist || {}).data,
+            recently : (recently || {}).data,
+            player_devices : (player_devices || {}).data
+        }
+
+        dispatch({type: 'GET_DATA', payload : obj});
         }).catch(err => {
             console.log(`actions ${err}`)
         })
@@ -29,10 +30,7 @@ export const update = () => {
         await delay(500);
         updateData().playing().then(response => {
             const {data} = response;
-            updateData().album(data.item.album.id).then(album => {
-                data._album_tracks = album.data.tracks;
-                dispatch({type : 'UPDATE_CURRENT_TRACK' , payload : { currentTrack : data }});
-            });
+            dispatch({type : 'UPDATE_CURRENT_TRACK' , payload : { currentTrack : data }});
         }).catch(err => {
             console.log(`actions ${err}`)
         });

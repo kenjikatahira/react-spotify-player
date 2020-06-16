@@ -7,7 +7,7 @@ import { createStore, applyMiddleware } from 'redux';
 import reducers from './reducers';
 
 import thunk from 'redux-thunk';
-import { logger } from './middlewares';
+import { logger,player } from './middlewares';
 
 import * as serviceWorker from './serviceWorker';
 import App from './App';
@@ -15,7 +15,8 @@ import App from './App';
 const store = createStore(
   reducers,applyMiddleware(
     thunk,
-    // logger
+    // logger,
+    player
   )
 );
 
