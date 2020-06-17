@@ -1,19 +1,28 @@
 import React from 'react';
+import styled from 'styled-components';
 import { connect } from 'react-redux';
 
-import { init,previous,next,play,pause } from '../../player';
-import { logout,getUser,getCurrentTrack,getStatus } from '../../actions';
+import {
+    logout,
+    getUser,
+    getCurrentTrack,
+    getStatus
+} from '../../actions';
 
-import Login from '../login';
+import { init } from '../../player';
+
 import SearchTrack from '../searchTrack';
 import Playlist from '../playlist';
-import styled from 'styled-components'
+import SideMenu from '../sidemenu';
+import Footer from '../footer';
+import Login from '../login';
+
 
 const StyledMain = styled.main`
     color: #ffffff;
     overflow: hidden;
 
-    .playlists {
+    .sidemenu {
         width: 240px;
         height: 92vh;
         background-color: #1F1A3C;
@@ -23,18 +32,27 @@ const StyledMain = styled.main`
         width: 100%;
         height: 92vh;
         background-color: #18142F;
+        overflow: auto;
     }
 
     .footer .controls {
         background-color: #282148;
         height: 8vh;
     }
-
 `
 
+/**
+ * Aplication Initiated Flag
+ * @type {Boolean}
+ */
 let initiated = false;
 
 class Main extends React.Component {
+    /**
+     * Initial configuration
+     * @function run
+     * @return {Void}
+     */
     run() {
         init({
             currentTrack : this.props.currentTrack,
@@ -49,37 +67,25 @@ class Main extends React.Component {
         };
     }
     render() {
-        (this.props.currentTrack.track && !initiated) && this.run();
+        const { logged,currentTrack,status } = this.props;
+        (currentTrack.track && !initiated) && this.run();
 
-        if(!(this.props.logged || {}).status) {
+        if(!logged.status) {
             return(<Login />)
         } else {
-            console.log('status changed',this.props.status)
             return (
                 <>
                     <StyledMain>
                         <main>
                             <div className="row">
-                                <aside className="playlists col-sm-2">
-
-                                </aside>
+                                <SideMenu />
                                 <div className="content col-sm-10">
                                     {/* <SearchTrack /> */}
-                                    <Playlist album={(this.props.currentTrack.album || {})} />
+                                    <Playlist album={(currentTrack.album || {})} />
                                 </div>
                             </div>
-                            <div className="footer">
-                                <div className="wrapper">
-                                    <div className="controls">
-                                        <button className="btn btn-outline-secondary" onClick={() => previous()}><i className="fas fa-backward"></i></button>
-                                        <button className="btn btn-outline-secondary" onClick={() => play(this.props.status.current_track || this.props.currentTrack.track)}><i className="fas fa-play"></i></button>
-                                        <button className="btn btn-outline-secondary" onClick={() => pause()}><i className="fas fa-pause"></i></button>
-                                        <button className="btn btn-outline-secondary" onClick={() => next()}><i className="fas fa-forward"></i></button>
-                                        <button className="btn btn-outline-secondary" onClick={() => this.props.logout()}>logout</button>
-                                        {(this.props.status.current_track || {}).name}
-                                    </div>
-                                </div>
-                            </div>
+                            <Footer status={status} currentTrack={currentTrack}></Footer>
+                            <button className="btn btn-outline-secondary" onClick={() => this.props.logout()}>logout</button>
                         </main>
                     </StyledMain>
                 </>

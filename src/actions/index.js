@@ -1,6 +1,12 @@
 import { setSession,getSession, removeSession,isAuthenticated } from '../utils';
 import { user,current_track,devices,playlists,recently, get } from '../api';
 
+/**
+ * Retrieves user information
+ *
+ * @function getUser
+ * @return {Void}
+ */
 export const getUser = () => {
     return dispatch => {
         user().then( data => {
@@ -12,6 +18,13 @@ export const getUser = () => {
     }
 }
 
+/**
+ * Updates current track status
+ *
+ * @function getStatus
+ * @param {Object} Track state
+ * @return {Void}
+ */
 export const getStatus = ({current_track,position,duration}) => {
     return async dispatch => {
         dispatch({
@@ -25,6 +38,12 @@ export const getStatus = ({current_track,position,duration}) => {
     }
 }
 
+/**
+ * Retrieves the current track information
+ *
+ * @function getCurrentTrack
+ * @return {Void}
+ */
 export const getCurrentTrack = () => {
     return async dispatch => {
         let current = await current_track();
@@ -50,6 +69,12 @@ export const getCurrentTrack = () => {
     }
 }
 
+/**
+ * Retrieves devices avaiable
+ *
+ * @function getDevices
+ * @return {Void}
+ */
 export const getDevices = () => {
     return dispatch => {
         devices().then( data => {
@@ -63,6 +88,12 @@ export const getDevices = () => {
     }
 }
 
+/**
+ * Retrieves usuer's playlists
+ *
+ * @function getPlaylists
+ * @return {Void}
+ */
 export const getPlaylists = () => {
     return dispatch => {
         playlists().then( data => {
@@ -76,9 +107,9 @@ export const getPlaylists = () => {
 }
 
 /**
- * Verifica se o usuario está logado
+ * Verifies if the user is logged
  * @function isLogged
- *
+ * @return {Void}
  */
 export const isLogged = () => {
     return dispatch => {
@@ -93,9 +124,10 @@ export const isLogged = () => {
 }
 
 /**
- * Flag para verificar se o usuario está logado
+ * Sets token for the logged user
  * @function login
- *
+ * @param response authentication
+ * @return {Void}
  */
 export const login = (response) => {
     return dispatch => {
@@ -112,9 +144,9 @@ export const login = (response) => {
 
 
 /**
- * Responsavel por deslogar usuario
+ * Removes authorization data
  * @function logout
- *
+ * @return {Void}
  */
 export const logout = () => {
     return dispatch => {

@@ -60,7 +60,7 @@ const statusReducer = (state={},action) => {
     return state;
 }
 
-const loginReducer = (state=null,action) => {
+const loginReducer = (state={},action) => {
     if(action.type === ISLOGGED) {
         return action.payload;
     }
