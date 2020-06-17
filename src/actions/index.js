@@ -1,5 +1,5 @@
 import { setSession,getSession, removeSession,isAuthenticated } from '../utils';
-import { user,current_track,devices,playlists,recently,album, get } from './../service';
+import { user,current_track,devices,playlists,recently, get } from '../api';
 
 export const getUser = () => {
     return dispatch => {

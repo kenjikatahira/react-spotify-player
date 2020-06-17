@@ -47,7 +47,6 @@ export const pause = () => {
 }
 
 export const play = async (track) => {
-    console.log(track)
     let uri;
     if(typeof track === 'object') {
         uri = track.uri ? track.uri : track.item.uri;
@@ -84,8 +83,12 @@ export const play = async (track) => {
     }
 }
 
+/*
+* Inicia a instancia do player do spotify
+* @function init
+*/
 export const init = async ({currentTrack,getStatus}) => {
-    console.log('_INIT_');
+    console.log('____init___');
     const player = new window.Spotify.Player({
         playerInstance: new window.Spotify.Player({ name: 'Kenjicas Player_' }),
         name: 'Kenjicas Player',
@@ -95,27 +98,12 @@ export const init = async ({currentTrack,getStatus}) => {
 
     player.connect().then(() => {
         player.addListener('ready', ({device_id}) => {
-            console.log('REAADYYYYYY');
-            console.log('Device ID', device_id);
             _device = device_id;
-
-            console.log('PLAY COMENTADOOOOOO');
-
-            // fetch(`https://api.spotify.com/v1/me/player/play?device_id=${device_id}`, {
-            //     method: 'PUT',
-            //     body: JSON.stringify({ uris : orderedUris }),
-            //     headers: {
-            //       'Content-Type': 'application/json',
-            //       'Authorization': `Bearer ${getSession().access_token}`
-            //     },
-            // });
+            console.log('Ready - Device ID', device_id);
         });
     });
 
-    player.addListener('player_state_changed', ({ position,duration,track_window: { current_track } }) => {
-        getStatus({
-            position,duration,current_track
-        });
-    });
+    // update status - action
+    player.addListener('player_state_changed', ({ position,duration,track_window: { current_track } }) => getStatus({ position,duration,current_track }));
 
 }

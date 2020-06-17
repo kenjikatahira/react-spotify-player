@@ -1,5 +1,7 @@
-import { getSession } from '../utils';
 import axios from 'axios';
+import { getSession } from '../utils';
+
+export const scope = 'user-read-private user-read-playback-state user-read-playback-position user-modify-playback-state user-top-read user-read-recently-played streaming user-read-email'
 
 export const user = () => {
     return axios.get('https://api.spotify.com/v1/me', {

@@ -4,9 +4,6 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import { isLogged } from './../../actions';
 
-import './style.css';
-
-// components ....
 import Login from '../login';
 import Main from '../main/index';
 

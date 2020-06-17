@@ -6,7 +6,7 @@ import { clientId, redirectUri } from './../../config';
 
 import { logout, login } from './../../actions';
 
-import { scope } from './../../service/scopes';
+import { scope } from './../../api';
 class Login extends React.Component {
     onSuccess(response) {
         this.props.login(response);

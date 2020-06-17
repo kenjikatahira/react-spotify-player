@@ -21,16 +21,18 @@ const StyledList = styled.ul`
     }
 `
 const Playlist = ({album}) => {
-    const album_id = album.id;
+    const { id : album_id} = album;
+    const { artists } = album;
     const renderList = (item) => {
+        const {id,name,duration_ms} = item;
         return (
-                <li className="track" key={item.id} onClick={() => {play({album_id,...item})}}>
+                <li className="track" key={id} onClick={() => {play({album_id,...item})}}>
                     <div className="info">
                         <i className="fas fa-play" ></i>
-                        <p>{item.name}</p>
+                        <p>{name}</p>
                     </div>
                     <div className="info">
-                        <p>{msToMinutes(item.duration_ms)}</p>
+                        <p>{msToMinutes(duration_ms)}</p>
                     </div>
                 </li>
             )
@@ -44,7 +46,7 @@ const Playlist = ({album}) => {
         return (
             <>
                 <StyledList>
-                    <h1 className="display-4">{album.artists[0].name}</h1>
+                    <h1 className="display-4">{artists[0].name}</h1>
                     <h2>{album.name}</h2>
                     {((album || {}).tracks || {}).items.map(renderList)}
                 </StyledList>

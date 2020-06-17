@@ -1,22 +1,15 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-
-import { Provider } from 'react-redux';
-import { createStore, applyMiddleware } from 'redux';
-
-import reducers from './reducers';
-
 import thunk from 'redux-thunk';
-import { logger,player } from './middlewares';
-
+import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
 import * as serviceWorker from './serviceWorker';
+import { createStore, applyMiddleware } from 'redux';
+import reducers from './reducers';
 import App from './App';
 
 const store = createStore(
   reducers,applyMiddleware(
-    thunk,
-    // logger,
-    player
+    thunk
   )
 );
 

@@ -1,5 +1,4 @@
 import React from 'react';
-import './style.css';
 
 // App Core
 import Core from './components/core';
