@@ -1,5 +1,4 @@
-import { getSession }  from '../utils';
-import { orderList } from '../utils';
+import { orderList,getSession } from '../utils';
 
 let _device;
 
@@ -47,11 +46,16 @@ export const pause = () => {
 }
 
 export const play = async (track) => {
-    let uri;
-    if(typeof track === 'object') {
+    let uri,album_id;
+    if(typeof track === 'object' && !track.uri.split(':').includes('album')) {
         uri = track.uri ? track.uri : track.item.uri;
     }
-    const album_id = track.album_id || (track.album || {}).id;
+
+    if(track.uri.split(':').includes('album')) {
+        album_id = track.uri.split(':')[track.uri.split(':').length-1];
+    } else {
+        album_id = (track.album || {}).id;
+    }
     if(album_id) {
         fetch('https://api.spotify.com/v1/albums/' + album_id, {
             method: 'GET',
@@ -96,14 +100,17 @@ export const init = async ({currentTrack,getStatus}) => {
         volume: 0.5
     });
 
-    player.connect().then(() => {
-        player.addListener('ready', ({device_id}) => {
-            _device = device_id;
-            console.log('Ready - Device ID', device_id);
-        });
+    player.addListener('ready', ({device_id}) => {
+        _device = device_id;
+        console.log('Ready - Device ID', device_id);
     });
 
     // update status - action
-    player.addListener('player_state_changed', ({ position,duration,track_window: { current_track } }) => getStatus({ position,duration,current_track }));
+    player.connect().then(() => {
+        player.addListener('player_state_changed', ({ position,duration,track_window: { current_track } }) => {
+            getStatus({ position,duration,current_track })
+        });
+    })
 
+    return player;
 }

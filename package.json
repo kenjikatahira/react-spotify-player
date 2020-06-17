@@ -7,8 +7,6 @@
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
     "axios": "^0.19.2",
-    "delay": "^4.3.0",
-    "history": "^4.10.1",
     "react": "^16.13.1",
     "react-chartjs-2": "^2.9.0",
     "react-dom": "^16.13.1",
@@ -19,9 +17,7 @@
     "react-spotify-login": "^0.9.1",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
-    "styled-components": "^5.1.1",
-    "to-slug-case": "^1.0.0",
-    "typeface-roboto": "0.0.75"
+    "styled-components": "^5.1.1"
   },
   "scripts": {
     "start": "react-scripts start",

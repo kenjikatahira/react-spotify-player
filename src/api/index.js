@@ -107,12 +107,27 @@ export const playlists = () => {
 }
 
 /**
- * Request for a albuym
+ * Request for a album
  * @function album
  * @return {Promise}
  */
 export const album = () => {
     return axios.get('https://api.spotify.com/v1/albums/', {
+        headers : {
+            'content-type' : 'application/json',
+            'Authorization' : `Bearer ${getSession().access_token}`
+        }
+    });
+}
+
+/**
+ * Request for a playlist
+ * @function Playlist
+ * @return {Promise}
+ */
+export const getPlaylist = ({uri}) => {
+    const id = uri.split(':');
+    return axios.get(`https://api.spotify.com/v1/playlists/${id[id.length-1]}/tracks`, {
         headers : {
             'content-type' : 'application/json',
             'Authorization' : `Bearer ${getSession().access_token}`

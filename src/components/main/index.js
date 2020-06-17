@@ -6,13 +6,15 @@ import {
     logout,
     getUser,
     getCurrentTrack,
-    getStatus
+    getStatus,
+    getPlaylists,
+    getContext
 } from '../../actions';
 
 import { init } from '../../player';
 
 import SearchTrack from '../searchTrack';
-import Playlist from '../playlist';
+import TrackList from '../tracklist';
 import SideMenu from '../sidemenu';
 import Footer from '../footer';
 import Login from '../login';
@@ -21,7 +23,13 @@ import Login from '../login';
 const StyledMain = styled.main`
     color: #ffffff;
     overflow: hidden;
+    font-family: 'Roboto', sans-serif;
 
+    header {
+        width: 100%;
+        height: 5vh;
+        background-color: #1F1A3C;
+    }
     .sidemenu {
         width: 240px;
         height: 92vh;
@@ -33,43 +41,38 @@ const StyledMain = styled.main`
         height: 92vh;
         background-color: #18142F;
         overflow: auto;
-    }
+        padding: 0;
 
-    .footer .controls {
-        background-color: #282148;
-        height: 8vh;
     }
 `
-
-/**
- * Aplication Initiated Flag
- * @type {Boolean}
- */
-let initiated = false;
-
 class Main extends React.Component {
+    consttructor() {
+        /**
+         * Aplication Initiated Flag
+         * @type {Boolean}
+         */
+        this.initiated = false;
+    }
     /**
      * Initial configuration
      * @function run
      * @return {Void}
      */
     run() {
-        init({
-            currentTrack : this.props.currentTrack,
-            getStatus : this.props.getStatus
-        });
-        initiated = true;
+        const { currentTrack, getStatus } = this.props;
+        init({ currentTrack, getStatus })
+        this.initiated = true;
     }
     async componentDidMount() {
         window.onSpotifyWebPlaybackSDKReady = () => {
             console.log('onSpotifyWebPlaybackSDKReady');
             this.props.getCurrentTrack();
+            this.props.getPlaylists();
         };
     }
     render() {
-        const { logged,currentTrack,status } = this.props;
-        (currentTrack.track && !initiated) && this.run();
-
+        const { logged,currentTrack,status,playlists,context } = this.props;
+        (currentTrack.track && !this.initiated) && this.run();
         if(!logged.status) {
             return(<Login />)
         } else {
@@ -78,14 +81,22 @@ class Main extends React.Component {
                     <StyledMain>
                         <main>
                             <div className="row">
-                                <SideMenu />
+                                <SideMenu playlists={playlists} />
                                 <div className="content col-sm-10">
+                                    <header>
+                                        <button className="btn btn-outline-secondary" onClick={() => this.props.logout()}>logout</button>
+                                    </header>
                                     {/* <SearchTrack /> */}
-                                    <Playlist album={(currentTrack.album || {})} />
+
+
+                                    {/* <View tyype="Tracklist" album={(currentTrack.album || {})}></View> */}
+
+
+                                    <TrackList list={(context || {})} />
                                 </div>
                             </div>
                             <Footer status={status} currentTrack={currentTrack}></Footer>
-                            <button className="btn btn-outline-secondary" onClick={() => this.props.logout()}>logout</button>
+
                         </main>
                     </StyledMain>
                 </>
@@ -96,11 +107,12 @@ class Main extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        user : state.user,
+        playlists : state.playlists,
         currentTrack : state.currentTrack,
         logged : state.logged,
-        status : state.status
+        status : state.status,
+        context : state.context
     };
 }
 
-export default connect(mapStateToProps, { logout,getUser,getCurrentTrack,getStatus })(Main);
+export default connect(mapStateToProps, { logout,getUser,getCurrentTrack,getStatus,getPlaylists,getContext })(Main);

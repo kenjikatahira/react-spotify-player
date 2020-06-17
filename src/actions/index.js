@@ -1,5 +1,5 @@
 import { setSession,getSession, removeSession,isAuthenticated } from '../utils';
-import { user,current_track,devices,playlists,recently, get } from '../api';
+import { user,current_track,devices,playlists,recently, get,getPlaylist } from '../api';
 
 /**
  * Retrieves user information
@@ -27,6 +27,7 @@ export const getUser = () => {
  */
 export const getStatus = ({current_track,position,duration}) => {
     return async dispatch => {
+        console.log('GET_STATUS')
         dispatch({
             type : 'GET_STATUS',
             payload : {
@@ -46,24 +47,49 @@ export const getStatus = ({current_track,position,duration}) => {
  */
 export const getCurrentTrack = () => {
     return async dispatch => {
+        let context;
         let current = await current_track();
+        // Se não houver musica tocando
+        // faz requests de ultimas escutadas
         if(current.status === 204) {
             const recent = await recently();
             current = recent.data.items[0].track;
             console.log('recentes...',current)
         } else {
             current = current.data;
-            console.log('tocando...',current)
         }
+
         const album = await get(current.item ? current.item.album.href : current.album.href);
+
+        if((current.context || {}).type == 'playlist') {
+            context = await getPlaylist(current.context);
+        } else {
+            context = album;
+        }
+
         const data = {
             track : current,
             artist : current.item ? current.item.artists[0] : current.artists[0],
-            album : album.data
+            album : album.data,
+            context : {
+                json : current,
+                type : (current.context || {}).type || current.type,
+                uri : (current.context || {}).uri || current.uri,
+                items : (context.data || {}).items || ((context.data || {}).tracks || {}).items
+            }
         }
 
         dispatch({
             type : 'GET_CURRENT_TRACK',
+            payload : data
+        });
+    }
+}
+
+export const getContext = (data) => {
+    return dispatch => {
+        dispatch({
+            type : 'GET_CONTEXT',
             payload : data
         });
     }
@@ -84,7 +110,6 @@ export const getDevices = () => {
                 payload : data.data
             });
         })
-
     }
 }
 
@@ -97,7 +122,6 @@ export const getDevices = () => {
 export const getPlaylists = () => {
     return dispatch => {
         playlists().then( data => {
-
             dispatch({
                 type : 'GET_PLAYLISTS',
                 payload : data.data
