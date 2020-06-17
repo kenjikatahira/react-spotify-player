@@ -1,115 +1,121 @@
-import axios from 'axios';
 import { getSession }  from '../utils';
-import delay from 'delay';
+import { orderList } from '../utils';
 
-class Player {
-    constructor() {
-        console.log(`player - v0.1`);
-        this.device_id = null;
-        this.commands = {
-            play : {
-                method : 'put',
-                url : 'https://api.spotify.com/v1/me/player/play'
-            },
-            pause : {
-                method : 'put',
-                url : 'https://api.spotify.com/v1/me/player/pause'
-            },
-            next : {
-                method : 'post',
-                url : 'https://api.spotify.com/v1/me/player/next'
-            },
-            previous : {
-                method : 'post',
-                url : 'https://api.spotify.com/v1/me/player/previous'
-            },
-            volume : {
-                method : 'put',
-                url : 'https://api.spotify.com/v1/me/player/volume',
-                params : {
-                    volume_percent : 0
-                }
-            }
+let _device;
+
+export const volume = () => {
+    fetch('https://api.spotify.com/v1/me/player/volume',{
+        method : 'PUT',
+        params : {
+            volume_percent : 0
+        },
+        headers : {
+            'content-type' : 'application/json',
+            'authorization' : `${getSession().token_type} ${getSession().access_token}`
         }
+    })
+}
+
+export const previous = () => {
+    fetch('https://api.spotify.com/v1/me/player/previous',{
+        method : 'POST',
+        headers : {
+            'content-type' : 'application/json',
+            'authorization' : `${getSession().token_type} ${getSession().access_token}`
+        }
+    });
+}
+
+export const next = () => {
+    fetch('https://api.spotify.com/v1/me/player/next',{
+        method : 'POST',
+        headers : {
+            'content-type' : 'application/json',
+            'authorization' : `${getSession().token_type} ${getSession().access_token}`
+        }
+    });
+}
+
+export const pause = () => {
+    fetch('https://api.spotify.com/v1/me/player/pause',{
+        method : 'PUT',
+        headers : {
+            'content-type' : 'application/json',
+            'authorization' : `${getSession().token_type} ${getSession().access_token}`
+        }
+    });
+}
+
+export const play = async (track) => {
+    console.log(track)
+    let uri;
+    if(typeof track === 'object') {
+        uri = track.uri ? track.uri : track.item.uri;
     }
-
-
-
-    static next(update) {
-        const spotify = new this();
-        spotify.run('next');
-        update();
-        return spotify;
-    }
-
-    static previous(update) {
-        const spotify = new this();
-        spotify.run('previous');
-        update();
-        return spotify;
-    }
-
-    static pause(update) {
-        const spotify = new this();
-        spotify.run('pause');
-        update();
-        return spotify;
-    }
-
-    static play(update) {
-        const spotify = new this();
-        spotify.run('play');
-        update();
-        return spotify;
-    }
-
-    run(action) {
-        let config = this.commands[action];
-        Object.assign( config, {
-            headers : {
-                'content-type' : 'application/json',
-                'authorization' : `${getSession().token_type} ${getSession().access_token}`
+    const album_id = track.album_id || (track.album || {}).id;
+    if(album_id) {
+        fetch('https://api.spotify.com/v1/albums/' + album_id, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${getSession().access_token}`
             }
-        });
-        axios(config);
-    }
-
-    static async init(config) {
-        console.log('INIT_',config);
-
-        const spotify = new this();
-
-        await delay(1000);
-
-        const player = new window.Spotify.Player({
-            playerInstance: new window.Spotify.Player({ name: "..." }),
-            name: 'Kenjicas Player',
-            getOAuthToken: callback => {
-                callback(getSession().access_token);
-            },
-            volume: 0.5
-        });
-
-        player.connect().then(success => success && console.log('The Web Playback SDK successfully connected to Spotify!'));
-
-        player.addListener('ready', ({ device_id }) => {
-            console.log('REAADYYYYYY');
-            console.log('Device ID', device_id);
-
-            this.device_id = device_id;
-
-            fetch(`https://api.spotify.com/v1/me/player/play?device_id=${device_id}`, {
+        })
+        .then(response => response.json())
+        .then(album => {
+            fetch(`https://api.spotify.com/v1/me/player/play?device_id=${_device ? _device : ''}`, {
                 method: 'PUT',
-                body: JSON.stringify({ uris: [config.uri] }),
+                body: JSON.stringify({ uris : orderList(uri,album.tracks.items.map(i => i.uri)), position_ms: track.position }),
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${getSession().access_token}`
                 }
             });
+        })
+    } else {
+        fetch(`https://api.spotify.com/v1/me/player/play?device_id=${_device ? _device : ''}`, {
+            method: 'PUT',
+            body: JSON.stringify({ uris : [uri] }),
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${getSession().access_token}`
+            }
         });
-
-        return spotify;
     }
 }
 
-export default Player;
+export const init = async ({currentTrack,getStatus}) => {
+    console.log('_INIT_');
+    const player = new window.Spotify.Player({
+        playerInstance: new window.Spotify.Player({ name: 'Kenjicas Player_' }),
+        name: 'Kenjicas Player',
+        getOAuthToken: callback => callback(getSession().access_token),
+        volume: 0.5
+    });
+
+    player.connect().then(() => {
+        player.addListener('ready', ({device_id}) => {
+            console.log('REAADYYYYYY');
+            console.log('Device ID', device_id);
+            _device = device_id;
+
+            console.log('PLAY COMENTADOOOOOO');
+
+            // fetch(`https://api.spotify.com/v1/me/player/play?device_id=${device_id}`, {
+            //     method: 'PUT',
+            //     body: JSON.stringify({ uris : orderedUris }),
+            //     headers: {
+            //       'Content-Type': 'application/json',
+            //       'Authorization': `Bearer ${getSession().access_token}`
+            //     },
+            // });
+        });
+    });
+
+    player.addListener('player_state_changed', ({ position,duration,track_window: { current_track } }) => {
+        getStatus({
+            position,duration,current_track
+        });
+    });
+
+}

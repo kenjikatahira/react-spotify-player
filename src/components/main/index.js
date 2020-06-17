@@ -1,40 +1,62 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import Player from '../../player';
-import { update,logout,getAll } from '../../actions';
+import { init,previous,next,play,pause } from '../../player';
+import { logout,getUser,getCurrentTrack,getStatus } from '../../actions';
 
 import Login from '../login';
-import delay from 'delay';
+import SearchTrack from '../searchTrack';
+import Playlist from '../playlist';
+import styled from 'styled-components'
 
-class Index extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            initiated : false,
-            avatar : { opened : false }
-        }
-    }
+const StyledList = styled.main`
+    background: red !important;
+`
+
+
+
+let initiated = false;
+
+class Main extends React.Component {
     async componentDidMount() {
-        // spotify player
-        await delay(1000);
-
-        if(window.Spotify) {
-            this.props.getAll();
-        }
+        window.onSpotifyWebPlaybackSDKReady = () => {
+            console.log('onSpotifyWebPlaybackSDKReady');
+            this.props.getCurrentTrack();
+        };
     }
     render() {
-        (Object.values(this.props.data).length !== 0 && (this.props.logged || {}).status && !this.state.initiated) && Player.init(this.props.data.currentTrack);
+        if(this.props.currentTrack.track && !initiated) {
+            init({
+                currentTrack : this.props.currentTrack,
+                getStatus : this.props.getStatus
+            });
+            initiated = true;
+        }
         if((this.props.logged || {}).status) {
+            console.log('props.status',this.props.status)
             return (
                 <>
                     <main>
-                        <footer>
-                            <button className="btn btn-outline-secondary" onClick={() => Player.previous(this.props.update)}><i className="fas fa-backward"></i></button>
-                            <button className="btn btn-outline-secondary" onClick={() => Player.play(this.props.update)}><i className="fas fa-play"></i></button>
-                            <button className="btn btn-outline-secondary" onClick={() => Player.pause(this.props.update)}><i className="fas fa-pause"></i></button>
-                            <button className="btn btn-outline-secondary" onClick={() => Player.next(this.props.update)}><i className="fas fa-forward"></i></button>
-                            <button className="btn btn-outline-secondary" onClick={() => this.props.logout()}>logout</button>
-                        </footer>
+                        <div className="row">
+                            <aside className="playlists col-sm-2">
+
+                            </aside>
+                            <div className="content col-sm-10">
+                                {/* <SearchTrack /> */}
+                                <Playlist album={(this.props.currentTrack.album || {})} />
+                            </div>
+                        </div>
+                        <div className="footer">
+                            <div className="wrapper">
+                                <div className="controls">
+                                    <button className="btn btn-outline-secondary" onClick={() => previous()}><i className="fas fa-backward"></i></button>
+                                    <button className="btn btn-outline-secondary" onClick={() => play(this.props.status.current_track || this.props.currentTrack.track)}><i className="fas fa-play"></i></button>
+                                    <button className="btn btn-outline-secondary" onClick={() => pause()}><i className="fas fa-pause"></i></button>
+                                    <button className="btn btn-outline-secondary" onClick={() => next()}><i className="fas fa-forward"></i></button>
+                                    <button className="btn btn-outline-secondary" onClick={() => this.props.logout()}>logout</button>
+                                    {(this.props.status.current_track || {}).name}
+                                </div>
+                            </div>
+                        </div>
                     </main>
                 </>
             )
@@ -46,9 +68,11 @@ class Index extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        data : state.data,
-        logged : state.logged
+        user : state.user,
+        currentTrack : state.currentTrack,
+        logged : state.logged,
+        status : state.status
     };
 }
 
-export default connect(mapStateToProps, { update,logout,getAll })(Index);
+export default connect(mapStateToProps, { logout,getUser,getCurrentTrack,getStatus })(Main);

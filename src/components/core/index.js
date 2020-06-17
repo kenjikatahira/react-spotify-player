@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
-import { isLogged,getAll } from './../../actions';
+import { isLogged } from './../../actions';
 
 import './style.css';
 
@@ -30,9 +30,8 @@ class Core extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        data : state.data,
         logged : state.logged
     };
 }
 
-export default connect(mapStateToProps, { isLogged,getAll })(Core);
+export default connect(mapStateToProps, { isLogged })(Core);

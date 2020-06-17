@@ -1,39 +1,77 @@
 import { setSession,getSession, removeSession,isAuthenticated } from '../utils';
-import { getData,updateData } from './../service';
-import delay from 'delay';
-/**
- * Responsavel por trazer os dados do usuario
- * @function getAll
- *
- */
-export const getAll = () => {
-    return dispatch => {
-        getData().then((responses) => {
-        const [user,currentTrack,topArtist,recently,player_devices] = responses;
-        const obj = {
-            user : user.data,
-            currentTrack : (currentTrack || {}).data || ((recently || {}).data || {}).items[0].track || {},
-            topArtist : (topArtist || {}).data,
-            recently : (recently || {}).data,
-            player_devices : (player_devices || {}).data
-        }
+import { user,current_track,devices,playlists,recently,album, get } from './../service';
 
-        dispatch({type: 'GET_DATA', payload : obj});
-        }).catch(err => {
-            console.log(`actions ${err}`)
+export const getUser = () => {
+    return dispatch => {
+        user().then( data => {
+            dispatch({
+                type : 'GET_USER',
+                payload : data.data
+            });
         })
     }
 }
 
-export const update = () => {
+export const getStatus = ({current_track,position,duration}) => {
     return async dispatch => {
-        await delay(500);
-        updateData().playing().then(response => {
-            const {data} = response;
-            dispatch({type : 'UPDATE_CURRENT_TRACK' , payload : { currentTrack : data }});
-        }).catch(err => {
-            console.log(`actions ${err}`)
+        dispatch({
+            type : 'GET_STATUS',
+            payload : {
+                current_track,
+                position,
+                duration
+            }
+        })
+    }
+}
+
+export const getCurrentTrack = () => {
+    return async dispatch => {
+        let current = await current_track();
+        if(current.status === 204) {
+            const recent = await recently();
+            current = recent.data.items[0].track;
+            console.log('recentes...',current)
+        } else {
+            current = current.data;
+            console.log('tocando...',current)
+        }
+        const album = await get(current.item ? current.item.album.href : current.album.href);
+        const data = {
+            track : current,
+            artist : current.item ? current.item.artists[0] : current.artists[0],
+            album : album.data
+        }
+
+        dispatch({
+            type : 'GET_CURRENT_TRACK',
+            payload : data
         });
+    }
+}
+
+export const getDevices = () => {
+    return dispatch => {
+        devices().then( data => {
+
+            dispatch({
+                type : 'GET_DEVICES',
+                payload : data.data
+            });
+        })
+
+    }
+}
+
+export const getPlaylists = () => {
+    return dispatch => {
+        playlists().then( data => {
+
+            dispatch({
+                type : 'GET_PLAYLISTS',
+                payload : data.data
+            });
+        })
     }
 }
 

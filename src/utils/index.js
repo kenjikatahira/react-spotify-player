@@ -26,3 +26,24 @@ export const isAuthenticated = () => {
     let expires_at = JSON.parse(localStorage.getItem('expires_at'));
     return expires_at && new Date().valueOf() < expires_at;
 }
+
+export const orderList = (item,arr) => {
+    const key = arr.indexOf(item)
+    let before = [],newArr = [], found = false;
+    arr.forEach((n,i) => {
+        if(i === key) found = true;
+        if(!found) {
+            before.push(n);
+        } else {
+            if(!newArr.includes(n)) {
+                newArr.push(n);
+            }
+        }
+    });
+
+    before.forEach(i => {
+        newArr.push(i);
+    });
+
+    return newArr;
+}

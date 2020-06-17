@@ -4,13 +4,12 @@ import SpotifyLogin from 'react-spotify-login';
 
 import { clientId, redirectUri } from './../../config';
 
-import { getAll, logout, login } from './../../actions';
+import { logout, login } from './../../actions';
 
 import { scope } from './../../service/scopes';
 class Login extends React.Component {
     onSuccess(response) {
         this.props.login(response);
-        this.props.getAll();
     }
     onFailure(err) {
         console.log('fail',err);
@@ -38,8 +37,8 @@ class Login extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        data : state.data
+        user : state.user
     };
 }
 
-export default connect(mapStateToProps, { getAll,login,logout })(Login);
+export default connect(mapStateToProps, { login,logout })(Login);
