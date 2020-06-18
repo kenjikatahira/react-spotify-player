@@ -1,5 +1,5 @@
 import { setSession,getSession, removeSession,isAuthenticated } from '../utils';
-import { user,current_track,devices,playlists,recently, get,getPlaylist } from '../api';
+import { user,current_track,devices,playlists,recently, get,getPlaylistItems, album  as getAlbum} from '../api';
 
 /**
  * Retrieves user information
@@ -18,23 +18,13 @@ export const getUser = () => {
     }
 }
 
-/**
- * Updates current track status
- *
- * @function getStatus
- * @param {Object} Track state
- * @return {Void}
- */
-export const getStatus = ({current_track,position,duration}) => {
-    return async dispatch => {
-        console.log('GET_STATUS')
-        dispatch({
-            type : 'GET_STATUS',
-            payload : {
-                current_track,
-                position,
-                duration
-            }
+export const get_playlist_items = (item) => {
+    return dispatch => {
+        getPlaylistItems(item).then(data => {
+            dispatch({
+                type : 'GET_PLAYLIST_ITEMS',
+                payload : data.data
+            });
         })
     }
 }
@@ -45,9 +35,9 @@ export const getStatus = ({current_track,position,duration}) => {
  * @function getCurrentTrack
  * @return {Void}
  */
-export const getCurrentTrack = () => {
+export const getCurrentTrack = (track_from_listener) => {
     return async dispatch => {
-        let context;
+        let context,album;
         let current = await current_track();
         // Se não houver musica tocando
         // faz requests de ultimas escutadas
@@ -56,13 +46,22 @@ export const getCurrentTrack = () => {
             current = recent.data.items[0].track;
             console.log('recentes...',current)
         } else {
-            current = current.data;
+            if(track_from_listener) {
+                console.log(`track_from_listener`,track_from_listener)
+                current = track_from_listener;
+            } else {
+                current = current.data;
+            }
         }
 
-        const album = await get(current.item ? current.item.album.href : current.album.href);
+        if( ((current.item || {}).album || {}).href || (current.album || {}).href ) {
+            album = await get(current.item ? current.item.album.href : current.album.href);
+        } else {
+            album = await getAlbum(current.album)
+        }
 
         if((current.context || {}).type == 'playlist') {
-            context = await getPlaylist(current.context);
+            context = await getPlaylistItems(current.context);
         } else {
             context = album;
         }

@@ -6,6 +6,7 @@ const GET_DEVICES = 'GET_DEVICES';
 const GET_PLAYLISTS = 'GET_PLAYLISTS';
 const GET_STATUS = 'GET_STATUS';
 const GET_CONTEXT = 'GET_CONTEXT';
+const GET_PLAYLIST_ITEMS = 'GET_PLAYLIST_ITEMS';
 
 const LOGIN = 'LOGIN';
 const LOGOUT = 'LOGOUT';
@@ -51,17 +52,10 @@ const devicesReducer = (state={},action) => {
     return state;
 }
 
-const statusReducer = (state={},action) => {
-    if(action.type === GET_STATUS) {
-        return { ...state , ...action.payload };
-    }
-    if(action.type === LOGOUT) {
-        return {};
-    }
-    return state;
-}
-
 const contextReducer = (state={},action) => {
+    if(action.type === GET_PLAYLIST_ITEMS) {
+        return { ...state, ...action.payload }
+    }
     if(action.type === GET_CURRENT_TRACK) {
         return { ...state , ...action.payload.context };
     }
@@ -93,6 +87,5 @@ export default combineReducers({
     currentTrack : currentTrackReducer,
     devices : devicesReducer,
     playlists : playlistsReducer,
-    status : statusReducer,
     context : contextReducer
 });

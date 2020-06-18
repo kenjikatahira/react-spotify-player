@@ -5,25 +5,22 @@ import styled from 'styled-components'
 const StyledFooter = styled.div`
     background-color: #282148;
     height: 8vh;
-    .controls {
-        border:1px solid #fff;
-        button svg { color: #fff; }
-    }
 `
 
 const Footer = (props) => {
-    const { status,currentTrack } = props;
+    const { currentTrack } = props;
+    console.log(`footer`,currentTrack)
     return(
         <>
             <StyledFooter>
                 <div className="row">
-                    <div className="controls col-sm-8">
+                    <div className="controls col-sm-12">
                         <button className="btn btn-outline-secondary" onClick={previous}>
                             <i className="fas fa-backward"></i>
                         </button>
                         <button
                             className="btn btn-outline-secondary"
-                            onClick={() => play(status.current_track || currentTrack.track)}
+                            onClick={() => play(currentTrack.track)}
                         >
                             <i className="fas fa-play"></i>
                         </button>
@@ -33,7 +30,7 @@ const Footer = (props) => {
                         <button className="btn btn-outline-secondary" onClick={next}>
                             <i className="fas fa-forward"></i>
                         </button>
-                        {(status.current_track || {}).name || ((currentTrack.track || {}).item || {}).name}
+                        {((currentTrack.track || {}).item || {}).name || ((currentTrack.track || {}) || {}).name}
                     </div>
                 </div>
             </StyledFooter>

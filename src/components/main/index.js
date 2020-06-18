@@ -6,7 +6,6 @@ import {
     logout,
     getUser,
     getCurrentTrack,
-    getStatus,
     getPlaylists,
     getContext
 } from '../../actions';
@@ -27,7 +26,7 @@ const StyledMain = styled.main`
 
     header {
         width: 100%;
-        height: 5vh;
+        height: 4vh;
         background-color: #1F1A3C;
     }
     .sidemenu {
@@ -42,7 +41,6 @@ const StyledMain = styled.main`
         background-color: #18142F;
         overflow: auto;
         padding: 0;
-
     }
 `
 class Main extends React.Component {
@@ -59,8 +57,12 @@ class Main extends React.Component {
      * @return {Void}
      */
     run() {
-        const { currentTrack, getStatus } = this.props;
-        init({ currentTrack, getStatus })
+        const { getCurrentTrack } = this.props;
+        const _changed_ = ({ position,duration,track_window: { current_track } }) => {
+            getCurrentTrack(current_track);
+
+        }
+        init({ _changed_ })
         this.initiated = true;
     }
     async componentDidMount() {
@@ -71,7 +73,7 @@ class Main extends React.Component {
         };
     }
     render() {
-        const { logged,currentTrack,status,playlists,context } = this.props;
+        const { logged,currentTrack,context } = this.props;
         (currentTrack.track && !this.initiated) && this.run();
         if(!logged.status) {
             return(<Login />)
@@ -79,25 +81,18 @@ class Main extends React.Component {
             return (
                 <>
                     <StyledMain>
-                        <main>
-                            <div className="row">
-                                <SideMenu playlists={playlists} />
-                                <div className="content col-sm-10">
-                                    <header>
-                                        <button className="btn btn-outline-secondary" onClick={() => this.props.logout()}>logout</button>
-                                    </header>
-                                    {/* <SearchTrack /> */}
-
-
-                                    {/* <View tyype="Tracklist" album={(currentTrack.album || {})}></View> */}
-
-
-                                    <TrackList list={(context || {})} />
-                                </div>
+                        <div className="row">
+                            <SideMenu />
+                            <div className="content col-sm-10">
+                                <header>
+                                    <button className="btn btn-outline-secondary" onClick={() => this.props.logout()}>logout</button>
+                                </header>
+                                {/* <SearchTrack /> */}
+                                {/* <View tyype="Tracklist" album={(currentTrack.album || {})}></View> */}
+                                <TrackList list={context} />
                             </div>
-                            <Footer status={status} currentTrack={currentTrack}></Footer>
-
-                        </main>
+                        </div>
+                        <Footer currentTrack={currentTrack}></Footer>
                     </StyledMain>
                 </>
             )
@@ -110,9 +105,8 @@ const mapStateToProps = (state) => {
         playlists : state.playlists,
         currentTrack : state.currentTrack,
         logged : state.logged,
-        status : state.status,
         context : state.context
     };
 }
 
-export default connect(mapStateToProps, { logout,getUser,getCurrentTrack,getStatus,getPlaylists,getContext })(Main);
+export default connect(mapStateToProps, { logout,getUser,getCurrentTrack,getPlaylists,getContext })(Main);

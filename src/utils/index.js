@@ -28,7 +28,8 @@ export const isAuthenticated = () => {
 }
 
 export const orderList = (item,arr) => {
-    const key = arr.indexOf(item)
+    if(!item) return arr;
+    const key = arr.indexOf(item);
     let before = [],newArr = [], found = false;
     arr.forEach((n,i) => {
         if(i === key) found = true;

@@ -23,15 +23,15 @@ const StyledList = styled.ul`
     }
 `
 const Tracklist = ({list}) => {
-    let { uri,items,type,json } = list;
+    let { playlist_uri,items,type,json } = list;
     if(type === 'track') {
-        uri = json.album.uri;
+        playlist_uri = json.album.uri;
     }
 
     const renderList = (item) => {
-        const {id,name,duration_ms} = item.track || item;
+        const {id,name,duration_ms, uri : track_uri} = item.track || item;
         return (
-            <li className="track" key={id} onClick={() => {play({uri,...item})}}>
+            <li className="track" key={id} onClick={() => {play({playlist_uri,track_uri,...item})}}>
                 <div className="name">
                     <i className="fas fa-play" ></i>
                     <span>{name}</span>
@@ -62,28 +62,6 @@ const Tracklist = ({list}) => {
             </>
         )
     }
-    // const {context} = list;
-    // const album_id = (album || {}).id;
-
-
-    // if(((album || {}).tracks || {}).items) {
-    //     const { artists } = album;
-    //     return (
-    //         <>
-    //             <h1 className="display-4">{artists[0].name}</h1>
-    //             <h2>{album.name}</h2>
-    //             <StyledList>
-    //                 {(context || {}).items.map(renderList)}
-    //             </StyledList>
-    //         </>
-    //     )
-    // } else {
-    //     return (
-    //         <>
-    //             <p>loading</p>
-    //         </>
-    //     )
-    // }
 }
 
 export default Tracklist;

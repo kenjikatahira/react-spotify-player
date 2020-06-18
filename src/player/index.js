@@ -1,4 +1,6 @@
 import { orderList,getSession } from '../utils';
+import { getPlaylistItems, album, getTrack } from '../api';
+import axios from 'axios';
 
 let _device;
 
@@ -46,52 +48,41 @@ export const pause = () => {
 }
 
 export const play = async (track) => {
-    let uri,album_id;
-    if(typeof track === 'object' && !track.uri.split(':').includes('album')) {
-        uri = track.uri ? track.uri : track.item.uri;
+    //  monta a playlist de acordo com o contexto
+    const {track_uri} = track;
+    const playlist_uri = track.uri || (track.item || {}).uri;
+    let type,id,response, uris;
+    console.log(`tem uri`,track.track_uri);
+
+    if((track_uri || playlist_uri).split(':').includes('track')) {
+        const res = await getTrack({ uri : track_uri});
+        type = 'TRACK';
+        response = await album({ uri : res.data.album.uri });
+        uris = response.data.tracks.items.map(i => i.uri);
+    } else if((track_uri || playlist_uri).split(':').includes('album')) {
+        type = 'ALBUM';
+        response = await album({ uri : (track_uri || playlist_uri)});
+    } else if((track_uri || playlist_uri).split(':').includes('playlist')) {
+        type = 'PLAYLIST';
+        response = await getPlaylistItems({ uri : (track_uri || playlist_uri)});
+        uris = response.data.items.map(i => !i.track.uri.split(':').includes('local') && i.track.uri).filter(i => i);
     }
 
-    if(track.uri.split(':').includes('album')) {
-        album_id = track.uri.split(':')[track.uri.split(':').length-1];
-    } else {
-        album_id = (track.album || {}).id;
-    }
-    if(album_id) {
-        fetch('https://api.spotify.com/v1/albums/' + album_id, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${getSession().access_token}`
-            }
-        })
-        .then(response => response.json())
-        .then(album => {
-            fetch(`https://api.spotify.com/v1/me/player/play?device_id=${_device ? _device : ''}`, {
-                method: 'PUT',
-                body: JSON.stringify({ uris : orderList(uri,album.tracks.items.map(i => i.uri)), position_ms: track.position }),
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${getSession().access_token}`
-                }
-            });
-        })
-    } else {
-        fetch(`https://api.spotify.com/v1/me/player/play?device_id=${_device ? _device : ''}`, {
-            method: 'PUT',
-            body: JSON.stringify({ uris : [uri] }),
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${getSession().access_token}`
-            }
-        });
-    }
+    fetch(`https://api.spotify.com/v1/me/player/play?device_id=${_device ? _device : ''}`, {
+        method: 'PUT',
+        body: JSON.stringify({ uris : orderList(track_uri,uris) }),
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${getSession().access_token}`
+        }
+    });
 }
 
-/*
+/**
 * Inicia a instancia do player do spotify
 * @function init
-*/
-export const init = async ({currentTrack,getStatus}) => {
+**/
+export const init = async ({_changed_}) => {
     console.log('____init___');
     const player = new window.Spotify.Player({
         playerInstance: new window.Spotify.Player({ name: 'Kenjicas Player_' }),
@@ -107,9 +98,7 @@ export const init = async ({currentTrack,getStatus}) => {
 
     // update status - action
     player.connect().then(() => {
-        player.addListener('player_state_changed', ({ position,duration,track_window: { current_track } }) => {
-            getStatus({ position,duration,current_track })
-        });
+        player.addListener('player_state_changed', _changed_);
     })
 
     return player;

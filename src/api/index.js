@@ -5,7 +5,7 @@ import { getSession } from '../utils';
  * Scope to provide the right acess to information
  * @type scope
  */
-export const scope = 'user-read-private user-read-playback-state user-read-playback-position user-modify-playback-state user-top-read user-read-recently-played streaming user-read-email'
+export const scope = 'playlist-read-private user-read-private user-read-playback-state user-read-playback-position user-modify-playback-state user-top-read user-read-recently-played streaming user-read-email'
 
 /**
  * Basic request with the token provided
@@ -111,8 +111,9 @@ export const playlists = () => {
  * @function album
  * @return {Promise}
  */
-export const album = () => {
-    return axios.get('https://api.spotify.com/v1/albums/', {
+export const album = ({uri}) => {
+    const id = uri.split(':');
+    return axios.get('https://api.spotify.com/v1/albums/' + id[id.length-1], {
         headers : {
             'content-type' : 'application/json',
             'Authorization' : `Bearer ${getSession().access_token}`
@@ -122,12 +123,30 @@ export const album = () => {
 
 /**
  * Request for a playlist
- * @function Playlist
+ * @function getPlaylistItems
  * @return {Promise}
  */
-export const getPlaylist = ({uri}) => {
+export const getPlaylistItems = ({uri}) => {
     const id = uri.split(':');
     return axios.get(`https://api.spotify.com/v1/playlists/${id[id.length-1]}/tracks`, {
+        params : {
+            limit : 100
+        },
+        headers : {
+            'content-type' : 'application/json',
+            'Authorization' : `Bearer ${getSession().access_token}`
+        }
+    });
+}
+
+/**
+ * Request for a playlist
+ * @function getTrack
+ * @return {Promise}
+ */
+export const getTrack = ({uri}) => {
+    const id = uri.split(':');
+    return axios.get(`https://api.spotify.com/v1/tracks/` + id[id.length-1], {
         headers : {
             'content-type' : 'application/json',
             'Authorization' : `Bearer ${getSession().access_token}`
