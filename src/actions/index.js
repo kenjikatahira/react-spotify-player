@@ -1,6 +1,12 @@
 import { setSession,getSession, removeSession,isAuthenticated } from '../utils';
-import { user,current_track,devices,playlists,recently, get,getPlaylist } from '../api';
+import {
+    get_user,
+    get_current_track,
+    get_devices,get_playlists,
+    get_recently_tracks
+} from '../api';
 
+import Track from '../api/Track';
 /**
  * Retrieves user information
  *
@@ -9,32 +15,11 @@ import { user,current_track,devices,playlists,recently, get,getPlaylist } from '
  */
 export const getUser = () => {
     return dispatch => {
-        user().then( data => {
+        get_user().then( data => {
             dispatch({
                 type : 'GET_USER',
                 payload : data.data
             });
-        })
-    }
-}
-
-/**
- * Updates current track status
- *
- * @function getStatus
- * @param {Object} Track state
- * @return {Void}
- */
-export const getStatus = ({current_track,position,duration}) => {
-    return async dispatch => {
-        console.log('GET_STATUS')
-        dispatch({
-            type : 'GET_STATUS',
-            payload : {
-                current_track,
-                position,
-                duration
-            }
         })
     }
 }
@@ -47,50 +32,19 @@ export const getStatus = ({current_track,position,duration}) => {
  */
 export const getCurrentTrack = () => {
     return async dispatch => {
-        let context;
-        let current = await current_track();
-        // Se não houver musica tocando
-        // faz requests de ultimas escutadas
-        if(current.status === 204) {
-            const recent = await recently();
-            current = recent.data.items[0].track;
-            console.log('recentes...',current)
-        } else {
-            current = current.data;
+        let response = await get_current_track();
+        if(response.status === 204) {
+            response = await get_recently_tracks();
+            const [lastTrack] = response.data.items;
+            response.data = lastTrack.track;
         }
 
-        const album = await get(current.item ? current.item.album.href : current.album.href);
-
-        if((current.context || {}).type == 'playlist') {
-            context = await getPlaylist(current.context);
-        } else {
-            context = album;
-        }
-
-        const data = {
-            track : current,
-            artist : current.item ? current.item.artists[0] : current.artists[0],
-            album : album.data,
-            context : {
-                json : current,
-                type : (current.context || {}).type || current.type,
-                uri : (current.context || {}).uri || current.uri,
-                items : (context.data || {}).items || ((context.data || {}).tracks || {}).items
-            }
-        }
+        const track = await Track.init(response.data);
+        console.log(track)
 
         dispatch({
             type : 'GET_CURRENT_TRACK',
-            payload : data
-        });
-    }
-}
-
-export const getContext = (data) => {
-    return dispatch => {
-        dispatch({
-            type : 'GET_CONTEXT',
-            payload : data
+            payload : track
         });
     }
 }
@@ -103,7 +57,7 @@ export const getContext = (data) => {
  */
 export const getDevices = () => {
     return dispatch => {
-        devices().then( data => {
+        get_devices().then( data => {
 
             dispatch({
                 type : 'GET_DEVICES',
@@ -121,7 +75,7 @@ export const getDevices = () => {
  */
 export const getPlaylists = () => {
     return dispatch => {
-        playlists().then( data => {
+        get_playlists().then( data => {
             dispatch({
                 type : 'GET_PLAYLISTS',
                 payload : data.data

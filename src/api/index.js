@@ -1,4 +1,5 @@
 import axios from 'axios';
+
 import { getSession } from '../utils';
 
 /**
@@ -24,10 +25,10 @@ export const get = (url) => {
 
 /**
  * Request for the user data
- * @function user
+ * @function get_user
  * @return {Promise}
  */
-export const user = () => {
+export const get_user = () => {
     return axios.get('https://api.spotify.com/v1/me', {
         headers : {
             'content-type' : 'application/json',
@@ -38,10 +39,10 @@ export const user = () => {
 
 /**
  * Request for the current track data
- * @function current_track
+ * @function get_current_track
  * @return {Promise}
  */
-export const current_track = () => {
+export const get_current_track = () => {
     return axios.get('https://api.spotify.com/v1/me/player/currently-playing', {
         headers : {
             'content-type' : 'application/json',
@@ -52,10 +53,10 @@ export const current_track = () => {
 
 /**
  * Request for the top artists list
- * @function topArtist
+ * @function top_artists
  * @return {Promise}
  */
-export const topArtist = () => {
+export const top_artists = () => {
     return axios.get('https://api.spotify.com/v1/me/top/artists', {
         headers : {
             'content-type' : 'application/json',
@@ -66,10 +67,10 @@ export const topArtist = () => {
 
 /**
  * Request for the recently listened music of the user
- * @function recently
+ * @function get_recently_tracks
  * @return {Promise}
  */
-export const recently = () => {
+export const get_recently_tracks = () => {
     return axios.get('https://api.spotify.com/v1/me/player/recently-played', {
         headers : {
             'content-type' : 'application/json',
@@ -80,10 +81,10 @@ export const recently = () => {
 
 /**
  * Retrieves the devices avaiable
- * @function devices
+ * @function get_devices
  * @return {Promise}
  */
-export const devices = () => {
+export const get_devices = () => {
     return axios.get('https://api.spotify.com/v1/me/player/devices', {
         headers : {
             'content-type' : 'application/json',
@@ -94,10 +95,10 @@ export const devices = () => {
 
 /**
  * Request for the user's playlists
- * @function playlists
+ * @function get_playlists
  * @return {Promise}
  */
-export const playlists = () => {
+export const get_playlists = () => {
     return axios.get('https://api.spotify.com/v1/me/playlists?limit=20&offset=0', {
         headers : {
             'content-type' : 'application/json',
@@ -108,11 +109,12 @@ export const playlists = () => {
 
 /**
  * Request for a album
- * @function album
+ * @function get_album
  * @return {Promise}
  */
-export const album = () => {
-    return axios.get('https://api.spotify.com/v1/albums/', {
+export const get_album = ({uri}) => {
+    const id = uri.split(':');
+    return axios.get('https://api.spotify.com/v1/albums/' + id[id.length-1], {
         headers : {
             'content-type' : 'application/json',
             'Authorization' : `Bearer ${getSession().access_token}`
@@ -122,12 +124,60 @@ export const album = () => {
 
 /**
  * Request for a playlist
- * @function Playlist
+ * @function get_playlist_items
  * @return {Promise}
  */
-export const getPlaylist = ({uri}) => {
+export const get_playlist_items = ({uri}) => {
     const id = uri.split(':');
     return axios.get(`https://api.spotify.com/v1/playlists/${id[id.length-1]}/tracks`, {
+        headers : {
+            'content-type' : 'application/json',
+            'Authorization' : `Bearer ${getSession().access_token}`
+        }
+    });
+}
+
+
+/**
+ * Request for a get_artist_top_tracks
+ * @function get_artist_top_tracks
+ * @return {Promise}
+ */
+export const get_artist_top_tracks = ({uri}) => {
+    const id = uri.split(':');
+    return axios.get(`https://api.spotify.com/v1/artists/${id[id.length-1]}/top-tracks?country=BR`, {
+        headers : {
+            'content-type' : 'application/json',
+            'Authorization' : `Bearer ${getSession().access_token}`
+        }
+    });
+}
+
+/**
+ * Request for a playlist
+ * @function get_artist
+ * @return {Promise}
+ */
+export const get_artist = ({uri}) => {
+    const id = uri.split(':');
+    return axios.get('https://api.spotify.com/v1/artists/' + id[id.length-1], {
+        headers : {
+            'content-type' : 'application/json',
+            'Authorization' : `Bearer ${getSession().access_token}`
+        }
+    });
+}
+
+
+
+/**
+ * Request for a playlist
+ * @function get_track
+ * @return {Promise}
+ */
+export const get_track = ({uri}) => {
+    const id = uri.split(':');
+    return axios.get('https://api.spotify.com/v1/tracks/' + id[id.length-1], {
         headers : {
             'content-type' : 'application/json',
             'Authorization' : `Bearer ${getSession().access_token}`

@@ -2,9 +2,7 @@ import { combineReducers } from 'redux';
 
 const GET_USER = 'GET_USER';
 const GET_CURRENT_TRACK = 'GET_CURRENT_TRACK';
-const GET_DEVICES = 'GET_DEVICES';
 const GET_PLAYLISTS = 'GET_PLAYLISTS';
-const GET_STATUS = 'GET_STATUS';
 const GET_CONTEXT = 'GET_CONTEXT';
 
 const LOGIN = 'LOGIN';
@@ -33,26 +31,6 @@ const currentTrackReducer = (state={},action) => {
 
 const playlistsReducer = (state={},action) => {
     if(action.type === GET_PLAYLISTS) {
-        return { ...state , ...action.payload };
-    }
-    if(action.type === LOGOUT) {
-        return {};
-    }
-    return state;
-}
-
-const devicesReducer = (state={},action) => {
-    if(action.type === GET_DEVICES) {
-        return { ...state , ...action.payload };
-    }
-    if(action.type === LOGOUT) {
-        return {};
-    }
-    return state;
-}
-
-const statusReducer = (state={},action) => {
-    if(action.type === GET_STATUS) {
         return { ...state , ...action.payload };
     }
     if(action.type === LOGOUT) {
@@ -90,9 +68,7 @@ const loginReducer = (state={},action) => {
 export default combineReducers({
     user : userReducer,
     logged : loginReducer,
-    currentTrack : currentTrackReducer,
-    devices : devicesReducer,
+    current : currentTrackReducer,
     playlists : playlistsReducer,
-    status : statusReducer,
     context : contextReducer
 });

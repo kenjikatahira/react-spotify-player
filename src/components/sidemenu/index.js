@@ -12,7 +12,7 @@ const SideMenu = ({playlists}) => {
     if((playlists || {}).items) {
         return (
             <>
-                <div className="sidemenu col-sm-2">
+                <div className="sidemenu">
                     {playlists.items.map(renderList)}
                 </div>
             </>
@@ -20,7 +20,7 @@ const SideMenu = ({playlists}) => {
     } else {
         return (
             <>
-                <div className="sidemenu col-sm-2">
+                <div className="sidemenu">
                     loading
                 </div>
             </>
