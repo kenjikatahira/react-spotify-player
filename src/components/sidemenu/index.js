@@ -6,12 +6,23 @@ import { get_playlist_items } from '../../actions';
 
 const StyledList = styled.ul`
     font-size:16px;
-    padding: 15px;
     list-style: none;
+    overflow: hidden;
+    white-space: nowrap;
+    margin:0;
+    padding:30px;
     h2 {
         font-size: 20px;
         color : #FF6699;
         font-weight: bold;
+    }
+    li {
+        cursor: pointer;
+
+        &:hover {
+            color: #ddd;
+            background: rgba(255,255,255,.1);
+        }
     }
 `
 
@@ -29,7 +40,7 @@ class SideMenu extends React.Component {
         if((playlists || {}).items) {
             return (
                 <>
-                    <StyledList className="sidemenu col-sm-2">
+                    <StyledList className="sidemenu">
                         <h2>your library</h2>
                         {playlists.items.map((item => this.renderList(item)))}
                     </StyledList>

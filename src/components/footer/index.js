@@ -3,8 +3,17 @@ import { previous,next,play,pause } from '../../player';
 import styled from 'styled-components'
 
 const StyledFooter = styled.div`
+    display:flex;
+    justify-content: center;
+    align-items: center;
     background-color: #282148;
     height: 8vh;
+
+    .controls {
+        svg {
+            width: 8px;
+        }
+    }
 `
 
 const Footer = (props) => {

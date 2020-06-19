@@ -30,7 +30,7 @@ const StyledMain = styled.main`
         background-color: #1F1A3C;
     }
     .sidemenu {
-        width: 240px;
+        width: 100%;
         height: 92vh;
         background-color: #1F1A3C;
     }
@@ -40,7 +40,6 @@ const StyledMain = styled.main`
         height: 92vh;
         background-color: #18142F;
         overflow: auto;
-        padding: 0;
     }
 `
 class Main extends React.Component {
@@ -60,10 +59,9 @@ class Main extends React.Component {
         const { getCurrentTrack } = this.props;
         const _changed_ = ({ position,duration,track_window: { current_track } }) => {
             getCurrentTrack(current_track);
-
         }
-        init({ _changed_ })
         this.initiated = true;
+        init({ _changed_ })
     }
     async componentDidMount() {
         window.onSpotifyWebPlaybackSDKReady = () => {
@@ -82,8 +80,10 @@ class Main extends React.Component {
                 <>
                     <StyledMain>
                         <div className="row">
-                            <SideMenu />
-                            <div className="content col-sm-10">
+                            <div className="content col-sm-3">
+                                <SideMenu />
+                            </div>
+                            <div className="content col-sm-9">
                                 <header>
                                     <button className="btn btn-outline-secondary" onClick={() => this.props.logout()}>logout</button>
                                 </header>

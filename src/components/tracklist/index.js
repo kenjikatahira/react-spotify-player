@@ -16,6 +16,14 @@ const StyledList = styled.ul`
         border-top: 1px solid rgba(133,133,133,.3);
         width: 90%;
         margin: 0 auto;
+
+        cursor: pointer;
+
+        &:hover {
+            color: #ddd;
+            background: rgba(255,255,255,.1);
+        }
+
         &:last-child {
             border-bottom: 1px solid rgba(133,133,133,.3);
         }
@@ -31,9 +39,9 @@ const Tracklist = ({list}) => {
     const renderList = (item) => {
         const {id,name,duration_ms, uri : track_uri} = item.track || item;
         return (
-            <li className="track" key={id} onClick={() => {play({playlist_uri,track_uri,...item})}}>
+            <li className="track" key={id} onDoubleClick={() => {play({playlist_uri,track_uri,...item})}}>
                 <div className="name">
-                    <i className="fas fa-play" ></i>
+                    <i className="fas fa-play"></i>
                     <span>{name}</span>
                 </div>
                 <div className="duration">

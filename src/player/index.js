@@ -54,19 +54,23 @@ export const play = async (track) => {
     let type,id,response, uris;
     console.log(`tem uri`,track.track_uri);
 
+    // se for a musica, procura o album
     if((track_uri || playlist_uri).split(':').includes('track')) {
         const res = await getTrack({ uri : track_uri});
         type = 'TRACK';
         response = await album({ uri : res.data.album.uri });
         uris = response.data.tracks.items.map(i => i.uri);
+        // se for o album
     } else if((track_uri || playlist_uri).split(':').includes('album')) {
         type = 'ALBUM';
         response = await album({ uri : (track_uri || playlist_uri)});
+        // se for uma playlist
     } else if((track_uri || playlist_uri).split(':').includes('playlist')) {
         type = 'PLAYLIST';
         response = await getPlaylistItems({ uri : (track_uri || playlist_uri)});
         uris = response.data.items.map(i => !i.track.uri.split(':').includes('local') && i.track.uri).filter(i => i);
     }
+    console.log(type,response);
 
     fetch(`https://api.spotify.com/v1/me/player/play?device_id=${_device ? _device : ''}`, {
         method: 'PUT',
