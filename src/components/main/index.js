@@ -14,7 +14,8 @@ import { init } from '../../player';
 import SearchTrack from '../searchTrack';
 import TrackList from '../tracklist';
 import SideMenu from '../sidemenu';
-import Footer from '../footer';
+import Controls from '../controls';
+import View from '../view';
 import Login from '../login';
 
 
@@ -46,7 +47,8 @@ const StyledMain = styled.main`
     }
 `
 class Main extends React.Component {
-    consttructor() {
+    constructor() {
+        super();
         /**
          * Aplication Initiated Flag
          * @type {Boolean}
@@ -88,10 +90,10 @@ class Main extends React.Component {
                                     <button className="btn btn-outline-secondary" onClick={() => this.props.logout()}>logout</button>
                                 </header> */}
                                 <div className="content col-sm-9">
-                                    <TrackList list={(current || {})} />
+                                    <View current={current}></View>
                                 </div>
                             </div>
-                            <Footer current={current}></Footer>
+                            <Controls current={current}></Controls>
                         </main>
                     </StyledMain>
                 </>

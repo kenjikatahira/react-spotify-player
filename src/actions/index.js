@@ -6,7 +6,7 @@ import {
     get_recently_tracks
 } from '../api';
 
-import Track from '../api/Track';
+import Player from '../api/Player';
 /**
  * Retrieves user information
  *
@@ -39,8 +39,8 @@ export const getCurrentTrack = () => {
             response.data = lastTrack.track;
         }
 
-        const track = await Track.init(response.data);
-        console.log(track)
+        const track = await Player.init(response.data);
+        console.log(`TRACK`,track)
 
         dispatch({
             type : 'GET_CURRENT_TRACK',

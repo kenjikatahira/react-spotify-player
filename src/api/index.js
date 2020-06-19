@@ -124,12 +124,41 @@ export const get_album = ({uri}) => {
 
 /**
  * Request for a playlist
+ * @function get_playlist_cover_image
+ * @return {Promise}
+ */
+export const get_playlist_cover_image = ({uri}) => {
+    const id = uri.split(':');
+    return axios.get(`https://api.spotify.com/v1/playlists/${id[id.length-1]}/images`, {
+        headers : {
+            'content-type' : 'application/json',
+            'Authorization' : `Bearer ${getSession().access_token}`
+        }
+    });
+}
+
+/**
+ * Request for a playlist
  * @function get_playlist_items
  * @return {Promise}
  */
 export const get_playlist_items = ({uri}) => {
     const id = uri.split(':');
     return axios.get(`https://api.spotify.com/v1/playlists/${id[id.length-1]}/tracks`, {
+        headers : {
+            'content-type' : 'application/json',
+            'Authorization' : `Bearer ${getSession().access_token}`
+        }
+    });
+}
+
+/**
+ * Request for a playlist
+ * @function get_a_playlist
+ * @return {Promise}
+ */
+export const get_a_playlist = (id) => {
+    return axios.get('https://api.spotify.com/v1/playlists/' + id, {
         headers : {
             'content-type' : 'application/json',
             'Authorization' : `Bearer ${getSession().access_token}`

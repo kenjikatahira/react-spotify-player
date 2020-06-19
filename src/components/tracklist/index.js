@@ -1,5 +1,4 @@
 import React from 'react';
-import { play } from '../../player';
 import styled from 'styled-components'
 
 const StyledList = styled.ul`
@@ -23,7 +22,8 @@ const StyledList = styled.ul`
     }
 `
 const Tracklist = ({list}) => {
-    const { tracks } = list;
+    const { tracks,play } = list;
+
     const setTrackDuration = (duration) => {
         const minutes = Math.floor(duration / 60000);
         const seconds = ((duration % 60000) / 1000).toFixed(0);
@@ -31,7 +31,7 @@ const Tracklist = ({list}) => {
     }
     const renderList = (item) => {
         return (
-            <li className="track" key={item.id} onClick={() => {play({...item})}}>
+            <li className="track" key={item.id} onClick={() => {play({...list,...item})}}>
                 <div className="name">
                     <i className="fas fa-play" ></i>
                     <span>{item.name}</span>
