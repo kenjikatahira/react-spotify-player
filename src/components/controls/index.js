@@ -10,29 +10,29 @@ const StyledControls = styled.div`
 `
 
 const Controls = (props) => {
-    const { current } = props;
-    const { player } = current;
+    const { current, device_id} = props;
+    const { play,next,pause,previous,uri,tracks,name } = current;
     return(
         <>
             <StyledControls>
-                {/* <div className="controls">
+                <div className="controls">
                     <button className="btn btn-outline-secondary" onClick={previous}>
                         <i className="fas fa-backward"></i>
                     </button>
                     <button
                         className="btn btn-outline-secondary"
-                        onClick={() => play(current.uris)}
+                        onClick={() => play({uri,tracks,device_id})}
                     >
                         <i className="fas fa-play"></i>
                     </button>
-                    <button className="btn btn-outline-secondary" onClick={pause}>
+                    <button className="btn btn-outline-secondary" onClick={() => pause()}>
                         <i className="fas fa-pause"></i>
                     </button>
                     <button className="btn btn-outline-secondary" onClick={next}>
                         <i className="fas fa-forward"></i>
                     </button>
-                    {current.name}
-                </div> */}
+                    {name}
+                </div>
             </StyledControls>
         </>
     )

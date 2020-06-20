@@ -21,9 +21,9 @@ const StyledList = styled.ul`
         .name span { padding-left: 15px; display: inline-block; margin-bottom:0; }
     }
 `
-const Tracklist = ({list}) => {
-    const { tracks,play } = list;
-
+const Tracklist = (props) => {
+    const { device_id } = props;
+    const { tracks,play } = props.current;
     const setTrackDuration = (duration) => {
         const minutes = Math.floor(duration / 60000);
         const seconds = ((duration % 60000) / 1000).toFixed(0);
@@ -31,7 +31,7 @@ const Tracklist = ({list}) => {
     }
     const renderList = (item) => {
         return (
-            <li className="track" key={item.id} onClick={() => {play({...list,...item})}}>
+            <li className="track" key={item.id} onClick={() => {play({uri : item.uri, tracks ,device_id})}}>
                 <div className="name">
                     <i className="fas fa-play" ></i>
                     <span>{item.name}</span>

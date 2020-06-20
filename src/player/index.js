@@ -91,7 +91,7 @@ export const play = async (track) => {
 * Inicia a instancia do player do spotify
 * @function init
 */
-export const init = async ({currentTrack,getStatus}) => {
+export const init = async ({currentTrack,setDeviceId}) => {
     console.log('____init___');
     const player = new window.Spotify.Player({
         playerInstance: new window.Spotify.Player({ name: 'Kenjicas Player_' }),
@@ -99,16 +99,15 @@ export const init = async ({currentTrack,getStatus}) => {
         getOAuthToken: callback => callback(getSession().access_token),
         volume: 0.5
     });
-
     player.addListener('ready', ({device_id}) => {
-        _device = device_id;
+        setDeviceId(device_id);
         console.log('Ready - Device ID', device_id);
     });
 
     // update status - action
     player.connect().then(() => {
         player.addListener('player_state_changed', ({ position,duration,track_window: { current_track } }) => {
-            getStatus({ position,duration,current_track })
+            // getStatus({ position,duration,current_track })
         });
     })
 

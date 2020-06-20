@@ -4,6 +4,7 @@ const GET_USER = 'GET_USER';
 const GET_CURRENT_TRACK = 'GET_CURRENT_TRACK';
 const GET_PLAYLISTS = 'GET_PLAYLISTS';
 const GET_CONTEXT = 'GET_CONTEXT';
+const SET_DEVICE_ID = 'SET_DEVICE_ID';
 
 const LOGIN = 'LOGIN';
 const LOGOUT = 'LOGOUT';
@@ -65,10 +66,18 @@ const loginReducer = (state={},action) => {
     return state;
 }
 
+const deviceIdReducer = (state={},action) => {
+    if(action.type === SET_DEVICE_ID) {
+        return action.payload;
+    }
+    return state;
+}
+
 export default combineReducers({
     user : userReducer,
     logged : loginReducer,
     current : currentTrackReducer,
     playlists : playlistsReducer,
-    context : contextReducer
+    context : contextReducer,
+    device_id : deviceIdReducer
 });

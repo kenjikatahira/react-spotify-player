@@ -3,7 +3,8 @@ import {
     get_user,
     get_current_track,
     get_devices,get_playlists,
-    get_recently_tracks
+    get_recently_tracks,
+    get_a_playlist
 } from '../api';
 
 import Player from '../api/Player';
@@ -50,6 +51,23 @@ export const getCurrentTrack = () => {
 }
 
 /**
+ * Retrieves the current track information
+ *
+ * @function getPlaylist
+ * @return {Void}
+ */
+export const getPlaylist = (id) => {
+    return async dispatch => {
+        let {data} = await get_a_playlist(id);
+
+        dispatch({
+            type : 'GET_PLAYLIST',
+            payload : data
+        });
+    }
+}
+
+/**
  * Retrieves devices avaiable
  *
  * @function getDevices
@@ -58,12 +76,26 @@ export const getCurrentTrack = () => {
 export const getDevices = () => {
     return dispatch => {
         get_devices().then( data => {
-
             dispatch({
                 type : 'GET_DEVICES',
                 payload : data.data
             });
         })
+    }
+}
+
+/**
+ * Retrieves devices avaiable
+ *
+ * @function setDeviceId
+ * @return {Void}
+ */
+export const setDeviceId = (data) => {
+    return dispatch => {
+        dispatch({
+            type : 'SET_DEVICE_ID',
+            payload : data
+        });
     }
 }
 
