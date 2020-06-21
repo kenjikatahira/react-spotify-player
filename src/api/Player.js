@@ -45,9 +45,7 @@ class Player {
         const { data: images } = await get_playlist_cover_image(this.context);
         // try to get playlist's id
         if (((playlist || {}).href || "").split("/")[5]) {
-            info = await get_a_playlist(
-                ((playlist || {}).href || "").split("/")[5]
-            );
+            info = await get_a_playlist({uri : (playlist || {}).uri});
         }
         const [item] = playlist.items;
         this.playlist = { images, ...playlist };
@@ -97,24 +95,22 @@ class Player {
         this.track = track || {};
         this.uris = [];
         this.view = {};
+        this.name = '';
+        this.description = '';
         this.tracks = [];
         this.play = this.play;
         this.pause = this.pause;
         this.next = this.next;
-        this.timestamp = this.timestamp;
         this.setView = this.setView;
         this.previous = this.previous;
+        this.public = this.public;
         this.uri = (track || {}).uri || ((track || {}).item || {}).uri;
         this.name = (track || {}).name || ((track || {}).item || {}).name;
         this.album = (track || {}).album || ((track || {}).item || {}).album;
         this.artist = (track || {}).artists || ((track || {}).item || {}).artists;
         this.duration = (track || {}).duration_ms || ((track || {}).item || {}).duration_ms;
         this.duration_ms = (track || {}).duration_ms || ((track || {}).item || {}).duration_ms;
-        this.images = {
-            artist: {},
-            album: {},
-            playlist: {},
-        };
+        this.images = [];
     }
 
     previous() {
@@ -171,11 +167,18 @@ class Player {
             instance.tracks = data.tracks.items.filter((i) => i);
         } else if(uri.split(':').indexOf('playlist') >= 0) {
             const { data: playlist } = await get_playlist_items({uri});
+            const { data: playlistCover } = await get_playlist_cover_image({uri});
+            const { data: playlistInfo } = await get_a_playlist({uri});
+            console.log('infoooooo',playlistInfo)
+            instance.id = playlist.id;
+            instance.name = playlistInfo.name;
+            instance.description = playlistInfo.description;
+            instance.public = playlistInfo.public;
             instance.tracks = playlist.items.map((i) => i.track).filter((i) => i);
+            instance.images = playlistCover;
         } else if(uri.split(':').indexOf('artist') >= 0) {
             console.log('PLAYER ARTIST IMPLEMENTAR')
         }
-        instance.timestamp = new Date().valueOf();
         return instance;
     }
 

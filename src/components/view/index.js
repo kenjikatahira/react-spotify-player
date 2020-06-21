@@ -4,7 +4,7 @@ import TrackList from "../tracklist";
 
 class View extends React.Component {
     render() {
-        const { view,device_id } = this.props;
+        const { view } = this.props;
         return (
             <>
                 {this.props.view.indexOf('album') >= 0 ? (

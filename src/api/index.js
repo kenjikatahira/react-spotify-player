@@ -171,8 +171,9 @@ export const get_playlist_items = ({uri}) => {
  * @function get_a_playlist
  * @return {Promise}
  */
-export const get_a_playlist = (id) => {
-    return axios.get('https://api.spotify.com/v1/playlists/' + id, {
+export const get_a_playlist = ({uri}) => {
+    const id = uri.split(':');
+    return axios.get('https://api.spotify.com/v1/playlists/' + id[id.length-1], {
         headers : {
             'content-type' : 'application/json',
             'Authorization' : `Bearer ${getSession().access_token}`

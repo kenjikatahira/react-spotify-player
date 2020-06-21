@@ -10,6 +10,8 @@ import {
 const StyledList = styled.ul`
     list-style: none;
     padding: 15px;
+    overflow: hidden;
+    white-space: nowrap;
 
     li {
         padding: 5px;
@@ -20,11 +22,20 @@ const StyledList = styled.ul`
             margin-bottom: 0;
         }
 
-        .active:before {
+        &.active:before {
             content: "";
             border-left: 3px solid #1db954;
             position: relative;
             left: -18px;
+        }
+        &:hover::after {
+                content: attr(data-owner);
+                position: relative;
+                font-size: 12px;
+                left: 10px;
+                color: #fff;
+                white-space: nowrap;
+            }
         }
     }
 `;
@@ -43,8 +54,9 @@ class Main extends React.Component {
         this.props.getPlaylists();
     }
     renderList(item) {
+        console.log(item)
         return (
-            <li onClick={() => this.props.setView({uri : item.uri})} key={item.id}>{item.name}</li>
+            <li className={this.props.view === item.uri ? 'active' : ''} data-owner={`* by ${(item.owner || {}).display_name}`} id={item.uri} onClick={() => this.props.setView({uri : item.uri})} key={item.id}>{item.name}</li>
         )
     }
     render() {
@@ -60,7 +72,8 @@ class Main extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        playlists: state.playlists
+        playlists: state.playlists,
+        view : state.view
     };
 };
 
