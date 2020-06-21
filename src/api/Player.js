@@ -155,7 +155,6 @@ class Player {
         } else {
             uris = [uri];
         }
-        console.log('play',{uri,uris,device_id});
         fetch(`https://api.spotify.com/v1/me/player/play?device_id=${device_id}`, {
             method: 'PUT',
             body: JSON.stringify({ uris : uris }),

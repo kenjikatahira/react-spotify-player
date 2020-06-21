@@ -14,6 +14,7 @@ const StyledList = styled.ul`
     li {
         padding: 5px;
         font-weight: bold;
+        cursor : pointer;
 
         p.lead {
             margin-bottom: 0;
@@ -50,9 +51,7 @@ class Main extends React.Component {
         return(
             <StyledList>
                 {this.fixedList.map((i) => this.renderList(i))}
-                <li>
-                    <p class="lead">PLAYLIST</p>
-                </li>
+                <li className="lead">PLAYLIST</li>
                 {(this.props.playlists.items || []).length && this.props.playlists.items.map((i) => this.renderList(i))}
             </StyledList>
         )

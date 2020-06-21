@@ -19,13 +19,12 @@ const StyledMain = styled.main`
     overflow: hidden;
     font-family: "Gotham", sans-serif;
     background: #181818;
-    max-width: 1400px;
-    margin: 0 auto;
     padding: 0;
     color: #fff;
+    overflow: none;
 
     .menu, .browser {
-        height: 92vh;
+        height: 100vh;
     }
 
     .browser {
@@ -50,17 +49,19 @@ class Main extends React.Component {
         const { currentTrack, setDeviceId } = this.props;
         setTimeout(() => {
             init({ currentTrack, setDeviceId });
-        },100);
+        },1000);
         this.initiated = true;
+    }
+    UNSAFE_componentWillUpdate() {
+        !this.initiated  && this.props.logged.status === true && this.run();
     }
     async componentDidMount() {
         window.onSpotifyWebPlaybackSDKReady = () => {
             this.props.setView();
-            this.run();
         };
     }
     render() {
-        const { logged,  device_id, view, tracks } = this.props;
+        const { logged, view, tracks } = this.props;
         if (!logged.status) {
             return <Login />;
         } else {

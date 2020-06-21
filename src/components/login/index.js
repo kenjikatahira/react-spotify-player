@@ -24,7 +24,7 @@ class Login extends React.Component {
                 <SpotifyLogin
                     clientId={clientId}
                     redirectUri={redirectUri}
-                    onSuccess={(d) => { this.onSuccess(d) }}
+                    onSuccess={(response) => { this.onSuccess(response) }}
                     onFailure={this.onFailure}
                     scope={scope}
                 />
