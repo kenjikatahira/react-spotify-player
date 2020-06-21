@@ -6,7 +6,7 @@ import { getSession } from '../utils';
  * Scope to provide the right acess to information
  * @type scope
  */
-export const scope = 'user-read-private user-read-playback-state user-read-playback-position user-modify-playback-state user-top-read user-read-recently-played streaming user-read-email'
+export const scope = 'user-read-private user-library-read user-read-playback-state user-read-playback-position user-modify-playback-state user-top-read user-read-recently-played streaming user-read-email'
 
 /**
  * Basic request with the token provided
@@ -30,6 +30,20 @@ export const get = (url) => {
  */
 export const get_user = () => {
     return axios.get('https://api.spotify.com/v1/me', {
+        headers : {
+            'content-type' : 'application/json',
+            'Authorization' : `Bearer ${getSession().access_token}`
+        }
+    });
+}
+
+/**
+ * Request for the current track data
+ * @function get_featured_playlist
+ * @return {Promise}
+ */
+export const get_featured_playlist = () => {
+    return axios.get('https://api.spotify.com/v1/browse/featured-playlists?country=BR&limit=14', {
         headers : {
             'content-type' : 'application/json',
             'Authorization' : `Bearer ${getSession().access_token}`

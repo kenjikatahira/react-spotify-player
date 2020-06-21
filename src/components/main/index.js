@@ -5,44 +5,32 @@ import { connect } from "react-redux";
 import {
     logout,
     getUser,
-    getCurrentTrack,
     getPlaylists,
-    setDeviceId,
+    setView
 } from "../../actions";
 
-import { init } from "../../player";
+import { init } from "../../spotify";
 
-import SearchTrack from "../searchTrack";
-import TrackList from "../tracklist";
-import SideMenu from "../sidemenu";
-import Controls from "../controls";
 import View from "../view";
 import Login from "../login";
+import Playlists from "../playlists";
 
 const StyledMain = styled.main`
-    color: #ffffff;
+    color: #fff;
     overflow: hidden;
-    font-family: "Roboto", sans-serif;
+    font-family: "Gotham", sans-serif;
+    background: rgb(24, 24, 24);
+    color: #fff;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0;
 
-    header {
-        width: 100%;
-        height: 5vh;
-        background-color: #1f1a3c;
-    }
-    .sidemenu {
-        width: 240px;
+    .menu, .browser {
         height: 92vh;
-        background-color: #1f1a3c;
-        padding: 0;
-        margin: 0;
     }
 
-    .content {
-        width: 100%;
-        height: 92vh;
-        background-color: #18142f;
+    .browser {
         overflow: auto;
-        padding: 0;
     }
 `;
 class Main extends React.Component {
@@ -61,62 +49,36 @@ class Main extends React.Component {
      */
     run() {
         const { currentTrack, setDeviceId } = this.props;
-        init({ currentTrack, setDeviceId });
+        setTimeout(() => {
+            init({ currentTrack, setDeviceId });
+        },100);
         this.initiated = true;
     }
     async componentDidMount() {
         window.onSpotifyWebPlaybackSDKReady = () => {
-            console.log("onSpotifyWebPlaybackSDKReady");
-            this.props.getCurrentTrack();
-            this.props.getPlaylists();
+            this.props.setView();
+            this.run();
         };
     }
     render() {
-        const { logged, current, playlists, device_id } = this.props;
-        const {
-            tracks,
-            uri,
-            name,
-            next,
-            previous,
-            pause,
-            play
-        } = current;
-        current.track && !this.initiated && this.run();
+        const { logged,  device_id, view, tracks } = this.props;
         if (!logged.status) {
             return <Login />;
         } else {
             return (
                 <>
                     <StyledMain>
-                        <main>
-                            <div className="row">
-                                <div className="col-sm-3">
-                                    <SideMenu playlists={playlists} />
-                                </div>
-                                {/* <header>
-                                    <button className="btn btn-outline-secondary" onClick={() => this.props.logout()}>logout</button>
-                                </header> */}
-                                <div className="content col-sm-9">
-                                    <View
-                                        current={current}
-                                        device_id={device_id}
-                                    ></View>
-                                </div>
+                        <div className="row">
+                            <div className="menu col-sm-3">
+                                <Playlists></Playlists>
                             </div>
-                            <Controls
-                                current={{
-                                    next,
-                                    previous,
-                                    pause,
-                                    play,
-                                    tracks,
-                                    uri,
-                                    name
-                                }}
-                                device_id={device_id}
-                            ></Controls>
-                        </main>
+                            <div className="browser col-sm-9">
+                                <View
+                                    view={view}
+                                    tracks={tracks}
+                                ></View>
+                            </div>
+                        </div>
                     </StyledMain>
                 </>
             );
@@ -129,16 +91,13 @@ const mapStateToProps = (state) => {
         user: state.user,
         logged: state.logged,
         playlists: state.playlists,
-        current: state.current,
-        context: state.context,
-        device_id: state.device_id,
+        view: state.view
     };
 };
 
 export default connect(mapStateToProps, {
     logout,
     getUser,
-    getCurrentTrack,
     getPlaylists,
-    setDeviceId,
+    setView
 })(Main);
