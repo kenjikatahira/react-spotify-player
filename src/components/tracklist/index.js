@@ -51,7 +51,7 @@ class Tracklist extends React.Component {
                 this.props.player.play({
                     uri : item.uri,
                     uris : this.props.player.tracks.map(i=>i.uri),
-                    device_id : window.localStorage.getItem('device_id')
+                    device_id : window.localStorage.getItem('spotify_device_id')
                 })
             }}>
                 <div className="name">
