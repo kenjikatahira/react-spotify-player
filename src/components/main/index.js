@@ -10,7 +10,7 @@ import {
     setDeviceId
 } from "../../actions";
 
-import { init } from "../../spotify";
+import Player from "./../../api/Player";
 
 import View from "../view";
 import Login from "../login";
@@ -49,7 +49,7 @@ class Main extends React.Component {
     run() {
         const { currentTrack, setDeviceId } = this.props;
         setTimeout(() => {
-            init({ currentTrack, setDeviceId });
+            Player.init({ currentTrack, setDeviceId });
         },1000);
         this.initiated = true;
     }

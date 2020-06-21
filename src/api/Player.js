@@ -104,7 +104,6 @@ class Player {
         this.timestamp = this.timestamp;
         this.setView = this.setView;
         this.previous = this.previous;
-        this.context = (track || {}).context || {};
         this.uri = (track || {}).uri || ((track || {}).item || {}).uri;
         this.name = (track || {}).name || ((track || {}).item || {}).name;
         this.album = (track || {}).album || ((track || {}).item || {}).album;
@@ -178,6 +177,28 @@ class Player {
         }
         instance.timestamp = new Date().valueOf();
         return instance;
+    }
+
+    static init({setDeviceId}) {
+        console.log('____init___');
+        const player = new window.Spotify.Player({
+            playerInstance: new window.Spotify.Player({ name: 'Kenjicas Player_' }),
+            name: 'Kenjicas Player',
+            getOAuthToken: callback => callback(getSession().access_token),
+            volume: 0.5
+        });
+
+        player.addListener('ready', ({device_id}) => {
+            setDeviceId(device_id);
+            console.log('Ready - Device ID', device_id);
+        });
+
+        // update status - action
+        player.connect().then(() => {
+            player.addListener('player_state_changed', ({ position,duration,track_window: { current_track } }) => {
+                // getStatus({ position,duration,current_track })
+            });
+        });
     }
 }
 
