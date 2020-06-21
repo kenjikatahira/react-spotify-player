@@ -144,6 +144,9 @@ class Player {
     }
 
     async play({uri,tracks,device_id}) {
+        console.log(`playyyyy`,{
+            uri,tracks,device_id
+        })
         let uris;
         if(tracks) {
             uris = orderList(uri,tracks.map(i => i.uri));
