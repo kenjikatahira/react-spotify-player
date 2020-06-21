@@ -4,7 +4,7 @@
     "author": "Kenji Katahira",
     "engines": {
         "node": "10.18.0"
-    }
+    },
     "dependencies": {
         "@testing-library/jest-dom": "^4.2.4",
         "@testing-library/react": "^9.5.0",
@@ -33,14 +33,14 @@
     },
     "browserslist": {
     "production": [
-    ">0.2%",
-    "not dead",
-    "not op_mini all"
+        ">0.2%",
+        "not dead",
+        "not op_mini all"
     ],
     "development": [
-    "last 1 chrome version",
-    "last 1 firefox version",
-    "last 1 safari version"
+        "last 1 chrome version",
+        "last 1 firefox version",
+        "last 1 safari version"
     ]
   }
 }
