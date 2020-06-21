@@ -54,7 +54,6 @@ class Main extends React.Component {
         this.props.getPlaylists();
     }
     renderList(item) {
-        console.log(item)
         return (
             <li className={this.props.view === item.uri ? 'active' : ''} data-owner={`* by ${(item.owner || {}).display_name}`} id={item.uri} onClick={() => this.props.setView({uri : item.uri})} key={item.id}>{item.name}</li>
         )
