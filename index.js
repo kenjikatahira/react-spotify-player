@@ -1,6 +1,6 @@
 const http = require('http');
 const hostname = 'localhost';
-const port = 443;
+const port = 3000;
 
 
 fs.readFile('./build/index.html', function(err, content){
