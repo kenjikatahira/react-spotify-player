@@ -1,14 +1,25 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
-// App Core
-import Core from './components/core';
+import { isLogged } from './actions';
 
-function App() {
-  return (
-    <div className="app">
-      <Core></Core>
-    </div>
-  );
+import Main from './components/main';
+
+class App extends React.Component {
+    componentDidMount() {
+        this.props.isLogged();
+    }
+    render() {
+        return (
+            <Main></Main>
+        )
+    }
 }
 
-export default App;
+const mapStateToProps = (state) => {
+    return {
+        logged : state.logged
+    };
+}
+
+export default connect(mapStateToProps, { isLogged })(App);

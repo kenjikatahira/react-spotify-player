@@ -16,7 +16,7 @@ class Main extends React.Component {
         console.log(playlist)
         return (
             <div className="item col-sm-3" onClick={() => { this.props.setView({uri : playlist.uri}) }} key={playlist.id}>
-                <img className="img-thumbnail" src={playlist.images[0].url} />
+            <img className="img-thumbnail" src={playlist.images[0].url} alt={playlist.name}/>
                 <div className="card-body">
                     <h5 className="card-title">{playlist.name}</h5>
                     <small className="card-text">{playlist.description}</small>

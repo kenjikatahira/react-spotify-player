@@ -16,14 +16,13 @@ import Login from "../login";
 import Playlists from "../playlists";
 
 const StyledMain = styled.main`
-    color: #fff;
     overflow: hidden;
     font-family: "Gotham", sans-serif;
-    background: rgb(24, 24, 24);
-    color: #fff;
+    background: #181818;
     max-width: 1400px;
     margin: 0 auto;
     padding: 0;
+    color: #fff;
 
     .menu, .browser {
         height: 92vh;

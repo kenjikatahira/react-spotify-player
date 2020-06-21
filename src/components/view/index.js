@@ -3,9 +3,6 @@ import Home from "../home";
 import TrackList from "../tracklist";
 
 class View extends React.Component {
-    constructor(props) {
-        super(props);
-    }
     render() {
         const { view,device_id } = this.props;
         return (
