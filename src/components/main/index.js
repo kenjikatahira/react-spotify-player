@@ -63,7 +63,7 @@ class Main extends React.Component {
     }
     render() {
         const { logged, view, tracks } = this.props;
-        if (!logged.status) {
+        if (!logged.status && this.props.device_id) {
             return <Login />;
         } else {
             return (
@@ -92,7 +92,8 @@ const mapStateToProps = (state) => {
         user: state.user,
         logged: state.logged,
         playlists: state.playlists,
-        view: state.view
+        view: state.view,
+        device_id: state.device_id
     };
 };
 
