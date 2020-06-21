@@ -14,7 +14,7 @@ export const init = async ({currentTrack,setDeviceId}) => {
         volume: 0.5
     });
     player.addListener('ready', ({device_id}) => {
-        window.localStorage.setItem('spotify_device_id', device_id);
+        setDeviceId(device_id);
         console.log('Ready - Device ID', device_id);
     });
 

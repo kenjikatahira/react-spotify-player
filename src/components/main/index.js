@@ -6,7 +6,8 @@ import {
     logout,
     getUser,
     getPlaylists,
-    setView
+    setView,
+    setDeviceId
 } from "../../actions";
 
 import { init } from "../../spotify";
@@ -99,5 +100,6 @@ export default connect(mapStateToProps, {
     logout,
     getUser,
     getPlaylists,
-    setView
+    setView,
+    setDeviceId
 })(Main);
