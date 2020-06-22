@@ -8,6 +8,7 @@ import {
 } from "./index";
 
 import { orderList,getSession } from "../utils";
+import { getDevices } from "../actions";
 
 class Player {
     constructor(props) {
@@ -172,7 +173,6 @@ class Player {
             const { data: playlist } = await get_playlist_items({uri});
             const { data: playlistCover } = await get_playlist_cover_image({uri});
             const { data: playlistInfo } = await get_a_playlist({uri});
-            console.log('infoooooo',playlistInfo)
             instance.id = playlist.id;
             instance.name = playlistInfo.name;
             instance.description = playlistInfo.description;
@@ -187,17 +187,20 @@ class Player {
 
     static init({setDeviceId}) {
         console.log('____init___');
+
         const player = new window.Spotify.Player({
             playerInstance: new window.Spotify.Player({ name: 'Kenjicas Player_' }),
             name: 'Kenjicas Player',
-            getOAuthToken: callback => callback(getSession().access_token),
-            volume: 0.5
+            getOAuthToken: callback => callback(getSession().access_token)
         });
 
         player.addListener('ready', ({device_id}) => {
             setDeviceId(device_id);
             console.log('Ready - Device ID', device_id);
         });
+        getDevices().then(({data}) => {
+            console.log('___getDevices___', data);
+        })
 
         // update status - action
         player.connect().then(() => {

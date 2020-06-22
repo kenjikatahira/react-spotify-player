@@ -31,6 +31,15 @@ const StyledMain = styled.main`
     .browser {
         overflow: auto;
     }
+
+    .debug {
+        padding: 3px;
+        background: black;
+        color: #fff;
+        position: absolute;
+        bottom:0;
+        right:0;
+    }
 `;
 class Main extends React.Component {
     constructor() {
@@ -79,6 +88,10 @@ class Main extends React.Component {
                                     tracks={tracks}
                                 ></View>
                             </div>
+                        </div>
+                        <div className="debug">
+                            <p>{JSON.stringify(process.env)}</p>
+                            <p>{JSON.stringify(this.props.device_id)}</p>
                         </div>
                     </StyledMain>
                 </>

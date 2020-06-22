@@ -13,7 +13,6 @@ const StyledHome = styled.main`
 
 class Main extends React.Component {
     renderAlbums(playlist) {
-        console.log(playlist)
         return (
             <div className="item col-sm-3" onClick={() => { this.props.setView({uri : playlist.uri}) }} key={playlist.id}>
             <img className="img-thumbnail" src={playlist.images[0].url} alt={playlist.name}/>
