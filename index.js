@@ -6,6 +6,7 @@ const fs = require('fs');
 app.use(express.static('build'))
 
 app.get('/', (req, res) => {
+    res.set('Cache-Control', 'public, max-age=31557600');
     res.sendFile(__dirname + '/build/index.html');
 })
 
