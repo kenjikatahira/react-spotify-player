@@ -194,9 +194,19 @@ class Player {
             getOAuthToken: callback => callback(getSession().access_token)
         });
 
+        console.log('instance -',player)
+
         player.addListener('ready', ({device_id}) => {
             setDeviceId(device_id);
             console.log('Ready - Device ID', device_id);
+        });
+
+        player.on('authentication_error', ({ message }) => {
+            console.error('Failed to authenticate', message);
+        });
+
+        player.on('initialization_error', ({ message }) => {
+            console.error('Failed to initialize', message);
         });
 
         // update status - action
