@@ -1,17 +1,12 @@
-const http = require('http');
-const hostname = 'localhost';
+const express = require('express');
+const app = express();
 const port = 3000;
+const fs = require('fs');
 
+app.use(express.static('build'))
 
-fs.readFile('./build/index.html', function(err, content){
-    const server = http.createServer((req, res) => {
-        res.statusCode = 200;
-        res.setHeader('Content-Type', 'text/html');
-        res.end(helpText);
-            response.write(content);
-            response.end();
-        });
-        server.listen(port, hostname, () => {
-            console.log(`Server running at http://${hostname}:${port}/`);
-        });
-});
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/build/index.html');
+})
+
+app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`))
