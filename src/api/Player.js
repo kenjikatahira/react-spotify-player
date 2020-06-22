@@ -194,17 +194,18 @@ class Player {
             getOAuthToken: callback => callback(getSession().access_token)
         });
 
-        player.addListener('ready', ({device_id}) => {
-            setDeviceId(device_id);
-            console.log('Ready - Device ID', device_id);
-        });
 
-        get_devices().then(({data}) => {
-            console.log('___getDevices___', data);
-        })
+        player.connect().then(() => {
+            player.addListener('ready', ({device_id}) => {
+                setDeviceId(device_id);
+                console.log('Ready - Device ID', device_id);
+            });
+
+            get_devices().then(({data}) => {
+                console.log('___getDevices___', data);
+            })
 
         // update status - action
-        player.connect().then(() => {
             player.addListener('player_state_changed', ({ position,duration,track_window: { current_track } }) => {
                 // getStatus({ position,duration,current_track })
             });
