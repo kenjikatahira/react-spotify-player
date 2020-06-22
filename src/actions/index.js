@@ -35,7 +35,6 @@ export const getUser = () => {
 export const getFeaturedPlaylist = () => {
     return dispatch => {
         get_featured_playlist().then( data => {
-            console.log(`teste`,data)
             dispatch({
                 type : 'GET_FEATURED_PLAYLIST',
                 payload : data.data

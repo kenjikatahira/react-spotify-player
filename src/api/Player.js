@@ -8,7 +8,7 @@ import {
 } from "./index";
 
 import { orderList,getSession } from "../utils";
-import { getDevices } from "../actions";
+import { get_devices } from "./..//api";
 
 class Player {
     constructor(props) {
@@ -198,7 +198,8 @@ class Player {
             setDeviceId(device_id);
             console.log('Ready - Device ID', device_id);
         });
-        getDevices().then(({data}) => {
+
+        get_devices().then(({data}) => {
             console.log('___getDevices___', data);
         })
 
