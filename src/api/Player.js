@@ -164,10 +164,14 @@ class Player {
 
     static async setTracks({uri}) {
         const instance = new this();
+
         if(uri.split(':').indexOf('album') >= 0) {
+
             const {data} = await get_album({uri});
             instance.tracks = data.tracks.items.filter((i) => i);
+
         } else if(uri.split(':').indexOf('playlist') >= 0) {
+
             const { data: playlist } = await get_playlist_items({uri});
             const { data: playlistCover } = await get_playlist_cover_image({uri});
             const { data: playlistInfo } = await get_a_playlist({uri});
@@ -177,6 +181,7 @@ class Player {
             instance.public = playlistInfo.public;
             instance.tracks = playlist.items.map((i) => i.track).filter((i) => i);
             instance.images = playlistCover;
+
         } else if(uri.split(':').indexOf('artist') >= 0) {
             console.log('PLAYER ARTIST IMPLEMENTAR')
         }
