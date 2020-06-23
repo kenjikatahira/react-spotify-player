@@ -35,16 +35,14 @@ class Login extends React.Component {
         return (
             <StyledLogin>
                 <div className="login container">
-                    <form>
-                        <SpotifyLogin
-                            className="btn btn-light"
-                            clientId={clientId}
-                            redirectUri={redirectUri}
-                            onSuccess={(response) => { this.onSuccess(response) }}
-                            onFailure={this.onFailure}
-                            scope={scope}
-                        />
-                    </form>
+                    <SpotifyLogin
+                        className="btn btn-light"
+                        clientId={clientId}
+                        redirectUri={redirectUri}
+                        onSuccess={(response) => { this.onSuccess(response) }}
+                        onFailure={this.onFailure}
+                        scope={scope}
+                    />
                 </div>
             </StyledLogin>
         )
