@@ -8,7 +8,8 @@ import {
 } from "./index";
 
 import { orderList,getSession } from "../utils";
-import { get_devices } from "./..//api";
+
+let cache = {};
 
 class Player {
     constructor(props) {
@@ -144,19 +145,16 @@ class Player {
         });
     }
 
-    async play({uri,tracks,device_id}) {
+    async play({uri,uris,device_id}) {
         console.log(`playyyyy`,{
-            uri,tracks,device_id
+            uri,uris,device_id
         })
-        let uris;
-        if(tracks) {
-            uris = orderList(uri,tracks.map(i => i.uri));
-        } else {
-            uris = [uri];
-        }
+
+        let queue = orderList(uri,uris.map(({uri}) => uri));
+
         fetch(`https://api.spotify.com/v1/me/player/play?device_id=${device_id}`, {
             method: 'PUT',
-            body: JSON.stringify({ uris : uris }),
+            body: JSON.stringify({ uris : queue || [uri] }),
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${getSession().access_token}`

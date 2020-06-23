@@ -4,7 +4,7 @@ const GET_USER = 'GET_USER';
 const GET_CURRENT_TRACK = 'GET_CURRENT_TRACK';
 const GET_PLAYLISTS = 'GET_PLAYLISTS';
 const SET_DEVICE_ID = 'SET_DEVICE_ID';
-const GET_FEATURED_PLAYLIST = 'GET_FEATURED_PLAYLIST';
+const GET_HOME = 'GET_HOME';
 const SET_VIEW = 'SET_VIEW';
 const GET_PLAYER = 'GET_PLAYER';
 
@@ -22,8 +22,8 @@ const userReducer = (state={},action) => {
     return state;
 }
 
-const featuredPlaylistReducer = (state={},action) => {
-    if(action.type === GET_FEATURED_PLAYLIST) {
+const homeReducer = (state={},action) => {
+    if(action.type === GET_HOME) {
         return { ...state , ...action.payload };
     }
     return state;
@@ -88,7 +88,7 @@ export default combineReducers({
     logged : loginReducer,
     playlists : playlistsReducer,
     device_id : deviceIdReducer,
-    home : featuredPlaylistReducer,
+    home : homeReducer,
     view : viewReducer,
     player : playerReducer
 });

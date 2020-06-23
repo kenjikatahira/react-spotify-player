@@ -9,6 +9,7 @@ import {
 } from '../api';
 
 import Player from '../api/Player';
+
 /**
  * Retrieves user information
  *
@@ -27,16 +28,17 @@ export const getUser = () => {
 }
 
 /**
- * Retrieves user information
+ * Retrieves home data
  *
  * @function getUser
  * @return {Void}
  */
-export const getFeaturedPlaylist = () => {
+export const getHome = () => {
     return dispatch => {
         get_featured_playlist().then( data => {
+            console.log(data)
             dispatch({
-                type : 'GET_FEATURED_PLAYLIST',
+                type : 'GET_HOME',
                 payload : data.data
             });
         })
@@ -46,7 +48,7 @@ export const getFeaturedPlaylist = () => {
 
 
 /**
- * Retrieves the current track information
+ * Retrieves the current track
  *
  * @function getCurrentTrack
  * @return {Void}
@@ -71,7 +73,7 @@ export const getCurrentTrack = () => {
 }
 
 /**
- * Retrieves the current track information
+ * Retrieves a playlist
  *
  * @function getPlaylist
  * @return {Void}
@@ -79,7 +81,6 @@ export const getCurrentTrack = () => {
 export const getPlaylist = (id) => {
     return async dispatch => {
         let {data} = await get_a_playlist(id);
-
         dispatch({
             type : 'GET_PLAYLIST',
             payload : data
@@ -105,7 +106,7 @@ export const getDevices = () => {
 }
 
 /**
- * Retrieves devices avaiable
+ * Sets a deviceId
  *
  * @function setDeviceId
  * @return {Void}
@@ -120,7 +121,7 @@ export const setDeviceId = (data) => {
 }
 
 /**
- * Retrieves usuer's playlists
+ * Retrieves user's playlists
  *
  * @function getPlaylists
  * @return {Void}
@@ -173,11 +174,14 @@ export const login = (response) => {
 }
 
 /**
+ * Sets the app's view ( browse,home,playlists,album )
  * @function setView
+ * @param props contains the uri of a song or playlist
  * @return {Void}
  */
 export const setView = (props) => {
     return async dispatch => {
+        (props || {}).uri && window.localStorage.setItem('last_uri',props.uri);
         dispatch({
             type : 'SET_VIEW',
             payload : (props || {}).uri || 'home'
@@ -186,6 +190,7 @@ export const setView = (props) => {
 }
 
 /**
+ * Return the instance of the Player
  * @function getPlayer
  * @return {Void}
  */
@@ -201,7 +206,7 @@ export const getPlayer = ({uri}) => {
 }
 
 /**
- * Removes authorization data
+ * Clear the authorization data
  * @function logout
  * @return {Void}
  */

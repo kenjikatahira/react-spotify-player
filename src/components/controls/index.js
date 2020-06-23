@@ -1,41 +1,58 @@
 import React from 'react';
 import styled from 'styled-components'
+import { connect } from "react-redux";
 
 const StyledControls = styled.div`
-    background-color: #282148;
-    height: 8vh;
     .controls {
+        text-align: center;
         button svg { color: #fff; }
     }
 `
 
-const Controls = (props) => {
-    const { current, device_id} = props;
-    const { play,next,pause,previous,uri,tracks,name } = current;
-    return(
-        <>
-            <StyledControls>
-                <div className="controls">
-                    <button className="btn btn-outline-secondary" onClick={previous}>
-                        <i className="fas fa-backward"></i>
-                    </button>
-                    <button
-                        className="btn btn-outline-secondary"
-                        onClick={() => play({uri,tracks,device_id})}
-                    >
-                        <i className="fas fa-play"></i>
-                    </button>
-                    <button className="btn btn-outline-secondary" onClick={() => pause()}>
-                        <i className="fas fa-pause"></i>
-                    </button>
-                    <button className="btn btn-outline-secondary" onClick={next}>
-                        <i className="fas fa-forward"></i>
-                    </button>
-                    {name}
-                </div>
-            </StyledControls>
-        </>
-    )
+class Controls extends React.Component {
+    render() {
+        if(this.props.device_id) {
+            return(
+                <>
+                    <StyledControls>
+                        <div className="controls">
+                            <button className="btn btn-outline-secondary" onClick={this.props.player.previous}>
+                                <i className="fas fa-backward"></i>
+                            </button>
+                            {/* <button
+                                className="btn btn-outline-secondary"
+                                onClick={() => this.props.player.play({
+                                    uri : this.props.player.uri,
+                                    tracks : this.props.player.tracks,
+                                    device_id : this.props.player.device_id
+                                })}
+                            >
+                                <i className="fas fa-play"></i>
+                            </button>
+                            <button className="btn btn-outline-secondary" onClick={this.props.player.pause}>
+                                <i className="fas fa-pause"></i>
+                            </button> */}
+                            <button className="btn btn-outline-secondary" onClick={this.props.player.next}>
+                                <i className="fas fa-forward"></i>
+                            </button>
+                        </div>
+                    </StyledControls>
+                </>
+            )
+        } else {
+            return(
+                <div>loading</div>
+            )
+        }
+    }
 }
+const mapStateToProps = (state) => {
+    return {
+        view: state.view,
+        player: state.player,
+        device_id: state.device_id,
+    };
+};
 
-export default Controls;
+export default connect(mapStateToProps)(Controls);
+

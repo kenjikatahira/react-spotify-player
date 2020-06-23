@@ -60,7 +60,7 @@ class Tracklist extends React.Component {
                 if(this.props.device_id) {
                     this.props.player.play({
                         uri : item.uri,
-                        uris : this.props.player.tracks.map(i=>i.uri),
+                        uris : this.props.player.tracks,
                         device_id : this.props.device_id
                     })
                 }

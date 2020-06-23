@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { connect } from "react-redux";
 
 import {
-    getFeaturedPlaylist,
+    getHome,
     setView
 } from "../../actions";
 
@@ -24,7 +24,7 @@ class Main extends React.Component {
         )
     }
     componentDidMount() {
-        this.props.getFeaturedPlaylist();
+        this.props.getHome();
     }
     render() {
         const { playlists } = (this.props.home || {});
@@ -33,6 +33,7 @@ class Main extends React.Component {
                 <>
                     <StyledHome>
                         <div className="container">
+                            <h1>{this.props.home.message}</h1>
                             <div className="row">
                                 {playlists.items.map(this.renderAlbums.bind(this))}
                             </div>
@@ -61,6 +62,6 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps, {
-    getFeaturedPlaylist,
+    getHome,
     setView
 })(Main);

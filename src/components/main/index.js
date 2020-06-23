@@ -15,10 +15,11 @@ import Player from "./../../api/Player";
 import View from "../view";
 import Login from "../login";
 import Playlists from "../playlists";
+import Controls from "../controls";
 
 const StyledMain = styled.main`
     overflow: hidden;
-    font-family: "Gotham", sans-serif;
+    font-family: "Signika";
     background: #181818;
     padding: 0;
     color: #fff;
@@ -65,14 +66,16 @@ class Main extends React.Component {
     UNSAFE_componentWillUpdate() {
         !this.initiated  && this.props.logged.status === true && this.run();
     }
-    async componentDidMount() {
+    componentDidMount() {
         window.onSpotifyWebPlaybackSDKReady = () => {
-            this.props.setView();
+            const lastPage = window.localStorage.getItem('last_uri');
+            this.props.setView(lastPage ? { uri : lastPage} : '');
         };
     }
     render() {
         const { logged, view, tracks } = this.props;
-        if (!logged.status && this.props.device_id) {
+
+        if(!logged.status) {
             return <Login />;
         } else {
             return (
@@ -81,6 +84,7 @@ class Main extends React.Component {
                         <div className="row">
                             <div className="menu col-sm-3">
                                 <Playlists></Playlists>
+                                <Controls></Controls>
                             </div>
                             <div className="browser col-sm-9">
                                 <View
@@ -89,14 +93,22 @@ class Main extends React.Component {
                                 ></View>
                             </div>
                         </div>
-                        <div className="debug">
-                            <p>{JSON.stringify(process.env)}</p>
-                            <p>{JSON.stringify(this.props.device_id)}</p>
-                        </div>
+                        {
+                        process.env.NODE_ENV === 'development' ?
+                        (
+                            <div className="debug">
+                                <p>{JSON.stringify(process.env)}</p>
+                                <p>{JSON.stringify(this.props.device_id)}</p>
+                                <p>{JSON.stringify(this.props.playlists.length)}</p>
+                            </div>
+                        ) :
+                        ''
+                    }
                     </StyledMain>
                 </>
             );
         }
+
     }
 }
 
