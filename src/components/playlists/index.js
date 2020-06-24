@@ -23,7 +23,6 @@ const StyledList = styled.ul`
         }
 
         &.active:before {
-            content: "";
             border-left: 3px solid #1db954;
             position: relative;
             left: -18px;

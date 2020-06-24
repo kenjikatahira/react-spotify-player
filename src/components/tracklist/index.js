@@ -2,14 +2,15 @@ import React from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
 import { getPlayer,setView } from "../../actions";
-import { get_playlist_items } from "../../api";
 
 const StyledList = styled.div`
-
+    padding: 20px 0;
     .info {
-        padding: 0 48px;
+        padding: 10px 0;
+        margin-bottom: 15px;
+
         img {
-            width: 320px;
+            width: 350px;
             padding: 15px;
         }
     }
@@ -19,32 +20,29 @@ const StyledList = styled.div`
         margin: 0;
         padding: 10px;
 
-        tr,td {
-            background: #181818;
-        }
-
-        td:hover {
-            .play {
-                display: block;
+        tr {
+            &:not(.header):hover td{
+                background:rgba(255,255,255,.1);
             }
         }
 
-        td span:hover {
+        tr,td {
+            background: rgba(24, 24, 24,1);
             cursor: pointer;
-            border-bottom: 1px solid #fff;
+
+            &:hover {
+                .play { visibility: visible;  }
+            }
+
+            .play { visibility: hidden; }
+
+            span:hover {
+                border-bottom: 1px solid #fff;
+            }
         }
     }
 `;
 class Tracklist extends React.Component {
-    UNSAFE_componentWillUpdate(nextProps) {
-        if (
-            ((nextProps.player || {}).tracks || []).length &&
-            ((this.props.player || {}).tracks || []).length &&
-            this.props.view !== nextProps.view
-            ) {
-            this.props.getPlayer({ uri: nextProps.view });
-        }
-    }
     componentWillMount() {
         this.props.getPlayer({ uri: this.props.view });
     }
@@ -82,7 +80,10 @@ class Tracklist extends React.Component {
     renderList(item,index) {
         return (
             <tr key={item.id}>
-                <td>{index}</td>
+                <td>
+                    <i className="play fas fa-play"></i>
+                    {/* <i className="fas fa-pause"></i> */}
+                </td>
                 <td>
                     <span onClick={() => {
                         if(this.props.device_id) {
@@ -113,6 +114,15 @@ class Tracklist extends React.Component {
             </tr>
         );
     }
+    UNSAFE_componentWillUpdate(nextProps) {
+        if (
+            ((nextProps.player || {}).tracks || []).length &&
+            ((this.props.player || {}).tracks || []).length &&
+            this.props.view !== nextProps.view
+            ) {
+            this.props.getPlayer({ uri: nextProps.view });
+        }
+    }
     render() {
         const { tracks, images, name, description } = this.props.player;
         if (tracks) {
@@ -133,12 +143,12 @@ class Tracklist extends React.Component {
                             </div>
                             <table className="table table-striped table-dark">
                                 <thead>
-                                    <tr>
-                                    <th scope="col"></th>
-                                    <th scope="col">Title</th>
-                                    <th scope="col">Artist</th>
-                                    <th scope="col">Album</th>
-                                    <th scope="col">length</th>
+                                    <tr class="header">
+                                        <th scope="col"></th>
+                                        <th scope="col">Title</th>
+                                        <th scope="col">Artist</th>
+                                        <th scope="col">Album</th>
+                                        <th scope="col">length</th>
                                     </tr>
                                 </thead>
                                 <tbody>

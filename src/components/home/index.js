@@ -8,18 +8,23 @@ import {
 } from "../../actions";
 
 const StyledHome = styled.main`
-
-    .album-row {
+    .albums-row {
         display: flex;
         flex-direction: row;
         overflow: hidden;
         width: 100%;
         white-space: nowrap;
-        height: 270px;
         padding: 10px 0;
         margin-bottom: 25px;
         .album {
             width: 240px;
+            .card-body {
+                padding: 10px 0;
+            }
+            .card-body .card-text {
+                display : block;
+                white-space: pre-wrap;
+            }
         }
     }
 
@@ -43,7 +48,7 @@ class Main extends React.Component {
                 <h2>
                     {row.message}
                 </h2>
-                <div class="album-row">
+                <div class="albums-row">
                     {row.items.map(this.renderAlbums.bind(this))}
                 </div>
             </>

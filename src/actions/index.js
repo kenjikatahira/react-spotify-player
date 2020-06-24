@@ -5,7 +5,8 @@ import {
     get_devices,get_playlists,
     get_recently_tracks,
     get_a_playlist,
-    get_featured_playlist
+    get_featured_playlist,
+    top_artists
 } from '../api';
 
 import Player from '../api/Player';
@@ -35,39 +36,67 @@ export const getUser = () => {
  */
 export const getHome = () => {
     return async dispatch => {
-        const promises = [get_recently_tracks(),get_featured_playlist()];
-        const [
-            { data : recentlyTracks },
-            { data : featuredPlaylists }
-        ] = await Promise.all(Object.values(promises));
-        let  ids = [];
-        let albums = recentlyTracks.items.map(item => item.track.album);
+        const promises = [get_recently_tracks(),get_featured_playlist(),top_artists()];
+        const [ { data : recentlyTracks }, { data : featuredPlaylists }, { data : topArtists } ] = await Promise.all(Object.values(promises));
+        /**
+         * Model array of recently tracks to albums for the homepage view
+         *
+         * @function factoryRecentlyTracks
+         * @return {Void}
+         */
+        const factoryRecentlyTracks = (response) => {
+            let  ids = [];
+            let albums = response.items.map(item => item.track.album);
 
-        albums = albums.filter(item => {
-            if(ids.includes(item.id)) return false;
-            ids.push(item.id);
-            return item;
-        })
+            albums = albums.filter(item => {
+                if(ids.includes(item.id)) return false;
+                ids.push(item.id);
+                return item;
+            });
 
-        console.log(albums)
-
-        const data = {
-            recentlyTracks : {
-                next : recentlyTracks.next,
-                limit : recentlyTracks.limit,
-                href : recentlyTracks.href,
+            return {
+                next : response.next,
+                limit : response.limit,
+                href : response.href,
                 message : 'Recently Played',
-                items : albums
-            },
-            featuredPlaylists : {
-                message : featuredPlaylists.message,
-                items : featuredPlaylists.playlists.items
+                items : albums,
+                type : 'recently-played'
             }
         }
-        console.log(data.recentlyTracks)
+        /**
+         * Model the playlist response for the homepage view
+         *
+         * @function factoryPlaylists
+         * @return {Void}
+         */
+        const factoryPlaylists = (response) => {
+            return {
+                message : response.message,
+                items : response.playlists.items,
+                type : 'playlists'
+            }
+        }
+        /**
+         * Model user's top artists response for the homepage view
+         *
+         * @function factoryTopArtists
+         * @return {Void}
+         */
+        const factoryTopArtists = (response) => {
+            return {
+                message : 'Top Artists',
+                items : response.items,
+                type : 'top-artists'
+            };
+        }
+
         dispatch({
             type : 'GET_HOME',
-            payload : data
+            payload : {
+                recentlyTracks : factoryRecentlyTracks(recentlyTracks),
+                featuredPlaylists : factoryPlaylists(featuredPlaylists),
+                top_artists : factoryTopArtists(topArtists)
+            }
         });
     }
 }
@@ -106,7 +135,6 @@ export const getCurrentTrack = () => {
         }
 
         const track = await Player.init(response.data);
-        console.log(`TRACK`,track)
 
         dispatch({
             type : 'GET_CURRENT_TRACK',

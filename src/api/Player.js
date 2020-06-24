@@ -36,21 +36,6 @@ class Player {
         this.uris = this.getUris();
         this.view.type = "album";
     }
-    async getPlaylist() {
-        let info;
-        const { data: playlist } = await get_playlist_items(this.context);
-        const { data: images } = await get_playlist_cover_image(this.context);
-        // try to get playlist's id
-        if (((playlist || {}).href || "").split("/")[5]) {
-            info = await get_a_playlist({uri : (playlist || {}).uri});
-        }
-        const [item] = playlist.items;
-        this.playlist = { images, ...playlist };
-        if (info) this.playlist = { ...info.data, ...this.playlist };
-        this.tracks = this.playlist.items.map((i) => i.track).filter((i) => i);
-        this.images.playlist = playlist.images;
-        this.uris = this.getUris();
-    }
     async setTracks() {
         if ((this.context || {}).type === "album" || !this.context) {
             await this.setAlbum();
