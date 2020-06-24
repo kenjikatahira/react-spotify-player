@@ -9,12 +9,7 @@ import {
 
 import { orderList,getSession } from "../utils";
 
-let cache = {};
-
 class Player {
-    constructor(props) {
-        this.defaultProperties(props);
-    }
     async setArtist() {
         if ( ((this.track || {}).artists && (this.track || {}).artists.length) || (((this.track || {}).item || {}).artists || {}).length) {
             try {
@@ -94,25 +89,6 @@ class Player {
     }
     defaultProperties(track) {
         // properties
-        this.track = track || {};
-        this.uris = [];
-        this.view = {};
-        this.name = '';
-        this.description = '';
-        this.tracks = [];
-        this.play = this.play;
-        this.pause = this.pause;
-        this.next = this.next;
-        this.setView = this.setView;
-        this.previous = this.previous;
-        this.public = this.public;
-        this.uri = (track || {}).uri || ((track || {}).item || {}).uri;
-        this.name = (track || {}).name || ((track || {}).item || {}).name;
-        this.album = (track || {}).album || ((track || {}).item || {}).album;
-        this.artist = (track || {}).artists || ((track || {}).item || {}).artists;
-        this.duration = (track || {}).duration_ms || ((track || {}).item || {}).duration_ms;
-        this.duration_ms = (track || {}).duration_ms || ((track || {}).item || {}).duration_ms;
-        this.images = [];
     }
 
     previous() {
@@ -162,29 +138,58 @@ class Player {
         });
     }
 
+    async fetchPlaylist(uri) {
+        const promises = {
+            playlist : get_playlist_items({uri}),
+            playlistInfo : get_a_playlist({uri}),
+            playlistCover : get_playlist_cover_image({uri}),
+        }
+
+        const [ playlist, playlistInfo, playlistCover ] = await Promise.all(Object.values(promises));
+
+        this.images = playlistCover.data;
+
+        this.id = playlist.data.id;
+        this.tracks = playlist.data.items.map((i) => i.track).filter((i) => i);
+
+        this.name = playlistInfo.data.name;
+        this.description = playlistInfo.data.description;
+        this.public = playlistInfo.data.public;
+    }
+
+    async fetchAlbum(uri) {
+        const {data} = await get_album({uri});
+
+        this.tracks = data.tracks.items.filter((i) => i);
+    }
+
+    async fetchArtist(uri) {
+        const { data } = await get_artist({uri});
+        const { data : topTracks } = await get_artist_top_tracks();
+        this.artist = data;
+        this.images = data.images;
+
+        if(!this.tracks) {
+            this.tracks = topTracks.tracks;
+        }
+    }
+
     static async setTracks({uri}) {
         const instance = new this();
 
         if(uri.split(':').indexOf('album') >= 0) {
 
-            const {data} = await get_album({uri});
-            instance.tracks = data.tracks.items.filter((i) => i);
+            await instance.fetchAlbum(uri);
+
 
         } else if(uri.split(':').indexOf('playlist') >= 0) {
 
-            const { data: playlist } = await get_playlist_items({uri});
-            const { data: playlistCover } = await get_playlist_cover_image({uri});
-            const { data: playlistInfo } = await get_a_playlist({uri});
-            instance.id = playlist.id;
-            instance.name = playlistInfo.name;
-            instance.description = playlistInfo.description;
-            instance.public = playlistInfo.public;
-            instance.tracks = playlist.items.map((i) => i.track).filter((i) => i);
-            instance.images = playlistCover;
+            await instance.fetchPlaylist(uri);
 
         } else if(uri.split(':').indexOf('artist') >= 0) {
             console.log('PLAYER ARTIST IMPLEMENTAR')
         }
+
         return instance;
     }
 

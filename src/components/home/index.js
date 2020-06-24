@@ -9,34 +9,56 @@ import {
 
 const StyledHome = styled.main`
 
+    .album-row {
+        display: flex;
+        flex-direction: row;
+        overflow: hidden;
+        width: 100%;
+        white-space: nowrap;
+        height: 270px;
+        padding: 10px 0;
+        margin-bottom: 25px;
+        .album {
+            width: 240px;
+        }
+    }
+
 `;
 
 class Main extends React.Component {
-    renderAlbums(playlist) {
+    renderAlbums(playlist,index) {
         return (
-            <div className="item col-sm-3" onClick={() => { this.props.setView({uri : playlist.uri}) }} key={playlist.id}>
-            <img className="img-thumbnail" src={playlist.images[0].url} alt={playlist.name}/>
+            <div className="album col-sm-3" onClick={() => { this.props.setView({uri : playlist.uri}) }} key={index}>
+                <img className="img-thumbnail" src={playlist.images.length && playlist.images[0].url} alt={playlist.name}/>
                 <div className="card-body">
-                    <h5 className="card-title">{playlist.name}</h5>
+                    <p className="card-title">{playlist.name}</p>
                     <small className="card-text">{playlist.description}</small>
                 </div>
             </div>
+        )
+    }
+    renderRow(row) {
+        return (
+            <>
+                <h2>
+                    {row.message}
+                </h2>
+                <div class="album-row">
+                    {row.items.map(this.renderAlbums.bind(this))}
+                </div>
+            </>
         )
     }
     componentDidMount() {
         this.props.getHome();
     }
     render() {
-        const { playlists } = (this.props.home || {});
-        if((this.props.home || {}).playlists) {
+        if(Object.keys(this.props.home).length) {
             return (
                 <>
                     <StyledHome>
                         <div className="container">
-                            <h1>{this.props.home.message}</h1>
-                            <div className="row">
-                                {playlists.items.map(this.renderAlbums.bind(this))}
-                            </div>
+                            {Object.values(this.props.home).map(this.renderRow.bind(this))}
                         </div>
                     </StyledHome>
                 </>
@@ -44,9 +66,9 @@ class Main extends React.Component {
         } else {
             return (
                 <>
-                <StyledHome>
-                    Loading...
-                </StyledHome>
+                    <StyledHome>
+                        Loading...
+                    </StyledHome>
                 </>
             )
         }

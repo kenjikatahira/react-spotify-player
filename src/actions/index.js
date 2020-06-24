@@ -30,22 +30,65 @@ export const getUser = () => {
 /**
  * Retrieves home data
  *
- * @function getUser
+ * @function getHome
  * @return {Void}
  */
 export const getHome = () => {
+    return async dispatch => {
+        const promises = [get_recently_tracks(),get_featured_playlist()];
+        const [
+            { data : recentlyTracks },
+            { data : featuredPlaylists }
+        ] = await Promise.all(Object.values(promises));
+        let  ids = [];
+        let albums = recentlyTracks.items.map(item => item.track.album);
+
+        albums = albums.filter(item => {
+            if(ids.includes(item.id)) return false;
+            ids.push(item.id);
+            return item;
+        })
+
+        console.log(albums)
+
+        const data = {
+            recentlyTracks : {
+                next : recentlyTracks.next,
+                limit : recentlyTracks.limit,
+                href : recentlyTracks.href,
+                message : 'Recently Played',
+                items : albums
+            },
+            featuredPlaylists : {
+                message : featuredPlaylists.message,
+                items : featuredPlaylists.playlists.items
+            }
+        }
+        console.log(data.recentlyTracks)
+        dispatch({
+            type : 'GET_HOME',
+            payload : data
+        });
+    }
+}
+
+/**
+ * Retrieves featured playlists from a country
+ *
+ * @function getFeaturedPlaylist
+ * @return {Void}
+ */
+export const getFeaturedPlaylist = () => {
     return dispatch => {
         get_featured_playlist().then( data => {
             console.log(data)
             dispatch({
-                type : 'GET_HOME',
+                type : 'GET_FEATURED_PLAYLISTS',
                 payload : data.data
             });
         })
     }
 }
-
-
 
 /**
  * Retrieves the current track
@@ -155,25 +198,6 @@ export const isLogged = () => {
 }
 
 /**
- * Sets token for the logged user
- * @function login
- * @param response authentication
- * @return {Void}
- */
-export const login = (response) => {
-    return dispatch => {
-        setSession(response);
-        dispatch({
-            type : 'LOGIN',
-            payload : {
-                status : true,
-                access_token : getSession().access_token
-            }
-        });
-    }
-}
-
-/**
  * Sets the app's view ( browse,home,playlists,album )
  * @function setView
  * @param props contains the uri of a song or playlist
@@ -218,6 +242,25 @@ export const logout = () => {
             payload : {
                 status : false,
                 access_token : false
+            }
+        });
+    }
+}
+
+/**
+ * Sets token for the logged user
+ * @function login
+ * @param response authentication
+ * @return {Void}
+ */
+export const login = (response) => {
+    return dispatch => {
+        setSession(response);
+        dispatch({
+            type : 'LOGIN',
+            payload : {
+                status : true,
+                access_token : getSession().access_token
             }
         });
     }

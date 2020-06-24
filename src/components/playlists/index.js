@@ -14,11 +14,11 @@ const StyledList = styled.ul`
     white-space: nowrap;
 
     li {
-        padding: 5px;
-        font-weight: bold;
+        padding: 0 3px;
         cursor : pointer;
+        margin-bottom: 5px;
 
-        p.lead {
+        &.lead {
             margin-bottom: 0;
         }
 
@@ -55,14 +55,14 @@ class Main extends React.Component {
     }
     renderList(item) {
         return (
-            <li className={this.props.view === item.uri ? 'active' : ''} data-owner={`* by ${(item.owner || {}).display_name}`} id={item.uri} onClick={() => this.props.setView({uri : item.uri})} key={item.id}>{item.name}</li>
+            <li key={item.uri} className={this.props.view === item.uri ? 'active' : ''} data-owner={`* by ${(item.owner || {}).display_name}`} id={item.uri} onClick={() => this.props.setView({uri : item.uri})} key={item.id}>{item.name}</li>
         )
     }
     render() {
         return(
             <StyledList>
                 {this.fixedList.map((i) => this.renderList(i))}
-                <li className="lead">PLAYLIST</li>
+                <li key="playlist" className="lead">PLAYLIST</li>
                 {(this.props.playlists.items || []).length && this.props.playlists.items.map((i) => this.renderList(i))}
             </StyledList>
         )
