@@ -27,10 +27,8 @@ const StyledMain = styled.main`
 
     .menu, .browser {
         height: 100vh;
-    }
-
-    .browser {
-        overflow: auto;
+        overflow-x: hidden;
+        overflow-y: auto;
     }
 
     .debug {

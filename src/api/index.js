@@ -113,7 +113,7 @@ export const get_devices = () => {
  * @return {Promise}
  */
 export const get_playlists = () => {
-    return axios.get('https://api.spotify.com/v1/me/playlists?limit=20&offset=0', {
+    return axios.get('https://api.spotify.com/v1/me/playlists?limit=50&offset=0', {
         headers : {
             'content-type' : 'application/json',
             'Authorization' : `Bearer ${getSession().access_token}`

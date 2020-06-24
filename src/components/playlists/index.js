@@ -10,8 +10,11 @@ import {
 const StyledList = styled.ul`
     list-style: none;
     padding: 15px;
-    overflow: hidden;
     white-space: nowrap;
+
+    .fixed-pages {
+        position: sticky;
+    }
 
     li {
         padding: 0 3px;
@@ -42,7 +45,7 @@ const StyledList = styled.ul`
 class Main extends React.Component {
     constructor() {
         super();
-        this.fixedList = [
+        this.fixedPages = [
             {
                 name : 'Home',
                 uri : 'home'
@@ -60,7 +63,9 @@ class Main extends React.Component {
     render() {
         return(
             <StyledList>
-                {this.fixedList.map((i) => this.renderList(i))}
+                <div class="fixed-pages">
+                    {this.fixedPages.map((i) => this.renderList(i))}
+                </div>
                 <li key="playlist" className="lead">PLAYLIST</li>
                 {(this.props.playlists.items || []).length && this.props.playlists.items.map((i) => this.renderList(i))}
             </StyledList>
