@@ -110,7 +110,6 @@ export const getHome = () => {
 export const getFeaturedPlaylist = () => {
     return dispatch => {
         get_featured_playlist().then( data => {
-            console.log(data)
             dispatch({
                 type : 'GET_FEATURED_PLAYLISTS',
                 payload : data.data
