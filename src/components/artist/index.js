@@ -1,9 +1,27 @@
 import React from "react";
-import styled from "styled-components";
 import { connect } from "react-redux";
-import { setView } from './../../actions';
+import styled from "styled-components";
+import { getPlayer, setView } from "../../actions";
+import TracklistHeader from "../tracklist-header";
+import Tracklist from "../tracklist";
 
 const StyledList = styled.div`
+    padding: 20px 0;
+    .container {
+        margin-left: 20px;
+    }
+    .filter {
+        padding: 3px;
+        input {
+            width: 176px;
+            height: 25px;
+            border-radius: 27px;
+            background: inherit;
+            border-style: none;
+            color: #f5f5f5;
+        }
+    }
+
     table {
         list-style: none;
         margin: 0;
@@ -53,15 +71,27 @@ const StyledList = styled.div`
     }
 `;
 
-const Tracklist = (props) => {
-    const setArtist = ({ item, total, index }) => {
+class Artist extends React.Component {
+    componentWillMount() {
+        this.props.getPlayer({ uri: this.props.view });
+    }
+    UNSAFE_componentWillUpdate(nextProps) {
+        if (
+            ((nextProps.player || {}).tracks || []).length &&
+            ((this.props.player || {}).tracks || []).length &&
+            this.props.view !== nextProps.view
+        ) {
+            this.props.getPlayer({ uri: nextProps.view });
+        }
+    }
+    setArtist({ item, total, index }) {
         const { uri, name } = item;
         return (
             <span
                 key={uri}
                 onClick={(ev) => {
                     ev.stopPropagation();
-                    props.setView({ uri });
+                    this.props.setView({ uri });
                 }}
             >
                 {total > 1 && index !== total - 1 ? `${name}, ` : name}
@@ -69,16 +99,16 @@ const Tracklist = (props) => {
         );
     }
 
-    const renderList = (item) => {
+    renderList(item) {
         return (
             <tr
                 key={item.id}
                 onClick={() => {
-                    if (props.device_id) {
-                        props.player.play({
+                    if (this.props.device_id) {
+                        this.props.player.play({
                             uri: item.uri,
-                            uris: props.player.tracks,
-                            device_id: props.device_id,
+                            uris: this.props.player.tracks,
+                            device_id: this.props.device_id,
                         });
                     }
                 }}
@@ -91,7 +121,7 @@ const Tracklist = (props) => {
                 </td>
                 <td>
                     {Object.values(item.artists).map((artist, index) => {
-                        return setArtist({
+                        return this.setArtist({
                             item: artist,
                             total: (item.artists || []).length,
                             index,
@@ -102,52 +132,47 @@ const Tracklist = (props) => {
                     <span
                         onClick={(ev) => {
                             ev.stopPropagation();
-                            props.setView({ uri: item.album.uri });
+                            this.props.setView({ uri: item.album.uri });
                         }}
                     >
                         {item.album.name}
                     </span>
                 </td>
-                <td>{props.player.setTrackDuration(item.duration_ms)}</td>
+                <td>{this.props.player.setTrackDuration(item.duration_ms)}</td>
             </tr>
         );
     }
-
-    const { tracks } = props.player;
-
-    if (tracks) {
-        return (
-            <>
-                <StyledList>
-                    <table className="table">
-                        <thead>
-                            <tr class="header">
-                                <th scope="col"></th>
-                                <th scope="col">Title</th>
-                                <th scope="col">Artist</th>
-                                <th scope="col">Album</th>
-                                <th scope="col">
-                                    <i className="clock fas fa-clock"></i>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {tracks.map((i) => renderList(i))}
-                        </tbody>
-                    </table>
-                </StyledList>
-            </>
-        );
-    } else {
-        return <>loading</>;
+    render() {
+        const { tracks } = this.props.player;
+        if (tracks) {
+            return (
+                <>
+                    <StyledList>
+                        <div className="container">
+                            <TracklistHeader props={this.props.player} />
+                            <div className="filter">
+                                <input type="text" placeholder="filter" />
+                            </div>
+                            <Tracklist player={this.props.player} device_id={this.props.device_id}/>
+                        </div>
+                    </StyledList>
+                </>
+            );
+        } else {
+            return <>loading</>;
+        }
     }
 }
 
 const mapStateToProps = (state) => {
     return {
+        view: state.view,
         player: state.player,
-        view : state.view
+        device_id: state.device_id,
     };
 };
 
-export default connect(mapStateToProps,{ setView })(Tracklist);
+export default connect(mapStateToProps, {
+    getPlayer,
+    setView,
+})(Artist);

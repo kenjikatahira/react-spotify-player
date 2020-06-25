@@ -103,10 +103,7 @@ class Main extends React.Component {
                                 <div class="search">
                                     <input type="text"></input>
                                 </div>
-                                <View
-                                    view={view}
-                                    tracks={tracks}
-                                ></View>
+                                <View view={view} tracks={tracks}></View>
                             </div>
                         </div>
                         {

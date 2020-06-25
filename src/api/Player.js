@@ -124,6 +124,14 @@ class Player {
         });
     }
 
+    totalDuration() {
+        if(!this.tracks) return false;
+        let initialValue = 0;
+        const duration = this.tracks.reduce((total,{duration_ms}) => total + duration_ms,initialValue);
+
+        return duration;
+    }
+
     async fetchPlaylist(uri) {
         const promises = {
             playlist : get_playlist_items({uri}),
@@ -133,19 +141,12 @@ class Player {
 
         const [ playlist, playlistInfo, playlistCover ] = await Promise.all(Object.values(promises));
 
+        this.type = 'playlist';
         this.images = playlistCover.data;
         this.id = playlist.data.id;
         this.tracks = playlist.data.items.map((i) => i.track).filter((i) => i);
 
-        const totalDuration = () => {
-            if(!this.tracks) return false;
-            let initialValue = 0;
-            const duration = this.tracks.reduce((total,{duration_ms}) => total + duration_ms,initialValue);
-
-            return duration;
-        }
-
-        this.total_duration = totalDuration();
+        this.total_duration = this.totalDuration();
         this.owner = playlistInfo.data.owner;
         this.followers = playlistInfo.data.followers.total;
         this.name = playlistInfo.data.name;
@@ -156,17 +157,21 @@ class Player {
     async fetchAlbum(uri) {
         const {data} = await get_album({uri});
 
+        this.type = 'album';
         this.tracks = data.tracks.items.filter((i) => i);
     }
 
     async fetchArtist(uri) {
         const { data } = await get_artist({uri});
-        const { data : topTracks } = await get_artist_top_tracks();
-        this.artist = data;
+        const { data : topTracks } = await get_artist_top_tracks({uri});
+
+        this.type = 'artist';
+        this.name = data.name;
         this.images = data.images;
 
         if(!this.tracks) {
             this.tracks = topTracks.tracks;
+            this.total_duration = this.totalDuration();
         }
     }
 
@@ -183,7 +188,7 @@ class Player {
             await instance.fetchPlaylist(uri);
 
         } else if(uri.split(':').indexOf('artist') >= 0) {
-            console.log('PLAYER ARTIST IMPLEMENTAR')
+            await instance.fetchArtist(uri);
         }
 
         return instance;

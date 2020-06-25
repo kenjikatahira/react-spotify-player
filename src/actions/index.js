@@ -248,7 +248,6 @@ export const setView = (props) => {
 export const getPlayer = ({uri}) => {
     return async dispatch => {
         let player = await Player.setTracks({uri});
-        console.log(`player`,player)
         dispatch({
             type : 'GET_PLAYER',
             payload : player

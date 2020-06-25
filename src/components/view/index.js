@@ -1,6 +1,7 @@
 import React from "react";
 import Home from "../home";
-import TrackList from "../tracklist";
+import Playlist from "../playlist";
+import Artist from "../artist";
 
 const View = (props) => {
     const { view } = props;
@@ -9,13 +10,13 @@ const View = (props) => {
                 {props.view.indexOf('album') >= 0 ? (
                     'album'
                 ) : props.view.indexOf('artist') >= 0 ? (
-                    'artist'
+                    <Artist />
                 ) : props.view.indexOf('playlist') >= 0 ? (
-                    <TrackList view={view} />
+                    <Playlist />
                 ) : props.view.indexOf('home') >= 0 ? (
                     <Home />
                 ) : (
-                    <TrackList />
+                    <Playlist />
                 )}
             </>
     );

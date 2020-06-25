@@ -54,7 +54,7 @@ const StyledHeader = Styled.div`
 
 const TracklistHeader = ({props}) => {
 
-    const {tracks, images, name, description, owner, total_duration} = props;
+    const {tracks, images, name, description, owner, total_duration,type } = props;
 
     return (
         <StyledHeader className="row">
@@ -64,7 +64,7 @@ const TracklistHeader = ({props}) => {
                 </div>
             )}
             <div className="col info d-flex flex-column">
-                <strong className="info-type">Playlist</strong>
+                <strong className="info-type">{type}</strong>
                 <h3 className="info-name">{name}</h3>
                 <span className="info-description">
                     {description}

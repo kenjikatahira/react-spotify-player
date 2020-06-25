@@ -2,10 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
 
-import {
-    getPlaylists,
-    setView
-} from "../../actions";
+import { getPlaylists, setView } from "../../actions";
 
 const StyledList = styled.ul`
     list-style: none;
@@ -47,40 +44,53 @@ class Main extends React.Component {
         super();
         this.fixedPages = [
             {
-                name : 'Home',
-                uri : 'home'
-            }
-        ]
+                name: "Home",
+                uri: "home",
+                icon: <i className="home fas fa-home">home</i>,
+            },
+        ];
     }
     componentWillMount() {
         this.props.getPlaylists();
     }
     renderList(item) {
         return (
-            <li key={item.uri} className={this.props.view === item.uri ? 'active' : ''} data-owner={`* by ${(item.owner || {}).display_name}`} id={item.uri} onClick={() => this.props.setView({uri : item.uri})} key={item.id}>{item.name}</li>
-        )
+            <li
+                key={item.uri}
+                className={this.props.view === item.uri ? "active" : ""}
+                data-owner={ (item || {}.owner).display_name ? `* by ${(item || {}.owner).display_name}`: "" }
+                id={item.uri}
+                onClick={() => this.props.setView({ uri: item.uri })}
+                key={item.id}
+            >
+                {item.icon ? item.icon : ''} {item.name}
+            </li>
+        );
     }
     render() {
-        return(
+        return (
             <StyledList>
                 <div class="fixed-pages">
                     {this.fixedPages.map((i) => this.renderList(i))}
                 </div>
-                <li key="playlist" className="lead">PLAYLIST</li>
-                {(this.props.playlists.items || []).length && this.props.playlists.items.map((i) => this.renderList(i))}
+                <li key="playlist" className="lead">
+                    PLAYLISTS
+                </li>
+                {(this.props.playlists.items || []).length &&
+                    this.props.playlists.items.map((i) => this.renderList(i))}
             </StyledList>
-        )
+        );
     }
 }
 
 const mapStateToProps = (state) => {
     return {
         playlists: state.playlists,
-        view : state.view
+        view: state.view,
     };
 };
 
 export default connect(mapStateToProps, {
     getPlaylists,
-    setView
+    setView,
 })(Main);
