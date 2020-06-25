@@ -13,7 +13,7 @@ const StyledLogin = styled.div`
     justify-content: center;
     overflow: hidden;
     font-family: "Gotham", sans-serif;
-    background: #181818;
+    background: rgba(28,28,28);
     padding: 0;
     color: #fff;
     overflow: none;

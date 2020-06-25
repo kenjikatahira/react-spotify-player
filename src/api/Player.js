@@ -45,12 +45,6 @@ class Player {
             await this.setArtist();
         }
     }
-    setTrackDuration() {
-        const minutes = Math.floor(this.duration / 60000);
-        const seconds = ((this.duration % 60000) / 1000).toFixed(0);
-
-        this.duration = minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
-    }
     setView() {
         const type = (this.context || {}).type || 'album';
         const { name, images, followers, id, owner,total_tracks,release_date,tracks } = this[type];
@@ -72,10 +66,17 @@ class Player {
             this.tracks.map((i) => i.uri)
         );
     }
-    defaultProperties(track) {
-        // properties
+    setTrackDuration(duration) {
+        var day, hour, minute, seconds;
+        seconds = Math.floor(duration / 1000);
+        minute = Math.floor(seconds / 60);
+        seconds = seconds % 60;
+        hour = Math.floor(minute / 60);
+        minute = minute % 60;
+        day = Math.floor(hour / 24);
+        hour = hour % 24;
+        return hour ? `${hour} hr ${minute} min`:`${minute}:${seconds}`;
     }
-
     previous() {
         fetch('https://api.spotify.com/v1/me/player/previous',{
             method : 'POST',
@@ -133,10 +134,20 @@ class Player {
         const [ playlist, playlistInfo, playlistCover ] = await Promise.all(Object.values(promises));
 
         this.images = playlistCover.data;
-
         this.id = playlist.data.id;
         this.tracks = playlist.data.items.map((i) => i.track).filter((i) => i);
 
+        const totalDuration = () => {
+            if(!this.tracks) return false;
+            let initialValue = 0;
+            const duration = this.tracks.reduce((total,{duration_ms}) => total + duration_ms,initialValue);
+
+            return duration;
+        }
+
+        this.total_duration = totalDuration();
+        this.owner = playlistInfo.data.owner;
+        this.followers = playlistInfo.data.followers.total;
         this.name = playlistInfo.data.name;
         this.description = playlistInfo.data.description;
         this.public = playlistInfo.data.public;

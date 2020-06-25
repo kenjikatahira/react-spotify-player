@@ -2,16 +2,22 @@ import React from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
 import { getPlayer,setView } from "../../actions";
+import TracklistHeader from "../tracklist-header";
 
 const StyledList = styled.div`
     padding: 20px 0;
-    .info {
-        padding: 10px 0;
-        margin-bottom: 15px;
-
-        img {
-            width: 350px;
-            padding: 15px;
+    .container {
+        margin-left: 20px;
+    }
+    .filter {
+        padding: 3px;
+        input {
+            width: 176px;
+            height: 25px;
+            border-radius: 27px;
+            background: inherit;
+            border-style: none;
+            color: #F5F5F5;
         }
     }
 
@@ -19,6 +25,15 @@ const StyledList = styled.div`
         list-style: none;
         margin: 0;
         padding: 10px;
+        color: #F5F5F5;
+
+        th {
+            color: #d1d1d1;
+            font-size: 13px;
+            text-transform: uppercase;
+            border-top: none;
+            border-bottom: 1px solid rgba(255,255,255,.1);
+        }
 
         tr {
             &:not(.header):hover td{
@@ -26,9 +41,16 @@ const StyledList = styled.div`
             }
         }
 
+        td {
+            &:nth-child(2) {
+                width: 444px;
+            }
+        }
+
         tr,td {
-            background: rgba(24, 24, 24,1);
+            border-bottom: 1px solid rgba(255,255,255,.1);
             cursor: pointer;
+            padding: 8px;
 
             &:hover {
                 .play { visibility: visible;  }
@@ -46,71 +68,61 @@ class Tracklist extends React.Component {
     componentWillMount() {
         this.props.getPlayer({ uri: this.props.view });
     }
-    setTrackDuration(duration) {
-        const minutes = Math.floor(duration / 60000);
-        const seconds = ((duration % 60000) / 1000).toFixed(0);
-        return minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
-    }
-    setArtist(item = {},index) {
+    setArtist({item,total,index}) {
         const { uri,name } = item;
-        if((item.artists || []).length > 1 && index != (item.artists || []).length-1) {
             return (
-            <span
-                key={uri}
-                onClick={() => {
-                    this.props.setView({uri});
-                }}
-            >
-                {name},
-            </span>
-            )
-        } else {
-            return (
-            <span
-                key={uri}
-                onClick={() => {
-                    this.props.setView({uri});
-                }}
-            >
-                {name}
-            </span>
+                <span
+                    key={uri}
+                    onClick={(ev) => {
+                        ev.stopPropagation();
+                        this.props.setView({uri});
+                    }}
+                >
+                    {(total > 1 && index !== total-1) ? `${name}, ` : name}
+                </span>
             );
-        }
     }
-    renderList(item,index) {
+
+    renderList(item) {
         return (
-            <tr key={item.id}>
+            <tr key={item.id} onClick={() => {
+                if(this.props.device_id) {
+                    this.props.player.play({
+                        uri : item.uri,
+                        uris : this.props.player.tracks,
+                        device_id : this.props.device_id
+                    });
+                }
+            }}>
                 <td>
                     <i className="play fas fa-play"></i>
                     {/* <i className="fas fa-pause"></i> */}
                 </td>
                 <td>
-                    <span onClick={() => {
-                        if(this.props.device_id) {
-                            this.props.player.play({
-                                uri : item.uri,
-                                uris : this.props.player.tracks,
-                                device_id : this.props.device_id
-                            });
-                        }
-                    }}>
+                    <span>
                         {item.name}
                     </span>
                 </td>
-
-                <td >
-                    {Object.values(item.artists).map((i) => this.setArtist(i) )}
+                <td>
+                    {Object.values(item.artists).map((artist,index) => {
+                        return this.setArtist({
+                            item: artist,
+                            total : (item.artists || []).length,
+                            index
+                        })
+                    })}
                 </td>
                 <td>
                     <span
-                        onClick={() => {
+                        onClick={(ev) => {
+                            ev.stopPropagation();
                             this.props.setView({uri : item.album.uri});
                         }}
                     >
                     {item.album.name}
                     </span>
                 </td>
-                <td>{this.setTrackDuration(item.duration_ms)}</td>
+                <td>{this.props.player.setTrackDuration(item.duration_ms)}</td>
             </tr>
         );
     }
@@ -124,31 +136,26 @@ class Tracklist extends React.Component {
         }
     }
     render() {
-        const { tracks, images, name, description } = this.props.player;
+        const { tracks, images, name, description, owner, total_duration } = this.props.player;
         if (tracks) {
             return (
                 <>
                     <StyledList>
-                        <div className="container row">
-                            <div className="info row">
-                                <div className="col-auto d-none d-lg-block">
-                                    <img src={images[0].url} alt={name || ''}/>
-                                </div>
-                                <div className="col p-4 d-flex flex-column position-static">
-                                    <strong className="d-inline-block mb-2 text-primary">{}</strong>
-                                    <h3 className="mb-0">{name}</h3>
-                                    <p className="card-text mb-auto">{description}</p>
-                                    <div className="mb-1 text-muted">Nov 12</div>
-                                </div>
+                        <div className="container">
+                            <TracklistHeader props={this.props.player} />
+                            <div className="filter">
+                                <input type="text" placeholder="filter" />
                             </div>
-                            <table className="table table-striped table-dark">
+                            <table className="table">
                                 <thead>
                                     <tr class="header">
                                         <th scope="col"></th>
                                         <th scope="col">Title</th>
                                         <th scope="col">Artist</th>
                                         <th scope="col">Album</th>
-                                        <th scope="col">length</th>
+                                        <th scope="col">
+                                            <i className="clock fas fa-clock"></i>
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody>
