@@ -8,18 +8,37 @@ const StyledList = styled.ul`
     list-style: none;
     padding: 15px;
     white-space: nowrap;
+    color : #B3B3B3;
 
     .fixed-pages {
         position: sticky;
+
+        li {
+            padding: 0;
+            margin-bottom: 15px;
+            font-size: 14px;
+            font-weight: 700;
+            svg {
+                margin-right: 10px;
+                font-weight: 500;
+                font-size: 18px;
+            }
+        }
     }
 
     li {
-        padding: 0 3px;
-        cursor : pointer;
-        margin-bottom: 5px;
+        padding: 0;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 800;
+        margin-bottom: 8px;
 
         &.lead {
             margin-bottom: 0;
+            font-size: 14px;
+            font-weight: 100;
+            text-transform: uppercase;
+            margin-bottom: 10px;
         }
 
         &.active:before {
@@ -42,12 +61,43 @@ const StyledList = styled.ul`
 class Menu extends React.Component {
     constructor() {
         super();
-        this.fixedPages = [
+        this.menuItems = [
             {
                 name: "Home",
                 uri: "home",
-                icon: <i className="home fas fa-home">home</i>,
+                el: <i className="home fas fa-home">home</i>,
             },
+            {
+                name: "Browse",
+                uri: "browse",
+                el: <i className="fa fa-folder-open" aria-hidden="true"></i>,
+            },
+            {
+                el: <li key="your-library" className="lead"> Your Library </li>
+            },
+            {
+                name: "Recently Played",
+                uri: "recently-played"
+            },
+            {
+                name: "Liked Songs",
+                uri: "liked-songs"
+            },
+            {
+                name: "Albums",
+                uri: "albums"
+            },
+            {
+                name: "Artists",
+                uri: "artists"
+            },
+            {
+                name: "Podcasts",
+                uri: "podcasts"
+            },
+            {
+                el: <li key="playlists" className="lead"> Playlists </li>
+            }
         ];
     }
     componentWillMount() {
@@ -56,14 +106,14 @@ class Menu extends React.Component {
     renderList(item) {
         return (
             <li
-                key={item.uri}
+                key={item.name}
                 className={this.props.view === item.uri ? "active" : ""}
                 data-owner={ (item || {}.owner).display_name ? `* by ${(item || {}.owner).display_name}`: "" }
                 id={item.uri}
                 onClick={() => this.props.setView({ uri: item.uri })}
                 key={item.id}
             >
-                {item.icon ? item.icon : ''} {item.name}
+                {item.el ? item.el : ''} {item.name}
             </li>
         );
     }
@@ -71,11 +121,8 @@ class Menu extends React.Component {
         return (
             <StyledList>
                 <div class="fixed-pages">
-                    {this.fixedPages.map((i) => this.renderList(i))}
+                    {this.menuItems.map((i) => this.renderList(i))}
                 </div>
-                <li key="playlist" className="lead">
-                    PLAYLISTS
-                </li>
                 {(this.props.playlists.items || []).length && this.props.playlists.items.map((i) => this.renderList(i))}
             </StyledList>
         );
