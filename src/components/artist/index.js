@@ -73,15 +73,15 @@ const StyledList = styled.div`
 
 class Artist extends React.Component {
     componentWillMount() {
-        this.props.getPlayer({ uri: this.props.view });
+        this.props.getPlayer({ uri: this.props.uri });
     }
     UNSAFE_componentWillUpdate(nextProps) {
         if (
             ((nextProps.player || {}).tracks || []).length &&
             ((this.props.player || {}).tracks || []).length &&
-            this.props.view !== nextProps.view
+            this.props.uri !== nextProps.uri
         ) {
-            this.props.getPlayer({ uri: nextProps.view });
+            this.props.getPlayer({ uri: nextProps.uri });
         }
     }
     setArtist({ item, total, index }) {
@@ -166,13 +166,13 @@ class Artist extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        view: state.view,
+        uri: state.uri,
         player: state.player,
-        device_id: state.device_id,
+        device_id: state.device_id
     };
 };
 
 export default connect(mapStateToProps, {
     getPlayer,
-    setView,
+    setView
 })(Artist);

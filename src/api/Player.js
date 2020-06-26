@@ -10,24 +10,6 @@ import {
 import { orderList,getSession } from "../utils";
 
 class Player {
-    async setArtist() {
-        if ( ((this.track || {}).artists && (this.track || {}).artists.length) || (((this.track || {}).item || {}).artists || {}).length) {
-            try {
-                let [first] = this.artist;
-                const { data: artist } = await get_artist(first);
-                this.artist = artist;
-                this.images.artist = artist.images;
-            } catch {
-                // cai aqui quando entramos na pagina de um artista e tocamos as top tracks
-                // Nessse caso a lista é o top trcaks do artista
-                const { data: topArtistsTracks } = await get_artist_top_tracks(
-                    this.artist
-                    );
-                this.tracks = topArtistsTracks.tracks;
-            }
-            this.uris = this.getUris();
-        }
-    }
     async setAlbum() {
         const { data: album } = await get_album(this.context || this.album);
         this.album = album;

@@ -1,8 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { connect } from "react-redux";
-
-import { getPlaylists, setView } from "../../actions";
+import PropTypes from 'prop-types';
 
 const StyledList = styled.ul`
     list-style: none;
@@ -58,85 +56,89 @@ const StyledList = styled.ul`
     }
 `;
 
-class Menu extends React.Component {
-    constructor() {
-        super();
-        this.menuItems = [
-            {
-                name: "Home",
-                uri: "home",
-                el: <i className="home fas fa-home">home</i>,
-            },
-            {
-                name: "Browse",
-                uri: "browse",
-                el: <i className="fa fa-folder-open" aria-hidden="true"></i>,
-            },
-            {
-                el: <li key="your-library" className="lead"> Your Library </li>
-            },
-            {
-                name: "Recently Played",
-                uri: "recently-played"
-            },
-            {
-                name: "Liked Songs",
-                uri: "liked-songs"
-            },
-            {
-                name: "Albums",
-                uri: "albums"
-            },
-            {
-                name: "Artists",
-                uri: "artists"
-            },
-            {
-                name: "Podcasts",
-                uri: "podcasts"
-            },
-            {
-                el: <li key="playlists" className="lead"> Playlists </li>
-            }
-        ];
+const Menu = ({playlists, setView, uri}) => {
+    let  menuItems = [
+        {
+            name: "Home",
+            uri: "home",
+            icon: <i className="home fas fa-home">home</i>,
+        },
+        {
+            name: "Browse",
+            uri: "browse",
+            icon: <i className="fa fa-folder-open" aria-hidden="true"></i>,
+        },
+        {
+            el: <li key="your-library" className="lead"> Your Library </li>
+        },
+        {
+            name: "Recently Played",
+            uri: "recently-played"
+        },
+        {
+            name: "Liked Songs",
+            uri: "liked-songs"
+        },
+        {
+            name: "Albums",
+            uri: "albums"
+        },
+        {
+            name: "Artists",
+            uri: "artists"
+        },
+        {
+            name: "Podcasts",
+            uri: "podcasts"
+        },
+        {
+            el: <li key="lead-playlists" className="lead"> Playlists </li>
+        }
+    ];
+
+    const renderList = (item) => {
+        const { display_name } = (item || {}.owner)
+        if(item.el) {
+            return item.el;
+        } else {
+            return (
+                <li
+                    key={item.uri}
+                    className={uri === item.uri ? "active" : ""}
+                    data-owner={display_name ? `* by ${display_name}`: "" }
+                    id={item.uri}
+                    onClick={() => setView({ uri: item.uri })}
+                >
+                    {item.icon ? item.icon : ''} {item.name}
+                </li>
+            );
+        }
     }
-    componentWillMount() {
-        this.props.getPlaylists();
-    }
-    renderList(item) {
-        return (
-            <li
-                key={item.name}
-                className={this.props.view === item.uri ? "active" : ""}
-                data-owner={ (item || {}.owner).display_name ? `* by ${(item || {}.owner).display_name}`: "" }
-                id={item.uri}
-                onClick={() => this.props.setView({ uri: item.uri })}
-                key={item.id}
-            >
-                {item.el ? item.el : ''} {item.name}
-            </li>
-        );
-    }
-    render() {
+
+    if((playlists.items || []).length) {
         return (
             <StyledList>
-                <div class="fixed-pages">
-                    {this.menuItems.map((i) => this.renderList(i))}
+                <div className="fixed-pages">
+                    {menuItems.map((i) => renderList(i))}
                 </div>
-                {(this.props.playlists.items || []).length && this.props.playlists.items.map((i) => this.renderList(i))}
+                {playlists.items.map((i) => renderList(i))}
+            </StyledList>
+        );
+    } else {
+        return (
+            <StyledList>
+                <div className="fixed-pages">
+                    {menuItems.map((i) => renderList(i))}
+                </div>
             </StyledList>
         );
     }
 }
 
-const mapStateToProps = (state) => {
-    return {
-        playlists: state.playlists,
-        view: state.view,
-    };
-};
+Menu.propTypes = {
+    playlists : PropTypes.object,
+    uri : PropTypes.string,
+    setView : PropTypes.func
+}
 
-export default connect(mapStateToProps, {
-    getPlaylists,
-    setView
-})(Menu);
+export default Menu;

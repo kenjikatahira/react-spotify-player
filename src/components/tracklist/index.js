@@ -26,7 +26,7 @@ const StyledList = styled.div`
 
         td {
             &:nth-child(2) {
-                width: 444px;
+                width: 300px;
             }
         }
 
@@ -35,6 +35,7 @@ const StyledList = styled.div`
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             cursor: pointer;
             padding: 8px;
+            white-space: nowrap;
 
             &:hover {
                 .play {
@@ -54,8 +55,8 @@ const StyledList = styled.div`
 `;
 
 const Tracklist = (props) => {
-    const setArtist = ({ item, total, index }) => {
-        const { uri, name } = item;
+    const setArtist = ({ artist, total, index }) => {
+        const { uri, name } = artist;
         return (
             <span
                 key={uri}
@@ -67,6 +68,11 @@ const Tracklist = (props) => {
                 {total > 1 && index !== total - 1 ? `${name}, ` : name}
             </span>
         );
+    }
+
+    const setAlbum = (ev,item) => {
+        ev.stopPropagation();
+        props.setView({ uri: item.album.uri });
     }
 
     const renderList = (item) => {
@@ -84,38 +90,25 @@ const Tracklist = (props) => {
                 }}
             >
                 <td>
-                    <i className="play fas fa-play"></i>
+                    <span><i className="play fas fa-play"></i></span>
                 </td>
                 <td>
                     <span>{item.name}</span>
                 </td>
                 <td>
-                    {Object.values(item.artists).map((artist, index) => {
-                        return setArtist({
-                            item: artist,
-                            total: (item.artists || []).length,
-                            index,
-                        });
-                    })}
+                    {Object.values(item.artists).map((artist, index) => setArtist({ artist,total: (item.artists || []).length, index }))}
                 </td>
                 <td>
-                    <span
-                        onClick={(ev) => {
-                            ev.stopPropagation();
-                            props.setView({ uri: item.album.uri });
-                        }}
-                    >
-                        {item.album.name}
-                    </span>
+                    <span onClick={(ev) => setAlbum(ev,item)}> {item.album.name} </span>
                 </td>
-                <td>{props.player.setTrackDuration(item.duration_ms)}</td>
+                <td>
+                    <span> {props.player.setTrackDuration(item.duration_ms)} </span>
+                </td>
             </tr>
         );
     }
 
-    const { tracks } = props.player;
-
-    if (tracks) {
+    if (props.player.tracks) {
         return (
             <>
                 <StyledList>
@@ -126,27 +119,24 @@ const Tracklist = (props) => {
                                 <th scope="col">Title</th>
                                 <th scope="col">Artist</th>
                                 <th scope="col">Album</th>
-                                <th scope="col">
-                                    <i className="clock fas fa-clock"></i>
-                                </th>
+                                <th scope="col"><i className="clock fas fa-clock"></i></th>
                             </tr>
                         </thead>
                         <tbody>
-                            {tracks.map((i) => renderList(i))}
+                            {props.player.tracks.map((i) => renderList(i))}
                         </tbody>
                     </table>
                 </StyledList>
             </>
         );
     } else {
-        return <>loading</>;
+        return <> Loading... </>;
     }
 }
 
 const mapStateToProps = (state) => {
     return {
-        player: state.player,
-        view : state.view
+        player: state.player
     };
 };
 

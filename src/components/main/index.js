@@ -91,11 +91,13 @@ class Main extends React.Component {
     componentDidMount() {
         window.onSpotifyWebPlaybackSDKReady = () => {
             const lastPage = window.localStorage.getItem('last_uri');
+            // Seta a primeira view
             this.props.setView(lastPage ? { uri : lastPage} : '');
+            this.props.getPlaylists();
         };
     }
     render() {
-        const { logged, view, tracks } = this.props;
+        const { logged, uri, tracks } = this.props;
 
         if(!logged.status) {
             return <Login />;
@@ -105,12 +107,15 @@ class Main extends React.Component {
                     <StyledMain>
                         <div className="row">
                             <div className="menu col-sm-2">
-                                <Menu></Menu>
-                                <Controls></Controls>
+                                <Menu
+                                    setView={this.props.setView}
+                                    playlists={this.props.playlists}
+                                    uri={uri}
+                                />
                             </div>
                             <div className="browser col-sm-10">
                                 <Search></Search>
-                                <View view={view} tracks={tracks}></View>
+                                <View uri={uri} tracks={tracks}></View>
                             </div>
                         </div>
                         {
@@ -137,7 +142,7 @@ const mapStateToProps = (state) => {
         user: state.user,
         logged: state.logged,
         playlists: state.playlists,
-        view: state.view,
+        uri: state.uri,
         device_id: state.device_id
     };
 };

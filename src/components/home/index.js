@@ -83,7 +83,6 @@ class Main extends React.Component {
 const mapStateToProps = (state) => {
     return {
         home: state.home,
-        view : state.view,
         device_id: state.device_id
     };
 };

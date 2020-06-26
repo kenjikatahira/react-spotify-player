@@ -48,7 +48,6 @@ class Controls extends React.Component {
 }
 const mapStateToProps = (state) => {
     return {
-        view: state.view,
         player: state.player,
         device_id: state.device_id,
     };

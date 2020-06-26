@@ -54,9 +54,6 @@ class Login extends React.Component {
         return (
             <StyledLogin style={{backgroundImage : `url('${process.env.PUBLIC_URL}/assets/background.jpg')`, backgroundSize : 'cover'}}>
                 <div className="login container">
-                    <div className="title">
-                        React Spotify Player <p>Only for learning purpose</p>
-                    </div>
                     <SpotifyLogin
                         className="btn"
                         clientId={clientId}

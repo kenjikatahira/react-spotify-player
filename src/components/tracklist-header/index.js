@@ -81,7 +81,7 @@ const TracklistHeader = ({props}) => {
                     </span>
                 </div>
                 <div className="info-interactive">
-                    <div class="play"> PLAY </div>
+                    <div className="play"> PLAY </div>
                 </div>
             </div>
         </StyledHeader>

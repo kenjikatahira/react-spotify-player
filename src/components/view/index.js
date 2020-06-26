@@ -4,19 +4,19 @@ import Playlist from "../playlist";
 import Artist from "../artist";
 
 const View = (props) => {
-    const { view } = props;
+    const { uri } = props;
     return (
             <>
-                {props.view.indexOf('album') >= 0 ? (
+                {props.uri.indexOf('album') >= 0 ? (
                     'album'
-                ) : view.indexOf('artist') >= 0 ? (
+                ) : uri.indexOf('artist') >= 0 ? (
                     <Artist />
-                ) : view.indexOf('playlist') >= 0 ? (
+                ) : uri.indexOf('playlist') >= 0 ? (
                     <Playlist />
-                ) : view.indexOf('home') >= 0 ? (
+                ) : uri.indexOf('home') >= 0 ? (
                     <Home />
                 ) : (
-                    <Playlist />
+                    'sem tpl'
                 )}
             </>
     );

@@ -198,10 +198,10 @@ export const setDeviceId = (data) => {
  */
 export const getPlaylists = () => {
     return dispatch => {
-        get_playlists().then( data => {
+        get_playlists().then(({data}) => {
             dispatch({
                 type : 'GET_PLAYLISTS',
-                payload : data.data
+                payload : data
             });
         })
     }

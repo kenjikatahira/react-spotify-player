@@ -6,12 +6,10 @@ import * as serviceWorker from './serviceWorker';
 import { createStore, applyMiddleware } from 'redux';
 import reducers from './reducers';
 import App from './App';
-import { logger } from './middlewares';
 
 const store = createStore(
   reducers,applyMiddleware(
-    thunk,
-    logger
+    thunk
   )
 );
 

@@ -37,16 +37,6 @@ const featuredPaylistReducer = (state={},action) => {
     return state;
 }
 
-const currentTrackReducer = (state={},action) => {
-    if(action.type === GET_CURRENT_TRACK) {
-        return { ...state , ...action.payload };
-    }
-    if(action.type === LOGOUT) {
-        return {};
-    }
-    return state;
-}
-
 const playlistsReducer = (state={},action) => {
     if(action.type === GET_PLAYLISTS) {
         return { ...state , ...action.payload };
@@ -70,7 +60,7 @@ const loginReducer = (state={},action) => {
     return state;
 }
 
-const viewReducer = (state='home',action) => {
+const uriReducer = (state='home',action) => {
     if(action.type === SET_VIEW) {
         return action.payload;
     }
@@ -97,7 +87,7 @@ export default combineReducers({
     playlists : playlistsReducer,
     device_id : deviceIdReducer,
     home : homeReducer,
-    view : viewReducer,
+    uri : uriReducer,
     player : playerReducer,
     featured_paylists : featuredPaylistReducer
 });

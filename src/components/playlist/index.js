@@ -25,15 +25,15 @@ const StyledList = styled.div`
 
 class Playlist extends React.Component {
     componentWillMount() {
-        this.props.getPlayer({ uri: this.props.view });
+        this.props.getPlayer({ uri: this.props.uri });
     }
     UNSAFE_componentWillUpdate(nextProps) {
         if (
             ((nextProps.player || {}).tracks || []).length &&
             ((this.props.player || {}).tracks || []).length &&
-            this.props.view !== nextProps.view
+            this.props.uri !== nextProps.uri
         ) {
-            this.props.getPlayer({ uri: nextProps.view });
+            this.props.getPlayer({ uri: nextProps.uri });
         }
     }
     render() {
@@ -44,9 +44,9 @@ class Playlist extends React.Component {
                     <StyledList>
                         <div className="container">
                             <TracklistHeader props={this.props.player} />
-                            <div className="filter">
+                            {/* <div className="filter">
                                 <input type="text" placeholder="filter" />
-                            </div>
+                            </div> */}
                             <Tracklist player={this.props.player} device_id={this.props.device_id} />
                         </div>
                     </StyledList>
@@ -60,9 +60,9 @@ class Playlist extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        view: state.view,
+        uri: state.uri,
         player: state.player,
-        device_id: state.device_id,
+        device_id: state.device_id
     };
 };
 
