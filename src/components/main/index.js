@@ -11,10 +11,10 @@ import {
 } from "../../actions";
 
 import Player from "./../../api/Player";
-
 import View from "../view";
 import Login from "../login";
-import Playlists from "../playlists";
+import Menu from "../menu";
+import Search from "../search";
 import Controls from "../controls";
 
 const StyledMain = styled.main`
@@ -38,6 +38,14 @@ const StyledMain = styled.main`
         height: 100vh;
         overflow-x: hidden;
         overflow-y: auto;
+
+        &::-webkit-scrollbar {
+            width: 1em;
+        }
+        &::-webkit-scrollbar-thumb {
+            background-color: rgba(73, 73, 73);
+            outline: 1px solid slategrey;
+        }
     }
 
     .browser {
@@ -55,6 +63,7 @@ const StyledMain = styled.main`
         right:0;
     }
 `;
+
 class Main extends React.Component {
     constructor() {
         super();
@@ -96,13 +105,11 @@ class Main extends React.Component {
                     <StyledMain>
                         <div className="row">
                             <div className="menu col-sm-2">
-                                <Playlists></Playlists>
+                                <Menu></Menu>
                                 <Controls></Controls>
                             </div>
                             <div className="browser col-sm-10">
-                                <div class="search">
-                                    <input type="text"></input>
-                                </div>
+                                <Search></Search>
                                 <View view={view} tracks={tracks}></View>
                             </div>
                         </div>

@@ -39,7 +39,7 @@ const StyledList = styled.ul`
     }
 `;
 
-class Main extends React.Component {
+class Menu extends React.Component {
     constructor() {
         super();
         this.fixedPages = [
@@ -76,8 +76,7 @@ class Main extends React.Component {
                 <li key="playlist" className="lead">
                     PLAYLISTS
                 </li>
-                {(this.props.playlists.items || []).length &&
-                    this.props.playlists.items.map((i) => this.renderList(i))}
+                {(this.props.playlists.items || []).length && this.props.playlists.items.map((i) => this.renderList(i))}
             </StyledList>
         );
     }
@@ -92,5 +91,5 @@ const mapStateToProps = (state) => {
 
 export default connect(mapStateToProps, {
     getPlaylists,
-    setView,
-})(Main);
+    setView
+})(Menu);
