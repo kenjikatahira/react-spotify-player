@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
-import { getPlayer, setView } from "../../actions";
+import { getView, setView } from "../../actions";
 import TracklistHeader from "../tracklist-header";
 import Tracklist from "../tracklist";
 
@@ -21,139 +21,34 @@ const StyledList = styled.div`
             color: #f5f5f5;
         }
     }
-
-    table {
-        list-style: none;
-        margin: 0;
-        padding: 10px;
-        color: #f5f5f5;
-
-        th {
-            color: #d1d1d1;
-            font-size: 13px;
-            text-transform: uppercase;
-            border-top: none;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        tr {
-            &:not(.header):hover td {
-                background: rgba(255, 255, 255, 0.1);
-            }
-        }
-
-        td {
-            &:nth-child(2) {
-                width: 444px;
-            }
-        }
-
-        tr,
-        td {
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            cursor: pointer;
-            padding: 8px;
-
-            &:hover {
-                .play {
-                    visibility: visible;
-                }
-            }
-
-            .play {
-                visibility: hidden;
-            }
-
-            span:hover {
-                border-bottom: 1px solid #fff;
-            }
-        }
-    }
 `;
 
 class Artist extends React.Component {
     componentWillMount() {
-        this.props.getPlayer({ uri: this.props.uri });
+        this.props.getView({ uri: this.props.uri });
     }
     UNSAFE_componentWillUpdate(nextProps) {
         if (
-            ((nextProps.player || {}).tracks || []).length &&
-            ((this.props.player || {}).tracks || []).length &&
+            ((nextProps.view || {}).tracks || []).length &&
+            ((this.props.view || {}).tracks || []).length &&
             this.props.uri !== nextProps.uri
         ) {
-            this.props.getPlayer({ uri: nextProps.uri });
+            this.props.getView({ uri: nextProps.uri });
         }
     }
-    setArtist({ item, total, index }) {
-        const { uri, name } = item;
-        return (
-            <span
-                key={uri}
-                onClick={(ev) => {
-                    ev.stopPropagation();
-                    this.props.setView({ uri });
-                }}
-            >
-                {total > 1 && index !== total - 1 ? `${name}, ` : name}
-            </span>
-        );
-    }
-
-    renderList(item) {
-        return (
-            <tr
-                key={item.id}
-                onClick={() => {
-                    if (this.props.device_id) {
-                        this.props.player.play({
-                            uri: item.uri,
-                            uris: this.props.player.tracks,
-                            device_id: this.props.device_id,
-                        });
-                    }
-                }}
-            >
-                <td>
-                    <i className="play fas fa-play"></i>
-                </td>
-                <td>
-                    <span>{item.name}</span>
-                </td>
-                <td>
-                    {Object.values(item.artists).map((artist, index) => {
-                        return this.setArtist({
-                            item: artist,
-                            total: (item.artists || []).length,
-                            index,
-                        });
-                    })}
-                </td>
-                <td>
-                    <span
-                        onClick={(ev) => {
-                            ev.stopPropagation();
-                            this.props.setView({ uri: item.album.uri });
-                        }}
-                    >
-                        {item.album.name}
-                    </span>
-                </td>
-                <td>{this.props.player.setTrackDuration(item.duration_ms)}</td>
-            </tr>
-        );
-    }
     render() {
-        const { tracks } = this.props.player;
+        const { tracks } = this.props.view;
+        const { view,device_id } = this.props;
         if (tracks) {
             return (
                 <>
                     <StyledList>
                         <div className="container">
-                            <TracklistHeader props={this.props.player} />
+                            <TracklistHeader props={view} />
                             <div className="filter">
                                 <input type="text" placeholder="filter" />
                             </div>
-                            <Tracklist player={this.props.player} device_id={this.props.device_id}/>
+                            <Tracklist view={view} device_id={device_id} />
                         </div>
                     </StyledList>
                 </>
@@ -167,12 +62,12 @@ class Artist extends React.Component {
 const mapStateToProps = (state) => {
     return {
         uri: state.uri,
-        player: state.player,
+        view: state.view,
         device_id: state.device_id
     };
 };
 
 export default connect(mapStateToProps, {
-    getPlayer,
+    getView,
     setView
 })(Artist);

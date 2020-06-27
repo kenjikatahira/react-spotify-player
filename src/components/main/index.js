@@ -7,10 +7,10 @@ import {
     getUser,
     getPlaylists,
     setView,
-    setDeviceId
+    setDeviceId,
+    getPlayer
 } from "../../actions";
 
-import Player from "./../../api/Player";
 import View from "../view";
 import Login from "../login";
 import Menu from "../menu";
@@ -80,9 +80,7 @@ class Main extends React.Component {
      */
     run() {
         const { currentTrack, setDeviceId } = this.props;
-        setTimeout(() => {
-            Player.init({ currentTrack, setDeviceId });
-        },1000);
+        this.props.getPlayer({ currentTrack, setDeviceId })
         this.initiated = true;
     }
     UNSAFE_componentWillUpdate() {
@@ -93,12 +91,13 @@ class Main extends React.Component {
             const lastPage = window.localStorage.getItem('last_uri');
             // Seta a primeira view
             this.props.setView(lastPage ? { uri : lastPage} : '');
-            this.props.getPlaylists();
         };
+    }
+    onSearchChange(ev) {
+        console.log(ev)
     }
     render() {
         const { logged, uri, tracks } = this.props;
-
         if(!logged.status) {
             return <Login />;
         } else {
@@ -108,23 +107,29 @@ class Main extends React.Component {
                         <div className="row">
                             <div className="menu col-sm-2">
                                 <Menu
+                                    getPlaylists={this.props.getPlaylists}
+                                    logout={this.props.logout}
                                     setView={this.props.setView}
                                     playlists={this.props.playlists}
                                     uri={uri}
                                 />
                             </div>
                             <div className="browser col-sm-10">
-                                <Search></Search>
-                                <View uri={uri} tracks={tracks}></View>
+                                <Search
+                                    onSearchChange={this.onSearchChange}
+                                />
+                                <View
+                                    uri={uri}
+                                    tracks={tracks}
+                                />
                             </div>
                         </div>
                         {
                         process.env.NODE_ENV === 'development' ?
                         (
                             <div className="debug">
-                                <p>{JSON.stringify(process.env)}</p>
+                                <p>{JSON.stringify(this.props.uri)}</p>
                                 <p>{JSON.stringify(this.props.device_id)}</p>
-                                <p>{JSON.stringify(this.props.playlists.length)}</p>
                             </div>
                         ) :
                         ''
@@ -152,5 +157,7 @@ export default connect(mapStateToProps, {
     getUser,
     getPlaylists,
     setView,
-    setDeviceId
+    setDeviceId,
+    logout,
+    getPlayer
 })(Main);

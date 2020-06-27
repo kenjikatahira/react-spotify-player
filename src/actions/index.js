@@ -9,7 +9,7 @@ import {
     top_artists
 } from '../api';
 
-import Player from '../api/Player';
+import Api from '../api/player';
 
 /**
  * Retrieves user information
@@ -119,30 +119,6 @@ export const getFeaturedPlaylist = () => {
 }
 
 /**
- * Retrieves the current track
- *
- * @function getCurrentTrack
- * @return {Void}
- */
-export const getCurrentTrack = () => {
-    return async dispatch => {
-        let response = await get_current_track();
-        if(response.status === 204) {
-            response = await get_recently_tracks();
-            const [lastTrack] = response.data.items;
-            response.data = lastTrack.track;
-        }
-
-        const track = await Player.init(response.data);
-
-        dispatch({
-            type : 'GET_CURRENT_TRACK',
-            payload : track
-        });
-    }
-}
-
-/**
  * Retrieves a playlist
  *
  * @function getPlaylist
@@ -193,7 +169,7 @@ export const setDeviceId = (data) => {
 /**
  * Retrieves user's playlists
  *
- * @function getPlaylists
+ * @function getPlay    lists
  * @return {Void}
  */
 export const getPlaylists = () => {
@@ -232,6 +208,7 @@ export const isLogged = () => {
  */
 export const setView = (props) => {
     return async dispatch => {
+        // salve o ultimo tpl acessado
         (props || {}).uri && window.localStorage.setItem('last_uri',props.uri);
         dispatch({
             type : 'SET_VIEW',
@@ -242,15 +219,15 @@ export const setView = (props) => {
 
 /**
  * Return the instance of the Player
- * @function getPlayer
+ * @function getView
  * @return {Void}
  */
-export const getPlayer = ({uri}) => {
+export const getView = ({uri}) => {
     return async dispatch => {
-        let player = await Player.setTracks({uri});
+        const view = await Api.getView({uri});
         dispatch({
-            type : 'GET_PLAYER',
-            payload : player
+            type : 'GET_VIEW',
+            payload : view
         });
     }
 }
@@ -288,6 +265,16 @@ export const login = (response) => {
                 status : true,
                 access_token : getSession().access_token
             }
+        });
+    }
+}
+
+export const getPlayer = ({ currentTrack, setDeviceId }) => {
+    return dispatch => {
+        const player = Api.init({ currentTrack, setDeviceId });
+        dispatch({
+            type : 'GET_PLAYER',
+            payload : player
         });
     }
 }

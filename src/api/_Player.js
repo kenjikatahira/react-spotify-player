@@ -15,17 +15,7 @@ class Player {
         this.album = album;
         this.tracks = album.tracks.items.filter((i) => i);
         this.images.album = album.images;
-        this.uris = this.getUris();
         this.view.type = "album";
-    }
-    async setTracks() {
-        if ((this.context || {}).type === "album" || !this.context) {
-            await this.setAlbum();
-        } else if ((this.context || {}).type === "playlist") {
-            await this.getPlaylist();
-        } else {
-            await this.setArtist();
-        }
     }
     setView() {
         const type = (this.context || {}).type || 'album';
@@ -42,12 +32,12 @@ class Player {
             tracks
         };
     }
-    getUris() {
-        return orderList(
-            this.uri,
-            this.tracks.map((i) => i.uri)
-        );
-    }
+    // getUris() {
+    //     return orderList(
+    //         this.uri,
+    //         this.tracks.map((i) => i.uri)
+    //     );
+    // }
     setTrackDuration(duration) {
         var day, hour, minute, seconds;
         seconds = Math.floor(duration / 1000);
@@ -157,14 +147,10 @@ class Player {
         }
     }
 
-    static async setTracks({uri}) {
+    static async getContext({uri}) {
         const instance = new this();
-
         if(uri.split(':').indexOf('album') >= 0) {
-
             await instance.fetchAlbum(uri);
-
-
         } else if(uri.split(':').indexOf('playlist') >= 0) {
 
             await instance.fetchPlaylist(uri);
@@ -172,7 +158,6 @@ class Player {
         } else if(uri.split(':').indexOf('artist') >= 0) {
             await instance.fetchArtist(uri);
         }
-
         return instance;
     }
 
@@ -202,7 +187,7 @@ class Player {
 
         // update status - action
         player.addListener('player_state_changed', ({ position,duration,track_window: { current_track } }) => {
-            // getStatus({ position,duration,current_track })
+            console.log({ position,duration,current_track })
         });
 
         player.connect();

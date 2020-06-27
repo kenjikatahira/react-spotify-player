@@ -22,9 +22,9 @@ class Controls extends React.Component {
                             {/* <button
                                 className="btn btn-outline-secondary"
                                 onClick={() => this.props.player.play({
-                                    uri : this.props.player.uri,
-                                    tracks : this.props.player.tracks,
-                                    device_id : this.props.player.device_id
+                                    uri : this.props.view.uri,
+                                    tracks : this.props.view.tracks,
+                                    device_id : this.props.view.device_id
                                 })}
                             >
                                 <i className="fas fa-play"></i>
@@ -48,8 +48,9 @@ class Controls extends React.Component {
 }
 const mapStateToProps = (state) => {
     return {
-        player: state.player,
+        view: state.view,
         device_id: state.device_id,
+        player : state.player
     };
 };
 

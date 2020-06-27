@@ -1,12 +1,11 @@
 import React from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
-import { getPlayer, setView } from "../../actions";
+import { getView, setView } from "../../actions";
 import TracklistHeader from "../tracklist-header";
 import Tracklist from "../tracklist";
 
 const StyledList = styled.div`
-    padding: 20px 0;
     .container {
         margin-left: 20px;
     }
@@ -25,29 +24,30 @@ const StyledList = styled.div`
 
 class Playlist extends React.Component {
     componentWillMount() {
-        this.props.getPlayer({ uri: this.props.uri });
+        this.props.getView({ uri: this.props.uri });
     }
     UNSAFE_componentWillUpdate(nextProps) {
         if (
-            ((nextProps.player || {}).tracks || []).length &&
-            ((this.props.player || {}).tracks || []).length &&
+            ((nextProps.view || {}).tracks || []).length &&
+            ((this.props.view || {}).tracks || []).length &&
             this.props.uri !== nextProps.uri
         ) {
-            this.props.getPlayer({ uri: nextProps.uri });
+            this.props.getView({ uri: nextProps.uri });
         }
     }
     render() {
-        const { tracks } = this.props.player;
+        const { tracks } = this.props.view;
+        const { view,device_id } = this.props;
         if (tracks) {
             return (
                 <>
                     <StyledList>
                         <div className="container">
-                            <TracklistHeader props={this.props.player} />
-                            {/* <div className="filter">
+                            <TracklistHeader props={view} />
+                            <div className="filter">
                                 <input type="text" placeholder="filter" />
-                            </div> */}
-                            <Tracklist player={this.props.player} device_id={this.props.device_id} />
+                            </div>
+                            <Tracklist view={view} device_id={device_id} />
                         </div>
                     </StyledList>
                 </>
@@ -61,12 +61,12 @@ class Playlist extends React.Component {
 const mapStateToProps = (state) => {
     return {
         uri: state.uri,
-        player: state.player,
+        view: state.view,
         device_id: state.device_id
     };
 };
 
 export default connect(mapStateToProps, {
-    getPlayer,
+    getView,
     setView,
 })(Playlist);

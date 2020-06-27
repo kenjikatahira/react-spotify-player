@@ -31,9 +31,9 @@ const StyledHome = styled.main`
 `;
 
 class Main extends React.Component {
-    renderAlbums(playlist,index) {
+    renderAlbums(playlist) {
         return (
-            <div className="album col-sm-3" onClick={() => { this.props.setView({uri : playlist.uri}) }} key={index}>
+            <div className="album col-sm-3" onClick={() => { this.props.setView({uri : playlist.uri}) }} key={playlist.id}>
                 <img className="img-thumbnail" src={playlist.images.length && playlist.images[0].url} alt={playlist.name}/>
                 <div className="card-body">
                     <p className="card-title">{playlist.name}</p>
@@ -45,10 +45,8 @@ class Main extends React.Component {
     renderRow(row) {
         return (
             <>
-                <h2>
-                    {row.message}
-                </h2>
-                <div class="albums-row">
+                <h2> {row.message} </h2>
+                <div class="albums-row" key={row.type}>
                     {row.items.map(this.renderAlbums.bind(this))}
                 </div>
             </>
@@ -82,8 +80,7 @@ class Main extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        home: state.home,
-        device_id: state.device_id
+        home: state.home
     };
 };
 

@@ -7,6 +7,7 @@ const SET_DEVICE_ID = 'SET_DEVICE_ID';
 const GET_HOME = 'GET_HOME';
 const SET_VIEW = 'SET_VIEW';
 const GET_FEATURED_PLAYLISTS = 'GET_FEATURED_PLAYLISTS';
+const GET_VIEW = 'GET_VIEW';
 const GET_PLAYER = 'GET_PLAYER';
 
 const LOGIN = 'LOGIN';
@@ -74,7 +75,14 @@ const deviceIdReducer = (state={},action) => {
     return state;
 }
 
-const playerReducer = (state=[],action) => {
+const viewReducer = (state=[],action) => {
+    if(action.type === GET_VIEW) {
+        return action.payload;
+    }
+    return state;
+}
+
+const playerReducer = (state={},action) => {
     if(action.type === GET_PLAYER) {
         return action.payload;
     }
@@ -88,6 +96,7 @@ export default combineReducers({
     device_id : deviceIdReducer,
     home : homeReducer,
     uri : uriReducer,
+    view : viewReducer,
     player : playerReducer,
     featured_paylists : featuredPaylistReducer
 });

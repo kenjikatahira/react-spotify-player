@@ -16,6 +16,9 @@ const StyledList = styled.div`
             text-transform: uppercase;
             border-top: none;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            &:fist-child {
+                width: 30px;
+            }
         }
 
         tr {
@@ -25,8 +28,12 @@ const StyledList = styled.div`
         }
 
         td {
-            &:nth-child(2) {
-                width: 300px;
+            &:nth-child(1) {
+                width: 20px;
+            }
+            &:last-child {
+                width: 80px;
+                text-align: center;
             }
         }
 
@@ -36,6 +43,8 @@ const StyledList = styled.div`
             cursor: pointer;
             padding: 8px;
             white-space: nowrap;
+            max-width: 220px;
+            overflow: hidden;
 
             &:hover {
                 .play {
@@ -55,6 +64,8 @@ const StyledList = styled.div`
 `;
 
 const Tracklist = (props) => {
+
+
     const setArtist = ({ artist, total, index }) => {
         const { uri, name } = artist;
         return (
@@ -81,9 +92,14 @@ const Tracklist = (props) => {
                 key={item.id}
                 onClick={() => {
                     if (props.device_id) {
+                        console.log({
+                            uri: item.uri,
+                            uris: props.view.tracks,
+                            device_id: props.device_id,
+                        })
                         props.player.play({
                             uri: item.uri,
-                            uris: props.player.tracks,
+                            uris: props.view.tracks,
                             device_id: props.device_id,
                         });
                     }
@@ -92,38 +108,51 @@ const Tracklist = (props) => {
                 <td>
                     <span><i className="play fas fa-play"></i></span>
                 </td>
+                {
+                    item.name &&
+                    <td>
+                        <span>{item.name}</span>
+                    </td>
+                }
+                {
+                    item.artists &&
+                    <td>
+                        {item.artists &&Object.values(item.artists).map((artist, index) => setArtist({ artist,total: (item.artists || []).length, index }))}
+                    </td>
+                }
+                {
+                    item.album &&
+                    <td>
+                        <span onClick={(ev) => setAlbum(ev,item)}> {item.album.name} </span>
+                    </td>
+                }
+                {
+                item.duration_ms &&
                 <td>
-                    <span>{item.name}</span>
+                    <span> {props.view.setTrackDuration(item.duration_ms)} </span>
                 </td>
-                <td>
-                    {Object.values(item.artists).map((artist, index) => setArtist({ artist,total: (item.artists || []).length, index }))}
-                </td>
-                <td>
-                    <span onClick={(ev) => setAlbum(ev,item)}> {item.album.name} </span>
-                </td>
-                <td>
-                    <span> {props.player.setTrackDuration(item.duration_ms)} </span>
-                </td>
+                }
             </tr>
         );
     }
 
-    if (props.player.tracks) {
+    if (props.view.tracks) {
         return (
             <>
                 <StyledList>
                     <table className="table">
                         <thead>
-                            <tr class="header">
+                            <tr className="header">
                                 <th scope="col"></th>
-                                <th scope="col">Title</th>
+                                {props.view.table.head.map(i => (<th>{i}</th>))}
+                                {/* <th scope="col">Title</th>
                                 <th scope="col">Artist</th>
                                 <th scope="col">Album</th>
-                                <th scope="col"><i className="clock fas fa-clock"></i></th>
+                                <th scope="col"><i className="clock fas fa-clock"></i></th> */}
                             </tr>
                         </thead>
                         <tbody>
-                            {props.player.tracks.map((i) => renderList(i))}
+                            {props.view.table.body.map((i) => renderList(i))}
                         </tbody>
                     </table>
                 </StyledList>
@@ -136,7 +165,8 @@ const Tracklist = (props) => {
 
 const mapStateToProps = (state) => {
     return {
-        player: state.player
+        view: state.view,
+        player: state.player,
     };
 };
 

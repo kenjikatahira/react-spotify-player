@@ -56,7 +56,10 @@ const StyledList = styled.ul`
     }
 `;
 
-const Menu = ({playlists, setView, uri}) => {
+const Menu = ({playlists, setView, uri, logout, getPlaylists}) => {
+    // Retorna a playlist do usuario
+    !Object.keys(playlists).length && getPlaylists && getPlaylists();
+    // Menu de itens fixos
     let  menuItems = [
         {
             name: "Home",
@@ -84,8 +87,8 @@ const Menu = ({playlists, setView, uri}) => {
             uri: "albums"
         },
         {
-            name: "Artists",
-            uri: "artists"
+            name: "Bands",
+            uri: "bands"
         },
         {
             name: "Podcasts",
@@ -95,7 +98,6 @@ const Menu = ({playlists, setView, uri}) => {
             el: <li key="lead-playlists" className="lead"> Playlists </li>
         }
     ];
-
     const renderList = (item) => {
         const { display_name } = (item || {}.owner)
         if(item.el) {
@@ -114,10 +116,10 @@ const Menu = ({playlists, setView, uri}) => {
             );
         }
     }
-
     if((playlists.items || []).length) {
         return (
             <StyledList>
+                <button onClick={logout}>logout</button>
                 <div className="fixed-pages">
                     {menuItems.map((i) => renderList(i))}
                 </div>
@@ -138,7 +140,8 @@ const Menu = ({playlists, setView, uri}) => {
 Menu.propTypes = {
     playlists : PropTypes.object,
     uri : PropTypes.string,
-    setView : PropTypes.func
+    setView : PropTypes.func,
+    logout : PropTypes.func
 }
 
 export default Menu;
