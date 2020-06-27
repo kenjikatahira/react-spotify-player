@@ -25,6 +25,9 @@ const StyledHeader = Styled.div`
                 font-weight: 600;
                 margin-bottom: 0;
             }
+            .info-description {
+                max-width: 500px;
+            }
             .info-details {
                 padding: 14px 0;
             }
@@ -53,9 +56,7 @@ const StyledHeader = Styled.div`
 
 
 const TracklistHeader = ({props}) => {
-
     const {tracks, images, name, description, owner, total_duration,type } = props;
-
     return (
         <StyledHeader className="row">
             {(images.length && images[0].url &&
@@ -77,7 +78,7 @@ const TracklistHeader = ({props}) => {
                         {(tracks || []).length} songs,
                     </span>
                     <span className="info-duration">
-                        {props.setTrackDuration(total_duration)}
+                        {total_duration}
                     </span>
                 </div>
                 <div className="info-interactive">

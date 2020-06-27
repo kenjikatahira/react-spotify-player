@@ -64,8 +64,6 @@ const StyledList = styled.div`
 `;
 
 const Tracklist = (props) => {
-
-
     const setArtist = ({ artist, total, index }) => {
         const { uri, name } = artist;
         return (
@@ -129,17 +127,25 @@ const Tracklist = (props) => {
                 {
                 item.duration_ms &&
                 <td>
-                    <span> {props.view.setTrackDuration(item.duration_ms)} </span>
+                    <span> {item.duration_ms} </span>
                 </td>
                 }
             </tr>
         );
     }
 
+    const onFilter = (ev) => {
+        const { value }  = ev.target;
+        props.view.table.body = props.view.table.body.filter(({name}) => name.indexOf(ev) >= 0).map(i => i);
+    }
+
     if (props.view.tracks) {
         return (
             <>
                 <StyledList>
+                    <div className="filter">
+                        <input type="text" placeholder="filter" onChange={onFilter} />
+                    </div>
                     <table className="table">
                         <thead>
                             <tr className="header">

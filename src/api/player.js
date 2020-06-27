@@ -7,26 +7,14 @@ import {
     get_a_playlist
 } from "./index";
 
-import { orderList,getSession } from "../utils";
-
-const setTrackDuration = (duration) => {
-    let day, hour, minute, seconds;
-    seconds = Math.floor(duration / 1000);
-    minute = Math.floor(seconds / 60);
-    seconds = seconds % 60;
-    hour = Math.floor(minute / 60);
-    minute = minute % 60;
-    day = Math.floor(hour / 24);
-    hour = hour % 24;
-    return hour ? `${hour} hr ${minute} min`:`${minute}:${seconds}`;
-}
+import { orderList, getSession, formatTrackDuration } from "../utils";
 
 const totalDuration = (tracks) => {
     if(!tracks) return false;
     let initialValue = 0;
     const duration = tracks.reduce((total,{duration_ms}) => total + duration_ms,initialValue);
 
-    return duration;
+    return formatTrackDuration(duration);
 }
 
 const fetchPlaylist = async (uri) => {
@@ -55,7 +43,7 @@ const fetchPlaylist = async (uri) => {
         return {
             id : i.id,
             name : i.name,
-            duration_ms : i.duration_ms,
+            duration_ms : formatTrackDuration(i.duration_ms),
             album : i.album,
             artists : i.artists,
             uri : i.uri,
@@ -63,7 +51,7 @@ const fetchPlaylist = async (uri) => {
     });
 
     playlistData.table = {
-        head :  ['name','artist','album','length'],
+        head :  ['name','artist','album','duration'],
         body  : playlistData.tracks
     }
 
@@ -94,13 +82,13 @@ const fetchArtist = async (uri) => {
         return {
             id : i.id,
             name : i.name,
-            duration_ms : i.duration_ms,
+            duration_ms : formatTrackDuration(i.duration_ms),
             uri : i.uri,
         }
     });
 
     artist.table = {
-        head :  ['name','length'],
+        head :  ['name','duration'],
         body  : artist.tracks
     }
 
@@ -118,8 +106,6 @@ const getView = async ({uri}) => {
     } else if(uri.split(':').indexOf('artist') >= 0) {
         content = await fetchArtist(uri);
     }
-
-    content.setTrackDuration = setTrackDuration;
 
     return content;
 }

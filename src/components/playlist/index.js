@@ -44,9 +44,6 @@ class Playlist extends React.Component {
                     <StyledList>
                         <div className="container">
                             <TracklistHeader props={view} />
-                            <div className="filter">
-                                <input type="text" placeholder="filter" />
-                            </div>
                             <Tracklist view={view} device_id={device_id} />
                         </div>
                     </StyledList>
