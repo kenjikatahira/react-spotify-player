@@ -2,8 +2,14 @@ import React from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
 import { setView } from './../../actions';
+import { render } from "@testing-library/react";
 
 const StyledList = styled.div`
+    .filter {
+        input {
+            font-size:14px;
+        }
+    }
     table {
         list-style: none;
         margin: 0;
@@ -63,15 +69,21 @@ const StyledList = styled.div`
     }
 `;
 
-const Tracklist = (props) => {
-    const setArtist = ({ artist, total, index }) => {
+class Tracklist extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            filteredItems : []
+        }
+    }
+    setArtist ({ artist, total, index }) {
         const { uri, name } = artist;
         return (
             <span
                 key={uri}
                 onClick={(ev) => {
                     ev.stopPropagation();
-                    props.setView({ uri });
+                    this.props.setView({ uri });
                 }}
             >
                 {total > 1 && index !== total - 1 ? `${name}, ` : name}
@@ -79,26 +91,26 @@ const Tracklist = (props) => {
         );
     }
 
-    const setAlbum = (ev,item) => {
+    setAlbum(ev,item) {
         ev.stopPropagation();
-        props.setView({ uri: item.album.uri });
+        this.props.setView({ uri: item.album.uri });
     }
 
-    const renderList = (item) => {
+    renderList(item) {
         return (
             <tr
                 key={item.id}
                 onClick={() => {
-                    if (props.device_id) {
+                    if (this.props.device_id) {
                         console.log({
                             uri: item.uri,
-                            uris: props.view.tracks,
-                            device_id: props.device_id,
+                            uris: this.props.view.tracks,
+                            device_id: this.props.device_id,
                         })
-                        props.player.play({
+                        this.props.player.play({
                             uri: item.uri,
-                            uris: props.view.tracks,
-                            device_id: props.device_id,
+                            uris: this.props.view.tracks,
+                            device_id: this.props.device_id,
                         });
                     }
                 }}
@@ -115,13 +127,13 @@ const Tracklist = (props) => {
                 {
                     item.artists &&
                     <td>
-                        {item.artists &&Object.values(item.artists).map((artist, index) => setArtist({ artist,total: (item.artists || []).length, index }))}
+                        {item.artists && Object.values(item.artists).map((artist, index) => this.setArtist({ artist,total: (item.artists || []).length, index }))}
                     </td>
                 }
                 {
                     item.album &&
                     <td>
-                        <span onClick={(ev) => setAlbum(ev,item)}> {item.album.name} </span>
+                        <span onClick={(ev) => this.setAlbum(ev,item)}> {item.album.name} </span>
                     </td>
                 }
                 {
@@ -134,38 +146,39 @@ const Tracklist = (props) => {
         );
     }
 
-    const onFilter = (ev) => {
-        const { value }  = ev.target;
-        props.view.table.body = props.view.table.body.filter(({name}) => name.indexOf(ev) >= 0).map(i => i);
+    onFilter(ev) {
+        console.log(ev.target.value)
+        this.setState({
+            filteredItems : this.props.view.table.body.filter(({name}) => name.toLowerCase().replace('ã','a').indexOf(ev.target.value.toLowerCase()) > -1 )
+        })
     }
 
-    if (props.view.tracks) {
-        return (
-            <>
-                <StyledList>
-                    <div className="filter">
-                        <input type="text" placeholder="filter" onChange={onFilter} />
-                    </div>
-                    <table className="table">
-                        <thead>
-                            <tr className="header">
-                                <th scope="col"></th>
-                                {props.view.table.head.map(i => (<th>{i}</th>))}
-                                {/* <th scope="col">Title</th>
-                                <th scope="col">Artist</th>
-                                <th scope="col">Album</th>
-                                <th scope="col"><i className="clock fas fa-clock"></i></th> */}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {props.view.table.body.map((i) => renderList(i))}
-                        </tbody>
-                    </table>
-                </StyledList>
-            </>
-        );
-    } else {
-        return <> Loading... </>;
+    render() {
+        console.log(this.state.filteredItems)
+        if (this.props.view.tracks) {
+            return (
+                <>
+                    <StyledList>
+                        <div className="filter">
+                            <input type="text" placeholder="Filter" onChange={(ev) => { this.onFilter(ev) }} />
+                        </div>
+                        <table className="table">
+                            <thead>
+                                <tr className="header">
+                                    <th scope="col"></th>
+                                    {this.props.view.table.head.map(i => (<th>{i}</th>))}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {((this.state.filteredItems || []).length > 0 ? this.state.filteredItems : this.props.view.table.body).map((i) => this.renderList(i))}
+                            </tbody>
+                        </table>
+                    </StyledList>
+                </>
+            );
+        } else {
+            return <> Loading... </>;
+        }
     }
 }
 

@@ -19,7 +19,7 @@ class Controls extends React.Component {
                             <button className="btn btn-outline-secondary" onClick={this.props.player.previous}>
                                 <i className="fas fa-backward"></i>
                             </button>
-                            {/* <button
+                            <button
                                 className="btn btn-outline-secondary"
                                 onClick={() => this.props.player.play({
                                     uri : this.props.view.uri,
@@ -31,7 +31,7 @@ class Controls extends React.Component {
                             </button>
                             <button className="btn btn-outline-secondary" onClick={this.props.player.pause}>
                                 <i className="fas fa-pause"></i>
-                            </button> */}
+                            </button>
                             <button className="btn btn-outline-secondary" onClick={this.props.player.next}>
                                 <i className="fas fa-forward"></i>
                             </button>

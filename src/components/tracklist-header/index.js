@@ -47,6 +47,9 @@ const StyledHeader = Styled.div`
                 cursor: pointer;
                 background: #1DB954;
                 border-radius: 15px;
+                font-size: 11px;
+                letter-spacing: 2px;
+                font-weight: bold;
                 width: 106px;
                 padding: 4px;
                 text-align: center;
