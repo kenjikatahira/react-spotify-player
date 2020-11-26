@@ -4,6 +4,11 @@ Using react, redux , router ...
 
 In the project directory, you can run:
 
-### `add your clientKey and clientSecret on src/config.js file`
-### `command : npm install`
-### `command : npm start`
+in progress project!
+
+## `*add your clientKey and clientSecret on src/config.js file`
+
+then
+
+### `npm install`
+### `npm start`
