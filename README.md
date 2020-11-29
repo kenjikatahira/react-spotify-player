@@ -1,5 +1,5 @@
 # React Spotify Player
-This is my first react application to play my favorite songs made with spotify apis
+This is my first react application to play my favorite songs made with spotify apis ( for learning purposes )
 
 ## It uses React, Redux...
 It is a nice excuse to learn new things and improve my coding
