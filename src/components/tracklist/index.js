@@ -102,11 +102,6 @@ class Tracklist extends React.Component {
                 key={item.id}
                 onClick={() => {
                     if (this.props.device_id) {
-                        console.log({
-                            uri: item.uri,
-                            uris: this.props.view.tracks,
-                            device_id: this.props.device_id,
-                        })
                         this.props.player.play({
                             uri: item.uri,
                             uris: this.props.view.tracks,
@@ -166,7 +161,7 @@ class Tracklist extends React.Component {
                             <thead>
                                 <tr className="header">
                                     <th scope="col"></th>
-                                    {this.props.view.table.head.map(i => (<th>{i}</th>))}
+                                    {this.props.view.table.head.map(i => (<th key={i}>{i}</th>))}
                                 </tr>
                             </thead>
                             <tbody>

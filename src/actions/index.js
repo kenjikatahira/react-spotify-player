@@ -278,3 +278,19 @@ export const getPlayer = ({ currentTrack, setDeviceId }) => {
         });
     }
 }
+
+/**
+ * Set current track and context data
+ * @function setCurrentState
+ * @param response changed state
+ * @return {Void}
+ */
+export const setCurrentState = (state) => {
+    return dispatch => {
+        console.log('SET_CURRENT_STATE',state);
+        dispatch({
+            type : 'SET_CURRENT_STATE',
+            payload : state
+        });
+    }
+}

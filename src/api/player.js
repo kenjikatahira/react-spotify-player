@@ -114,49 +114,35 @@ const init = ({setDeviceId}) => {
     console.log('____init___');
 
     const player = new window.Spotify.Player({
-        playerInstance: new window.Spotify.Player({ name: 'Kenjicas Player_' }),
+        playerInstance: new window.Spotify.Player({ name: 'Kenjicas Player' }),
         name: 'Kenjicas Player',
         getOAuthToken: callback => callback(getSession().access_token)
     });
 
-    console.log('instance -',player)
-
-    player.addListener('ready', ({device_id}) => {
-        setDeviceId(device_id);
-        console.log('Ready - Device ID', device_id);
-    });
-
-    player.on('authentication_error', ({ message }) => {
-        console.error('Failed to authenticate', message);
-    });
-
-    player.on('initialization_error', ({ message }) => {
-        console.error('Failed to initialize', message);
-    });
-
-    // update status - action
-    player.addListener('player_state_changed', ({ position,duration,track_window: { current_track } }) => {
-        // console.log({ position,duration,current_track })
-    });
-
-    player.connect();
-
+    player.setDeviceId = setDeviceId;
     player.play = play;
     player.next = next;
     player.previous = previous;
     player.pause = pause;
+    player.resume = resume;
 
     return player;
 }
 
-const previous = () => {
-    fetch('https://api.spotify.com/v1/me/player/previous',{
-        method : 'POST',
-        headers : {
-            'content-type' : 'application/json',
-            'authorization' : `${getSession().token_type} ${getSession().access_token}`
-        }
-    });
+const previous = (lastUri) => {
+    console.log(lastUri)
+    try {
+        fetch('https://api.spotify.com/v1/me/player/previous',{
+            method : 'POST',
+            headers : {
+                'content-type' : 'application/json',
+                'authorization' : `${getSession().token_type} ${getSession().access_token}`
+            }
+        });
+    } catch(err) {
+        play({uri : lastUri})
+    }
+
 }
 
 const next = () => {
@@ -179,12 +165,19 @@ const pause = () => {
     });
 }
 
-const play = async ({uri,uris,device_id}) => {
-    console.log(`playyyyy`,{
-        uri,uris,device_id
-    })
+const resume = async () => {
+   fetch(`https://api.spotify.com/v1/me/player/play`, {
+       method: 'PUT',
+       headers: {
+           'Content-Type': 'application/json',
+           'Authorization': `Bearer ${getSession().access_token}`
+       }
+   });
+}
 
-    let queue = orderList(uri,uris.map(({uri}) => uri));
+
+const play = async ({uri,uris,device_id}) => {
+    let queue = orderList(uri,(uris || []).map(({uri}) => uri));
 
     fetch(`https://api.spotify.com/v1/me/player/play?device_id=${device_id}`, {
         method: 'PUT',

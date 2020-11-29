@@ -45,7 +45,8 @@ class Artist extends React.Component {
                     <StyledList>
                         <div className="container">
                             <TracklistHeader props={view} />
-                            <Tracklist view={view} device_id={device_id} />
+                            <Tracklist view={view} limit="5" device_id={device_id} />
+                            <button>show more</button>
                         </div>
                     </StyledList>
                 </>

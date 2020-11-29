@@ -18,6 +18,11 @@ const StyledHome = styled.main`
         margin-bottom: 25px;
         .album {
             width: 240px;
+            cursor: pointer;
+            .image {
+                width: 240px;
+                height:240px;
+            }
             .card-body {
                 padding: 10px 0;
             }
@@ -34,7 +39,9 @@ class Main extends React.Component {
     renderAlbums(playlist) {
         return (
             <div className="album col-sm-3" onClick={() => { this.props.setView({uri : playlist.uri}) }} key={playlist.id}>
-                <img className="img-thumbnail" src={playlist.images.length && playlist.images[0].url} alt={playlist.name}/>
+                <div class="image" style={
+                    { backgroundImage: `url(${playlist.images.length && playlist.images[0].url})`, backgroundSize :'cover', backgroundPosition:'center center' }
+                }></div>
                 <div className="card-body">
                     <p className="card-title">{playlist.name}</p>
                     <small className="card-text">{playlist.description}</small>

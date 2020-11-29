@@ -113,6 +113,7 @@ class Main extends React.Component {
                                     playlists={this.props.playlists}
                                     uri={uri}
                                 />
+                                <Controls />
                             </div>
                             <div className="browser col-sm-10">
                                 <Search
