@@ -2,7 +2,6 @@ import React from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
 import { setView } from './../../actions';
-import { render } from "@testing-library/react";
 
 const StyledList = styled.div`
     .filter {

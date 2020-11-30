@@ -48,14 +48,8 @@ export const orderList = (item,arr) => {
     return newArr;
 }
 
-export const formatTrackDuration = (duration) => {
-    let day, hour, minute, seconds;
-    seconds = Math.floor(duration / 1000);
-    minute = Math.floor(seconds / 60);
-    seconds = seconds % 60;
-    hour = Math.floor(minute / 60);
-    minute = minute % 60;
-    day = Math.floor(hour / 24);
-    hour = hour % 24;
-    return hour ? `${hour} hr ${minute} min`:`${minute}:${seconds}`;
+export const formatTrackDuration = (millis) => {
+    var minutes = Math.floor(millis / 60000);
+    var seconds = ((millis % 60000) / 1000).toFixed(0);
+    return `${minutes}:${(seconds < 10 ? "0" : "")}${seconds}`;
 }

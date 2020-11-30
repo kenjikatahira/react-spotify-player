@@ -1,7 +1,6 @@
 import { combineReducers } from 'redux';
 
 const GET_USER = 'GET_USER';
-const GET_CURRENT_TRACK = 'GET_CURRENT_TRACK';
 const GET_PLAYLISTS = 'GET_PLAYLISTS';
 const SET_DEVICE_ID = 'SET_DEVICE_ID';
 const GET_HOME = 'GET_HOME';

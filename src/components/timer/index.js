@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components'
-import StateManager from 'react-select';
 
 const StyledTimer = styled.div`
     .timer {

@@ -14,7 +14,6 @@ import {
 import View from "../view";
 import Login from "../login";
 import Menu from "../menu";
-import Search from "../search";
 import Controls from "../controls";
 
 const StyledMain = styled.main`
@@ -172,6 +171,5 @@ export default connect(mapStateToProps, {
     getPlaylists,
     setView,
     setDeviceId,
-    logout,
     getPlayer
 })(Main);

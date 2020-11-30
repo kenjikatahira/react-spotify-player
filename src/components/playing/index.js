@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components'
 
 const StyledPlaying = styled.div`
@@ -36,7 +36,7 @@ const Playing = ({current_state : { current_track }}) => {
     return (
         <StyledPlaying>
             <div className="image col-sm-4">
-                <img src={image} />
+                <img src={image} alt={image} />
             </div>
             <div className="info col-sm-8">
                 <div className="track"><b>{track}</b></div>
