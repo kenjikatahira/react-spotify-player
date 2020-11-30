@@ -2,6 +2,9 @@
     "name": "react-spotify-player",
     "version": "0.0.1",
     "author": "Kenji Katahira",
+    "engines": {
+        "node": "12.19.0"
+    },
     "dependencies": {
         "@testing-library/jest-dom": "^4.2.4",
         "@testing-library/react": "^9.5.0",
