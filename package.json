@@ -2,6 +2,10 @@
     "name": "react-spotify-player",
     "version": "0.0.1",
     "author": "Kenji Katahira",
+    "engines": {
+        "node": "12.19.0",
+        "npm" : "6.14.8"
+    },
     "dependencies": {
         "@testing-library/jest-dom": "^4.2.4",
         "@testing-library/react": "^9.5.0",
@@ -25,7 +29,8 @@
         "start": "react-scripts start",
         "build": "react-scripts build",
         "test": "react-scripts test",
-        "eject": "react-scripts eject"
+        "eject": "react-scripts eject",
+        "heroku-postbuild": "react-scripts build"
     },
     "eslintConfig": {
         "extends": "react-app"
