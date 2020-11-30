@@ -165,8 +165,9 @@ const pause = () => {
     });
 }
 
-const resume = async () => {
-   fetch(`https://api.spotify.com/v1/me/player/play`, {
+const resume = async ({device_id}) => {
+    console.log(device_id)
+   fetch(`https://api.spotify.com/v1/me/player/play?device_id=${device_id}`, {
        method: 'PUT',
        headers: {
            'Content-Type': 'application/json',

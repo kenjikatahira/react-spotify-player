@@ -9,6 +9,7 @@ const SET_VIEW = 'SET_VIEW';
 const GET_FEATURED_PLAYLISTS = 'GET_FEATURED_PLAYLISTS';
 const GET_VIEW = 'GET_VIEW';
 const GET_PLAYER = 'GET_PLAYER';
+const SET_CURRENT_STATE = 'SET_CURRENT_STATE';
 
 const LOGIN = 'LOGIN';
 const LOGOUT = 'LOGOUT';
@@ -89,6 +90,13 @@ const playerReducer = (state={},action) => {
     return state;
 }
 
+const currentStateReducer = (state={},action) => {
+    if(action.type === SET_CURRENT_STATE) {
+        return action.payload;
+    }
+    return state;
+}
+
 export default combineReducers({
     user : userReducer,
     logged : loginReducer,
@@ -98,5 +106,6 @@ export default combineReducers({
     uri : uriReducer,
     view : viewReducer,
     player : playerReducer,
-    featured_paylists : featuredPaylistReducer
+    featured_paylists : featuredPaylistReducer,
+    current_state : currentStateReducer
 });

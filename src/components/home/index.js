@@ -36,10 +36,15 @@ const StyledHome = styled.main`
 `;
 
 class Main extends React.Component {
+
+    componentDidMount() {
+        this.props.getHome();
+    }
+
     renderAlbums(playlist) {
         return (
             <div className="album col-sm-3" onClick={() => { this.props.setView({uri : playlist.uri}) }} key={playlist.id}>
-                <div class="image" style={
+                <div className="image" style={
                     { backgroundImage: `url(${playlist.images.length && playlist.images[0].url})`, backgroundSize :'cover', backgroundPosition:'center center' }
                 }></div>
                 <div className="card-body">
@@ -49,19 +54,18 @@ class Main extends React.Component {
             </div>
         )
     }
+
     renderRow(row) {
         return (
             <>
                 <h2> {row.message} </h2>
-                <div class="albums-row" key={row.type}>
+                <div className="albums-row" key={row.type}>
                     {row.items.map(this.renderAlbums.bind(this))}
                 </div>
             </>
         )
     }
-    componentDidMount() {
-        this.props.getHome();
-    }
+
     render() {
         if(Object.keys(this.props.home).length) {
             return (

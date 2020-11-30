@@ -1,7 +1,6 @@
 import { setSession,getSession, removeSession,isAuthenticated } from '../utils';
 import {
     get_user,
-    get_current_track,
     get_devices,get_playlists,
     get_recently_tracks,
     get_a_playlist,
@@ -287,10 +286,32 @@ export const getPlayer = ({ currentTrack, setDeviceId }) => {
  */
 export const setCurrentState = (state) => {
     return dispatch => {
-        console.log('SET_CURRENT_STATE',state);
+        const {
+            position,
+            duration,
+            paused,
+            shuffle,
+            repeat_mode,
+            track_window : {
+                current_track,
+                next_tracks,
+                previous_tracks
+            }
+        } = state;
+
         dispatch({
             type : 'SET_CURRENT_STATE',
-            payload : state
+            payload : {
+                position,
+                duration,
+                paused,
+                shuffle,
+                repeat_mode,
+                current_track,
+                next_tracks,
+                previous_tracks
+            }
         });
     }
 }
+

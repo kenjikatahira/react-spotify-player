@@ -1,20 +1,33 @@
 import React from 'react';
+import Timer from './../timer';
 import styled from 'styled-components'
 import { connect } from "react-redux";
 import { setCurrentState } from './../../actions';
 
+import Playing from './../playing';
+
 const StyledControls = styled.div`
-    .controls {
+    .playing-wrapper {
+        float: left;
+    }
+    &> div:nth-child(2) {
+        float:left;
         text-align: center;
         button svg { color: #fff; }
-        position: fixed;
-        bottom: 0;
-        z-index:10;
-        background:#000;
+        height: 8vh;
     }
 `
 
 class Controls extends React.Component {
+
+    componentDidUpdate() {
+        if(this.props.player && this.props.player.addListener && !this.connected) this.configurePlayer(this.props.player);
+    }
+
+    onChange(state) {
+        this.props.setCurrentState(state);
+    }
+
     /**
      * Configure spotify player listeners
      * @function configurePlayer
@@ -22,70 +35,63 @@ class Controls extends React.Component {
      * @return {Void}
      */
     configurePlayer(player) {
+        if(!player) return;
         // player -> instancia do spotify player
         player.addListener('ready', ({device_id}) => {
-            player.setDeviceId(device_id);
             console.log('Ready - Device ID', device_id);
-        });
-
-        player.on('authentication_error', ({ message }) => {
-            console.error('Failed to authenticate', message);
-        });
-
-        player.on('initialization_error', ({ message }) => {
-            console.error('Failed to initialize', message);
+            player.setDeviceId(device_id);
         });
 
         // update status - action
-        player.addListener('player_state_changed', this.onChangeState.bind(this));
+        player.addListener('player_state_changed', this.onChange.bind(this));
 
+        // player connected
         player.connect();
+        this.connected = true;
     }
-    /**
-     * Player state changed callback
-     * @function onChangeState
-     * @param state Changed State Data
-     * @return {Void}
-     */
-    onChangeState(state) {
-        // action to set current state
-        this.props.setCurrentState(state);
-    }
-    render() {
-        const {player} = this.props;
-        if(player && player.addListener) {
-            this.configurePlayer(player);
+
+    togglePlayButton() {
+        const { paused } = this.props.current_state;
+        if(paused === undefined || paused) {
+            return (
+                <button
+                    className="btn btn-outline-secondary"
+                    onClick={() => {
+                        this.props.player.resume({device_id : this.props.device_id || ''})
+                    }}
+                >
+                    <i className="fas fa-play"></i>
+                </button>
+            )
+        } else {
+            return (
+                <button className="btn btn-outline-secondary" onClick={this.props.player.pause}>
+                    <i className="fas fa-pause" onClick={this.props.player.pause}></i>
+                </button>
+            )
         }
+    }
+
+    render() {
+        const {
+            player,
+            current_state
+        } = this.props;
+
+        // verify if player device_id is ready to take commands
         if(this.props.device_id) {
             return(
                 <>
                     <StyledControls>
-                        <div className="controls">
-                            <div>
-                                00:00
-                            </div>
+                        <div className="playing-wrapper col-sm-2">
+                            <Playing current_state={current_state} />
+                        </div>
+                        <div className="col-sm-10">
+                            <Timer current_state={current_state} />
                             <button className="btn btn-outline-secondary" onClick={() => {player.previous(this.teste)}}>
                                 <i className="fas fa-backward"></i>
                             </button>
-                            <button
-                                className="btn btn-outline-secondary"
-                                onClick={() => {
-                                    if((this.props.view || {}).uri) {
-                                        player.play({
-                                            uri : this.props.view.uri,
-                                            tracks : this.props.view.tracks,
-                                            device_id : this.props.view.device_id
-                                        })
-                                    } else {
-                                        player.resume();
-                                    }
-                                }}
-                            >
-                                <i className="fas fa-play"></i>
-                            </button>
-                            <button className="btn btn-outline-secondary" onClick={player.pause}>
-                                <i className="fas fa-pause" onClick={player.pause}></i>
-                            </button>
+                            {this.togglePlayButton()}
                             <button className="btn btn-outline-secondary" onClick={player.next}>
                                 <i className="fas fa-forward"></i>
                             </button>
@@ -102,9 +108,9 @@ class Controls extends React.Component {
 }
 const mapStateToProps = (state) => {
     return {
-        view: state.view,
         device_id: state.device_id,
-        player : state.player
+        player : state.player,
+        current_state : state.current_state
     };
 };
 

@@ -6,9 +6,6 @@ import TracklistHeader from "../tracklist-header";
 import Tracklist from "../tracklist";
 
 const StyledList = styled.div`
-    .container {
-        margin-left: 20px;
-    }
     .filter {
         padding: 3px;
         input {
@@ -23,9 +20,11 @@ const StyledList = styled.div`
 `;
 
 class Playlist extends React.Component {
+
     componentWillMount() {
         this.props.getView({ uri: this.props.uri });
     }
+
     UNSAFE_componentWillUpdate(nextProps) {
         if (
             ((nextProps.view || {}).tracks || []).length &&
@@ -35,6 +34,7 @@ class Playlist extends React.Component {
             this.props.getView({ uri: nextProps.uri });
         }
     }
+
     render() {
         const { tracks } = this.props.view;
         const { view,device_id } = this.props;

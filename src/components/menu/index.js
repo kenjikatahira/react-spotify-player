@@ -54,7 +54,7 @@ const StyledList = styled.ul`
             }
         }
     }
-`;
+`
 
 const Menu = ({playlists, setView, uri, logout, getPlaylists}) => {
     // Retorna a playlist do usuario

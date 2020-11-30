@@ -1,9 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
-
+import styled from "styled-components";
 import { isLogged } from './actions';
 
 import Main from './components/main';
+
+const StyledApp = styled.main`
+    background: rgba(28,28,28);
+`;
 
 class App extends React.Component {
     componentDidMount() {
@@ -11,7 +15,9 @@ class App extends React.Component {
     }
     render() {
         return (
-            <Main></Main>
+            <StyledApp>
+                <Main></Main>
+            </StyledApp>
         )
     }
 }

@@ -77,10 +77,10 @@ class Tracklist extends React.Component {
         }
     }
     setArtist ({ artist, total, index }) {
-        const { uri, name } = artist;
+        const { id, uri, name } = artist;
         return (
             <span
-                key={uri}
+                key={id+'#'+index}
                 onClick={(ev) => {
                     ev.stopPropagation();
                     this.props.setView({ uri });
@@ -96,10 +96,10 @@ class Tracklist extends React.Component {
         this.props.setView({ uri: item.album.uri });
     }
 
-    renderList(item) {
+    renderList(item,index) {
         return (
             <tr
-                key={item.id}
+                key={item.id+'#'+index}
                 onClick={() => {
                     if (this.props.device_id) {
                         this.props.player.play({
@@ -142,14 +142,12 @@ class Tracklist extends React.Component {
     }
 
     onFilter(ev) {
-        console.log(ev.target.value)
-        this.setState({
+            this.setState({
             filteredItems : this.props.view.table.body.filter(({name}) => name.toLowerCase().replace('ã','a').indexOf(ev.target.value.toLowerCase()) > -1 )
         })
     }
 
     render() {
-        console.log(this.state.filteredItems)
         if (this.props.view.tracks) {
             return (
                 <>
@@ -165,7 +163,7 @@ class Tracklist extends React.Component {
                                 </tr>
                             </thead>
                             <tbody>
-                                {((this.state.filteredItems || []).length > 0 ? this.state.filteredItems : this.props.view.table.body).map((i) => this.renderList(i))}
+                                {((this.state.filteredItems || []).length > 0 ? this.state.filteredItems : this.props.view.table.body).map((i,index) => this.renderList(i,index))}
                             </tbody>
                         </table>
                     </StyledList>

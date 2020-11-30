@@ -20,8 +20,6 @@ import Controls from "../controls";
 const StyledMain = styled.main`
     overflow: hidden;
     font-family: "Lato";
-    background: rgba(28,28,28);
-    padding: 0;
     color: #F5F5F5;
     overflow: none;
 
@@ -35,7 +33,8 @@ const StyledMain = styled.main`
     }
 
     .menu, .browser {
-        height: 100vh;
+        position: relative;
+        height: 92vh;
         overflow-x: hidden;
         overflow-y: auto;
 
@@ -46,6 +45,13 @@ const StyledMain = styled.main`
             background-color: rgba(73, 73, 73);
             outline: 1px solid slategrey;
         }
+    }
+
+    .controls-wrapper {
+        position: relative;
+        width: 100%;
+        height: 8vh;
+        background-color: #282828;
     }
 
     .browser {
@@ -94,10 +100,15 @@ class Main extends React.Component {
         };
     }
     onSearchChange(ev) {
-        console.log(ev)
+        console.log(ev);
     }
     render() {
-        const { logged, uri, tracks } = this.props;
+        const {
+            logged,
+            uri,
+            tracks
+        } = this.props;
+
         if(!logged.status) {
             return <Login />;
         } else {
@@ -113,28 +124,30 @@ class Main extends React.Component {
                                     playlists={this.props.playlists}
                                     uri={uri}
                                 />
-                                <Controls />
                             </div>
                             <div className="browser col-sm-10">
-                                <Search
+                                {/* <Search
                                     onSearchChange={this.onSearchChange}
-                                />
+                                /> */}
                                 <View
                                     uri={uri}
                                     tracks={tracks}
                                 />
                             </div>
+                            <div className="controls-wrapper">
+                                <Controls />
+                            </div>
                         </div>
                         {
-                        process.env.NODE_ENV === 'development' ?
-                        (
-                            <div className="debug">
-                                <p>{JSON.stringify(this.props.uri)}</p>
-                                <p>{JSON.stringify(this.props.device_id)}</p>
-                            </div>
-                        ) :
-                        ''
-                    }
+                            process.env.NODE_ENV === 'development' ?
+                            (
+                                <div className="debug">
+                                    <p>{JSON.stringify(this.props.uri)}</p>
+                                    <p>{JSON.stringify(this.props.device_id)}</p>
+                                </div>
+                            ) :
+                            ''
+                        }
                     </StyledMain>
                 </>
             );
