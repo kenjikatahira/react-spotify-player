@@ -54,7 +54,6 @@ class Main extends React.Component {
             logged,
             uri,
             tracks,
-            device_id,
             getPlaylists,
             logout,
             setView,

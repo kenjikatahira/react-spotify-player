@@ -58,13 +58,13 @@ class Tracklist extends React.Component {
                 {
                     item.artists &&
                     <td>
-                        {item.artists && Object.values(item.artists).map((artist, index) => this.setArtist({ artist,total: (item.artists || []).length, index }))}
+                        <span className="link">{item.artists && Object.values(item.artists).map((artist, index) => this.setArtist({ artist,total: (item.artists || []).length, index }))}</span>
                     </td>
                 }
                 {
                     item.album &&
                     <td>
-                        <span onClick={(ev) => this.setAlbum(ev,item)}> {item.album.name} </span>
+                        <span className="link" onClick={(ev) => this.setAlbum(ev,item)}> {item.album.name} </span>
                     </td>
                 }
                 {

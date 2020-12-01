@@ -53,10 +53,15 @@
             }
 
             .play {
+                border: 1px solid #fff;
+                padding: 5px;
+                width: 20px;
+                height: 20px;
+                border-radius: 100%;
                 visibility: hidden;
             }
 
-            span:hover {
+            span.link:hover {
                 border-bottom: 1px solid #fff;
             }
         }

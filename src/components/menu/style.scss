@@ -4,6 +4,20 @@ ul.menu {
     white-space: nowrap;
     color : #B3B3B3;
 
+    .spotify-logo {
+        width:150px;
+        padding:20px;
+        padding-right: 0;
+        padding-left:5px;
+        display:inline-block;
+        color:#fff;
+    }
+    .react-logo {
+        width:80px;
+        padding-left:0px;
+        color:#fff;
+    }
+
     .fixed-pages {
         position: sticky;
 

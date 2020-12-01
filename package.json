@@ -30,7 +30,8 @@
         "build": "react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject",
-        "heroku-postbuild": "react-scripts build"
+        "predeploy": "npm run build",
+        "deploy": "gh-pages -d dist"
     },
     "eslintConfig": {
         "extends": "react-app"
@@ -48,6 +49,7 @@
         ]
     },
     "devDependencies": {
+        "gh-pages": "^3.1.0",
         "node-sass": "^4.14.1"
     }
 }
