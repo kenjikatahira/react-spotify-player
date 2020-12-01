@@ -16,7 +16,7 @@ const View = (props) => {
                 ) : uri.indexOf('home') >= 0 ? (
                     <Home />
                 ) : (
-                    'sem tpl'
+                    'TRISTE'
                 )}
             </>
     );
