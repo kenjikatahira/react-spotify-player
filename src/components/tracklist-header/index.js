@@ -59,7 +59,16 @@ const StyledHeader = Styled.div`
 
 
 const TracklistHeader = ({props}) => {
-    const {tracks, images, name, description, owner, total_duration,type } = props;
+    const {
+        tracks,
+        images,
+        name,
+        description,
+        owner,
+        total_duration,
+        type
+    } = props;
+
     return (
         <StyledHeader className="row">
             {(images.length && images[0].url &&

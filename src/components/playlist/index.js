@@ -1,28 +1,19 @@
 import React from "react";
 import { connect } from "react-redux";
-import styled from "styled-components";
+
+import './style.scss';
+
 import { getView, setView } from "../../actions";
+
 import TracklistHeader from "../tracklist-header";
 import Tracklist from "../tracklist";
-
-const StyledList = styled.div`
-    .filter {
-        padding: 3px;
-        input {
-            width: 176px;
-            height: 25px;
-            border-radius: 27px;
-            background: inherit;
-            border-style: none;
-            color: #f5f5f5;
-        }
-    }
-`;
 
 class Playlist extends React.Component {
 
     componentWillMount() {
-        this.props.getView({ uri: this.props.uri });
+        this.props.getView({
+            uri: this.props.uri
+        });
     }
 
     UNSAFE_componentWillUpdate(nextProps) {
@@ -37,17 +28,24 @@ class Playlist extends React.Component {
 
     render() {
         const { tracks } = this.props.view;
-        const { view,device_id } = this.props;
+        const {
+            view,
+            device_id
+        } = this.props;
+
         if (tracks) {
             return (
-                <>
-                    <StyledList>
-                        <div className="container">
-                            <TracklistHeader props={view} />
-                            <Tracklist view={view} device_id={device_id} />
-                        </div>
-                    </StyledList>
-                </>
+                <div className="playlist">
+                    <div className="container">
+                        <TracklistHeader
+                            props={view}
+                        />
+                        <Tracklist
+                            view={view}
+                            device_id={device_id}
+                        />
+                    </div>
+                </div>
             );
         } else {
             return <>loading</>;

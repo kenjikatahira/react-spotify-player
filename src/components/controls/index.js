@@ -1,27 +1,19 @@
 import React from 'react';
-import Timer from './../timer';
-import styled from 'styled-components'
+import './style.scss';
 import { connect } from "react-redux";
 import { setCurrentState } from './../../actions';
 
 import Playing from './../playing';
-
-const StyledControls = styled.div`
-    .playing-wrapper {
-        float: left;
-    }
-    &> div:nth-child(2) {
-        float:left;
-        text-align: center;
-        button svg { color: #fff; }
-        height: 8vh;
-    }
-`
+import TimerContainer from '../timerContainer';
 
 class Controls extends React.Component {
 
     componentDidUpdate() {
-        if(this.props.player && this.props.player.addListener && !this.connected) this.configurePlayer(this.props.player);
+        if(
+            this.props.player &&
+            this.props.player.addListener &&
+            !this.connected
+        ) this.configurePlayer(this.props.player);
     }
 
     onChange(state) {
@@ -41,10 +33,8 @@ class Controls extends React.Component {
             console.log('Ready - Device ID', device_id);
             player.setDeviceId(device_id);
         });
-
         // update status - action
         player.addListener('player_state_changed', this.onChange.bind(this));
-
         // player connected
         player.connect();
         this.connected = true;
@@ -82,12 +72,12 @@ class Controls extends React.Component {
         if(this.props.device_id) {
             return(
                 <>
-                    <StyledControls>
+                    <div className="controls">
                         <div className="playing-wrapper col-sm-2">
                             <Playing current_state={current_state} />
                         </div>
                         <div className="col-sm-10">
-                            <Timer current_state={current_state} />
+                            <TimerContainer current_state={current_state} />
                             <button className="btn btn-outline-secondary" onClick={() => {player.previous(this.teste)}}>
                                 <i className="fas fa-backward"></i>
                             </button>
@@ -96,7 +86,7 @@ class Controls extends React.Component {
                                 <i className="fas fa-forward"></i>
                             </button>
                         </div>
-                    </StyledControls>
+                    </div>
                 </>
             )
         } else {

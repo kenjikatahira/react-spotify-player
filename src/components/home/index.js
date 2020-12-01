@@ -1,39 +1,12 @@
 import React from "react";
-import styled from "styled-components";
 import { connect } from "react-redux";
+
+import './style.scss';
 
 import {
     getHome,
     setView
 } from "../../actions";
-
-const StyledHome = styled.main`
-    .albums-row {
-        display: flex;
-        flex-direction: row;
-        overflow: hidden;
-        width: 100%;
-        white-space: nowrap;
-        padding: 10px 0;
-        margin-bottom: 25px;
-        .album {
-            width: 240px;
-            cursor: pointer;
-            .image {
-                width: 240px;
-                height:240px;
-            }
-            .card-body {
-                padding: 10px 0;
-            }
-            .card-body .card-text {
-                display : block;
-                white-space: pre-wrap;
-            }
-        }
-    }
-
-`;
 
 class Main extends React.Component {
 
@@ -69,21 +42,17 @@ class Main extends React.Component {
     render() {
         if(Object.keys(this.props.home).length) {
             return (
-                <>
-                    <StyledHome>
-                        <div className="container">
-                            {Object.values(this.props.home).map(this.renderRow.bind(this))}
-                        </div>
-                    </StyledHome>
-                </>
+                <div className="home">
+                    <div className="container">
+                        {Object.values(this.props.home).map(this.renderRow.bind(this))}
+                    </div>
+                </div>
             );
         } else {
             return (
-                <>
-                    <StyledHome>
-                        Loading...
-                    </StyledHome>
-                </>
+                <div className="home">
+                    Loading...
+                </div>
             )
         }
     }

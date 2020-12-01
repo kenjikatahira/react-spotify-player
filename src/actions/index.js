@@ -299,6 +299,8 @@ export const setCurrentState = (state) => {
             }
         } = state;
 
+        console.log(state);
+
         dispatch({
             type : 'SET_CURRENT_STATE',
             payload : {

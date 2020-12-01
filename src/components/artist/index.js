@@ -1,33 +1,18 @@
 import React from "react";
 import { connect } from "react-redux";
-import styled from "styled-components";
+
+import './style.scss';
+
 import { getView, setView } from "../../actions";
+
 import TracklistHeader from "../tracklist-header";
 import Tracklist from "../tracklist";
-
-const StyledList = styled.div`
-    padding: 20px 0;
-    .container {
-        margin-left: 20px;
-    }
-    .filter {
-        padding: 3px;
-        input {
-            width: 176px;
-            height: 25px;
-            border-radius: 27px;
-            background: inherit;
-            border-style: none;
-            color: #f5f5f5;
-        }
-    }
-`;
 
 class Artist extends React.Component {
     componentWillMount() {
         this.props.getView({ uri: this.props.uri });
     }
-    UNSAFE_componentWillUpdate(nextProps) {
+    componentDidUpdate(nextProps) {
         if (
             ((nextProps.view || {}).tracks || []).length &&
             ((this.props.view || {}).tracks || []).length &&
@@ -41,15 +26,13 @@ class Artist extends React.Component {
         const { view,device_id } = this.props;
         if (tracks) {
             return (
-                <>
-                    <StyledList>
-                        <div className="container">
-                            <TracklistHeader props={view} />
-                            <Tracklist view={view} limit="5" device_id={device_id} />
-                            <button>show more</button>
-                        </div>
-                    </StyledList>
-                </>
+                <div className="artist">
+                    <div className="container">
+                        <TracklistHeader props={view} />
+                        <Tracklist view={view} limit="5" device_id={device_id} />
+                        <button>show more</button>
+                    </div>
+                </div>
             );
         } else {
             return <>loading</>;

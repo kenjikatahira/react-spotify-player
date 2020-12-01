@@ -1,0 +1,12 @@
+.controls {
+    .playing-wrapper {
+        float: left;
+    }
+
+    &> div:nth-child(2) {
+        float:left;
+        text-align: center;
+        button svg { color: #fff; }
+        height: 8vh;
+    }
+}
