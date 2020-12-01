@@ -27,11 +27,9 @@ class Artist extends React.Component {
         if (tracks) {
             return (
                 <div className="artist">
-                    <div className="container">
-                        <TracklistHeader props={view} />
-                        <Tracklist view={view} limit="5" device_id={device_id} />
-                        <button>show more</button>
-                    </div>
+                    <TracklistHeader props={view} />
+                    <Tracklist view={view} limit="5" device_id={device_id} />
+                    <button>show more</button>
                 </div>
             );
         } else {

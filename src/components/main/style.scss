@@ -1,5 +1,12 @@
 .main {
-    overflow: hidden;
+    display: grid;
+    grid-template-columns: 20vw;
+    grid-template-rows: auto;
+    grid-template-areas:
+      "sidebar main main main"
+      "footer footer footer footer";
+
+      overflow: hidden;
     font-family: "Lato";
     color: #F5F5F5;
     overflow: none;
@@ -13,11 +20,12 @@
         }
     }
 
+
     .menu-wrapper, .browser-wrapper {
         position: relative;
-        height: 92vh;
         overflow-x: hidden;
         overflow-y: auto;
+        max-height: 92vh;
 
         &::-webkit-scrollbar {
             width: 1em;
@@ -28,25 +36,27 @@
         }
     }
 
-    .controls-wrapper {
-        position: relative;
-        width: 100%;
-        height: 8vh;
-        background-color: #282828;
+    .menu-wrapper {
+        grid-area: sidebar;
     }
 
     .browser-wrapper {
+        grid-area: main;
         background: rgb(2,0,36);
         background: linear-gradient(0deg, rgba(28,28,28,1) 0%, rgba(28,28,28,1) 70%, rgba(87,87,87,1) 100%);
         background-position: fixed;
+        .browser-inner-wrapper {
+            max-width: 1025px;
+            margin: 0 auto;
+            margin-top: 20px;
+            margin-bottom: 80px;
+        }
     }
 
-    .debug {
-        padding: 3px;
-        background: black;
-        color: #fff;
-        position: absolute;
-        bottom:0;
-        right:0;
+    .controls-wrapper {
+        position: relative;
+        width: 100%;
+        background-color: #282828;
+        grid-area: footer;
     }
 }

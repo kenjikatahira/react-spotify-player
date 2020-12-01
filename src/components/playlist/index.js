@@ -36,15 +36,13 @@ class Playlist extends React.Component {
         if (tracks) {
             return (
                 <div className="playlist">
-                    <div className="container">
-                        <TracklistHeader
-                            props={view}
-                        />
-                        <Tracklist
-                            view={view}
-                            device_id={device_id}
-                        />
-                    </div>
+                    <TracklistHeader
+                        props={view}
+                    />
+                    <Tracklist
+                        view={view}
+                        device_id={device_id}
+                    />
                 </div>
             );
         } else {

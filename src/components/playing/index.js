@@ -8,12 +8,12 @@ const Playing = ({current_state : { current_track }}) => {
     const artist = (((current_track || {}).artists || [])[0] || {}).name;
     return (
         <div className="playing">
-            <div className="image col-sm-4">
+            <div className="image">
                 <img src={image} alt={image} />
             </div>
-            <div className="info col-sm-8">
+            <div className="info">
                 <div className="track"><b>{track}</b></div>
-                <div className="artist">{artist}</div>
+                <div className="playing-artist">{artist}</div>
             </div>
         </div>
     )

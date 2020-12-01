@@ -73,10 +73,10 @@ class Controls extends React.Component {
             return(
                 <>
                     <div className="controls">
-                        <div className="playing-wrapper col-sm-2">
+                        <div className="playing-wrapper">
                             <Playing current_state={current_state} />
                         </div>
-                        <div className="col-sm-10">
+                        <div className="inner-controls">
                             <TimerContainer current_state={current_state} />
                             <button className="btn btn-outline-secondary" onClick={() => {player.previous(this.teste)}}>
                                 <i className="fas fa-backward"></i>

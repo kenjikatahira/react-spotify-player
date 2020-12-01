@@ -66,36 +66,26 @@ class Main extends React.Component {
         } else {
             return (
                 <div className="main">
-                    <div className="row">
-                        <div className="menu-wrapper col-sm-2">
-                            <Menu
-                                getPlaylists={getPlaylists}
-                                logout={logout}
-                                setView={setView}
-                                playlists={playlists}
-                                uri={uri}
-                            />
-                        </div>
-                        <div className="browser-wrapper col-sm-10">
+                    <div className="menu-wrapper">
+                        <Menu
+                            getPlaylists={getPlaylists}
+                            logout={logout}
+                            setView={setView}
+                            playlists={playlists}
+                            uri={uri}
+                        />
+                    </div>
+                    <div className="browser-wrapper">
+                        <div className="browser-inner-wrapper">
                             <View
                                 uri={uri}
                                 tracks={tracks}
                             />
                         </div>
-                        <div className="controls-wrapper">
-                            <Controls />
-                        </div>
                     </div>
-                    {
-                        process.env.NODE_ENV === 'development' ?
-                        (
-                            <div className="debug">
-                                <p>{JSON.stringify(uri)}</p>
-                                <p>{JSON.stringify(device_id)}</p>
-                            </div>
-                        ) :
-                        ''
-                    }
+                    <div className="controls-wrapper">
+                        <Controls />
+                    </div>
                 </div>
             );
         }

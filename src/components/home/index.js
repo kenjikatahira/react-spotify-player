@@ -43,9 +43,7 @@ class Main extends React.Component {
         if(Object.keys(this.props.home).length) {
             return (
                 <div className="home">
-                    <div className="container">
-                        {Object.values(this.props.home).map(this.renderRow.bind(this))}
-                    </div>
+                    {Object.values(this.props.home).map(this.renderRow.bind(this))}
                 </div>
             );
         } else {
