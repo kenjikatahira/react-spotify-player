@@ -1,8 +1,15 @@
 .tracklist {
+    padding: 0 32px 24px;
     .filter {
         input {
             font-size:14px;
         }
+    }
+    .toggleShow {
+        padding: 16px;
+        background: none;
+        border: none;
+        color: hsla(0,0%,100%,.7);
     }
     table {
         list-style: none;

@@ -43,7 +43,7 @@ export const get_user = () => {
  * @return {Promise}
  */
 export const get_featured_playlist = () => {
-    return axios.get('https://api.spotify.com/v1/browse/featured-playlists?country=JP&limit=12', {
+    return axios.get('https://api.spotify.com/v1/browse/featured-playlists?country=CA&limit=4', {
         headers : {
             'content-type' : 'application/json',
             'Authorization' : `Bearer ${getSession().access_token}`
@@ -113,7 +113,7 @@ export const get_devices = () => {
  * @return {Promise}
  */
 export const get_playlists = () => {
-    return axios.get('https://api.spotify.com/v1/me/playlists?limit=50&offset=0', {
+    return axios.get('https://api.spotify.com/v1/me/playlists?limit=30&offset=0', {
         headers : {
             'content-type' : 'application/json',
             'Authorization' : `Bearer ${getSession().access_token}`

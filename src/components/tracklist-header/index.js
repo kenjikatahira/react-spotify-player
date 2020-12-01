@@ -2,9 +2,10 @@ import React from 'react';
 import Styled from 'styled-components';
 
 const StyledHeader = Styled.div`
-        padding: 10px 0;
+        padding: 0 32px 24px;
         margin-bottom: 15px;
-
+        display: flex;
+    align-items: center;
         img {
             width: 220px;
         }
@@ -21,7 +22,9 @@ const StyledHeader = Styled.div`
                 font-size: 15px;
             }
             .info-name {
-                font-size: 48px;
+                font-size: 82px;
+                line-height: 82px;
+                padding: 0.08em 0px;
                 font-weight: 600;
                 margin-bottom: 0;
             }

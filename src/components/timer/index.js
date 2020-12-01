@@ -1,10 +1,13 @@
 import React from 'react';
+
+import {formatTrackDuration} from './../../utils';
+
 import './style.scss';
 
 const Timer = ({count,fixed}) => {
     return (
         <div className="timer">
-            {fixed ? fixed : count}
+            {formatTrackDuration(fixed ? fixed : count)}
         </div>
     )
 }

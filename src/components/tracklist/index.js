@@ -9,7 +9,8 @@ class Tracklist extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            filteredItems : []
+            filteredItems : [],
+            limit : props.limit || null
         }
     }
     setArtist ({ artist, total, index }) {
@@ -78,9 +79,13 @@ class Tracklist extends React.Component {
     }
 
     onFilter(ev) {
-            this.setState({
+        this.setState({
             filteredItems : this.props.view.table.body.filter(({name}) => name.toLowerCase().replace('ã','a').indexOf(ev.target.value.toLowerCase()) > -1 )
         })
+    }
+
+    showMore() {
+        this.setState({ limit : +this.state.limit === 5 ? 10 : 5 });
     }
 
     render() {
@@ -99,9 +104,16 @@ class Tracklist extends React.Component {
                                 </tr>
                             </thead>
                             <tbody>
-                                {((this.state.filteredItems || []).length > 0 ? this.state.filteredItems : this.props.view.table.body).map((i,index) => this.renderList(i,index))}
+                                {((this.state.filteredItems || []).length > 0 ? this.state.filteredItems : this.props.view.table.body).map((i,index) => {
+                                    if((this.state.limit)) {
+                                        return (index < +this.state.limit) && this.renderList(i,index);
+                                    } else {
+                                        return this.renderList(i,index);
+                                    }
+                                })}
                             </tbody>
                         </table>
+                        { this.props.limit && <button class="toggleShow" onClick={this.showMore.bind(this)}>show {+this.state.limit === 5 ? 'more' : 'less' }</button>}
                     </div>
                 </>
             );

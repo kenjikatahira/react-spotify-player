@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+
 import Timer from '../timer';
 
 const TimerContainer = ({current_state,fixed}) => {
@@ -19,12 +20,6 @@ const TimerContainer = ({current_state,fixed}) => {
             count: 0,
             current_track : current_track
         });
-    }
-
-    const millisToMinutesAndSeconds = (millis) => {
-        var minutes = Math.floor(millis / 60000);
-        var seconds = ((millis % 60000) / 1000).toFixed(0);
-        return `${minutes}:${(seconds < 10 ? "0" : "")}${seconds}`;
     }
 
     const timer = (cb) => {
@@ -53,7 +48,7 @@ const TimerContainer = ({current_state,fixed}) => {
     });
 
     return (
-        <Timer count={millisToMinutesAndSeconds(state.count)} fixed={fixed} />
+        <Timer count={state.count} fixed={fixed} />
     )
 }
 

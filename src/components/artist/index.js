@@ -29,7 +29,6 @@ class Artist extends React.Component {
                 <div className="artist">
                     <TracklistHeader props={view} />
                     <Tracklist view={view} limit="5" device_id={device_id} />
-                    <button>show more</button>
                 </div>
             );
         } else {

@@ -1,12 +1,13 @@
 import React from 'react';
 import './style.scss';
 import { connect } from "react-redux";
-import { setCurrentState } from './../../actions';
+import { setCurrentState } from '../../actions';
 
-import Playing from './../playing';
+import Playing from '../playing';
 import TimerContainer from '../timerContainer';
+import Timer from '../timer';
 
-class Controls extends React.Component {
+class NowPlaying extends React.Component {
 
     componentDidUpdate() {
         if(
@@ -45,7 +46,7 @@ class Controls extends React.Component {
         if(paused === undefined || paused) {
             return (
                 <button
-                    className="btn btn-outline-secondary"
+                    className="btn btn-outline-secondary control-button play"
                     onClick={() => {
                         this.props.player.resume({device_id : this.props.device_id || ''})
                     }}
@@ -55,7 +56,7 @@ class Controls extends React.Component {
             )
         } else {
             return (
-                <button className="btn btn-outline-secondary" onClick={this.props.player.pause}>
+                <button className="btn btn-outline-secondary control-button play" onClick={this.props.player.pause}>
                     <i className="fas fa-pause" onClick={this.props.player.pause}></i>
                 </button>
             )
@@ -68,23 +69,35 @@ class Controls extends React.Component {
             current_state
         } = this.props;
 
+        const { current_track } = current_state;
+
         // verify if player device_id is ready to take commands
         if(this.props.device_id) {
             return(
                 <>
-                    <div className="controls">
+                    <div className="now-playing">
                         <div className="playing-wrapper">
                             <Playing current_state={current_state} />
                         </div>
-                        <div className="inner-controls">
-                            <TimerContainer current_state={current_state} />
-                            <button className="btn btn-outline-secondary" onClick={() => {player.previous(this.teste)}}>
-                                <i className="fas fa-backward"></i>
-                            </button>
-                            {this.togglePlayButton()}
-                            <button className="btn btn-outline-secondary" onClick={player.next}>
-                                <i className="fas fa-forward"></i>
-                            </button>
+                        <div className="inner-now-playing">
+                            <div className="controls-buttons">
+                                <button className="btn control-button" onClick={() => {player.previous(this.teste)}}>
+                                    <i className="fas fa-backward"></i>
+                                </button>
+                                {this.togglePlayButton()}
+                                <button className="btn control-button" onClick={player.next}>
+                                    <i className="fas fa-forward"></i>
+                                </button>
+                            </div>
+                            <div className="playback-bar">
+                                <TimerContainer current_state={current_state} />
+                                <div className="playback-progress-bar">
+                                    <div className="progress-bar-inner"></div>
+                                </div>
+                                {
+                                    (current_track || {}).duration_ms && <Timer fixed={(current_track || {}).duration_ms} />
+                                }
+                            </div>
                         </div>
                     </div>
                 </>
@@ -104,5 +117,5 @@ const mapStateToProps = (state) => {
     };
 };
 
-export default connect(mapStateToProps, { setCurrentState })(Controls);
+export default connect(mapStateToProps, { setCurrentState })(NowPlaying);
 

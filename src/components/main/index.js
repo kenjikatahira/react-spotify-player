@@ -15,7 +15,7 @@ import {
 import View from "../view";
 import Login from "../login";
 import Menu from "../menu";
-import Controls from "../controls";
+import NowPlaying from "../nowplaying";
 
 class Main extends React.Component {
     constructor() {
@@ -75,6 +75,9 @@ class Main extends React.Component {
                         />
                     </div>
                     <div className="browser-wrapper">
+                        <a class="github" href="https://github.com/kenjikatahira/react-spotify-player" target="_blank">
+                            <img loading="lazy" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_white_ffffff.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1" />
+                        </a>
                         <div className="browser-inner-wrapper">
                             <View
                                 uri={uri}
@@ -82,8 +85,8 @@ class Main extends React.Component {
                             />
                         </div>
                     </div>
-                    <div className="controls-wrapper">
-                        <Controls />
+                    <div className="now-playing-wrapper">
+                        <NowPlaying />
                     </div>
                 </div>
             );
