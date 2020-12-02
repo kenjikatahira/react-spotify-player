@@ -1,7 +1,8 @@
 import React from "react";
-import Home from "../home";
-import Playlist from "../playlist";
-import Artist from "../artist";
+import Home from "../../pages/home";
+import Playlist from "../../pages/playlist";
+import Artist from "../../pages/artist";
+import SavedTracks from "../../pages/saved-tracks";
 
 const View = (props) => {
     const { uri } = props;
@@ -15,6 +16,8 @@ const View = (props) => {
                     <Playlist />
                 ) : uri.indexOf('home') >= 0 ? (
                     <Home />
+                ) : uri.indexOf('saved-tracks') >= 0 ? (
+                    <SavedTracks />
                 ) : (
                     'TRISTE'
                 )}

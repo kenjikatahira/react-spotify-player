@@ -5,8 +5,9 @@ import './style.scss';
 
 import { getView, setView } from "../../actions";
 
-import TracklistHeader from "../tracklist-header";
-import Tracklist from "../tracklist";
+import TracklistHeader from "../../components/tracklist-header";
+import Tracklist from "../../components/tracklist";
+import Loading from "../../components/grid/loading";
 
 class Artist extends React.Component {
     componentWillMount() {
@@ -32,7 +33,9 @@ class Artist extends React.Component {
                 </div>
             );
         } else {
-            return <>loading</>;
+            return (
+                <Loading />
+            )
         }
     }
 }

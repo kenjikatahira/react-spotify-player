@@ -1,6 +1,7 @@
 import { setSession,getSession, removeSession,isAuthenticated } from '../utils';
 import {
     get_user,
+    get_saved_tracks,
     get_devices,get_playlists,
     get_recently_tracks,
     get_a_playlist,
@@ -97,6 +98,55 @@ export const getHome = () => {
                 top_artists : factoryTopArtists(topArtists)
             }
         });
+    }
+}
+
+/**
+ * Retrieves user's saved tracks
+ *
+ * @function getSavedTracks
+ * @return {Void}
+ */
+export const getSavedTracks = () => {
+    return dispatch => {
+        get_saved_tracks().then( ({data}) => {
+            /**
+             * Model array of recently tracks to albums for the saved tracks
+             *
+             * @function factorySavedTracks
+             * @return {Void}
+             */
+            const factorySavedTracks = (response) => {
+                let tracks = response.items.map(item => item.track);
+                tracks = tracks.map(item => {
+                    item.images = item.album.images;
+                    return {
+                        images : item.album.images,
+                        name : item.name,
+                        uri : item.uri,
+                        album : {
+                            uri : item.album.uri
+                        },
+                        artists : item.artists
+                    };
+                });
+                console.log(tracks)
+                return {
+                    next : response.next,
+                    limit : response.limit,
+                    message : 'Saved Tracks',
+                    items : tracks,
+                    type : 'saved-tracks'
+                }
+            }
+
+            dispatch({
+                type : 'GET_SAVED_TRACKS',
+                payload : {
+                    savedTracks : factorySavedTracks(data)
+                }
+            });
+        })
     }
 }
 
@@ -268,9 +318,9 @@ export const login = (response) => {
     }
 }
 
-export const getPlayer = ({ currentTrack, setDeviceId }) => {
+export const getPlayer = ({ setDeviceId }) => {
     return dispatch => {
-        const player = Api.init({ currentTrack, setDeviceId });
+        const player = Api.init({ setDeviceId });
         dispatch({
             type : 'GET_PLAYER',
             payload : player

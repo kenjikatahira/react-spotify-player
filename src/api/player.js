@@ -70,9 +70,11 @@ const fetchArtist = async (uri) => {
     let artist = {};
     const { data } = await get_artist({uri});
     const { data : topTracks } = await get_artist_top_tracks({uri});
+
     artist.type = 'artist';
     artist.name = data.name;
     artist.images = data.images;
+
     if(!artist.tracks) {
         artist.tracks = topTracks.tracks;
         artist.total_duration = totalDuration(artist.tracks);
@@ -100,9 +102,7 @@ const getView = async ({uri}) => {
     if(uri.split(':').indexOf('album') >= 0) {
         content = await fetchAlbum(uri);
     } else if(uri.split(':').indexOf('playlist') >= 0) {
-
         content = await fetchPlaylist(uri);
-
     } else if(uri.split(':').indexOf('artist') >= 0) {
         content = await fetchArtist(uri);
     }
@@ -166,7 +166,7 @@ const pause = () => {
 }
 
 const resume = async ({device_id}) => {
-    console.log(device_id)
+    console.log('resume')
    fetch(`https://api.spotify.com/v1/me/player/play?device_id=${device_id}`, {
        method: 'PUT',
        headers: {
@@ -176,13 +176,12 @@ const resume = async ({device_id}) => {
    });
 }
 
-
 const play = async ({uri,uris,device_id}) => {
+    console.log('play')
     let queue = orderList(uri,(uris || []).map(({uri}) => uri));
-
     fetch(`https://api.spotify.com/v1/me/player/play?device_id=${device_id}`, {
         method: 'PUT',
-        body: JSON.stringify({ uris : queue || [uri] }),
+        body: JSON.stringify({ uris : queue.length ? queue : [uri] }),
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${getSession().access_token}`

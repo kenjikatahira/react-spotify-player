@@ -8,7 +8,6 @@ import TimerContainer from '../timerContainer';
 import Timer from '../timer';
 
 class NowPlaying extends React.Component {
-
     componentDidUpdate() {
         if(
             this.props.player &&
@@ -38,6 +37,7 @@ class NowPlaying extends React.Component {
         player.addListener('player_state_changed', this.onChange.bind(this));
         // player connected
         player.connect();
+        // connected
         this.connected = true;
     }
 
@@ -101,10 +101,6 @@ class NowPlaying extends React.Component {
                         </div>
                     </div>
                 </>
-            )
-        } else {
-            return(
-                <div>Loading...</div>
             )
         }
     }

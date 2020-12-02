@@ -9,6 +9,7 @@ const GET_FEATURED_PLAYLISTS = 'GET_FEATURED_PLAYLISTS';
 const GET_VIEW = 'GET_VIEW';
 const GET_PLAYER = 'GET_PLAYER';
 const SET_CURRENT_STATE = 'SET_CURRENT_STATE';
+const GET_SAVED_TRACKS = 'GET_SAVED_TRACKS';
 
 const LOGIN = 'LOGIN';
 const LOGOUT = 'LOGOUT';
@@ -96,6 +97,13 @@ const currentStateReducer = (state={},action) => {
     return state;
 }
 
+const gridReducer = (state={},action) => {
+    if(action.type === GET_SAVED_TRACKS) {
+        return action.payload;
+    }
+    return state;
+}
+
 export default combineReducers({
     user : userReducer,
     logged : loginReducer,
@@ -106,5 +114,6 @@ export default combineReducers({
     view : viewReducer,
     player : playerReducer,
     featured_paylists : featuredPaylistReducer,
-    current_state : currentStateReducer
+    current_state : currentStateReducer,
+    grid : gridReducer
 });

@@ -117,8 +117,6 @@ class Tracklist extends React.Component {
                     </div>
                 </>
             );
-        } else {
-            return <> Loading... </>;
         }
     }
 }

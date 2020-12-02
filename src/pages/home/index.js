@@ -7,6 +7,7 @@ import {
     getHome,
     setView
 } from "../../actions";
+import Loading from "../../components/grid/loading";
 
 class Main extends React.Component {
 
@@ -48,9 +49,7 @@ class Main extends React.Component {
             );
         } else {
             return (
-                <div className="home">
-                    Loading...
-                </div>
+                <Loading />
             )
         }
     }

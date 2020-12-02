@@ -38,6 +38,20 @@ export const get_user = () => {
 }
 
 /**
+ * Request user's saved tracks
+ * @function get_saved_tracks
+ * @return {Promise}
+ */
+export const get_saved_tracks = () => {
+    return axios.get('https://api.spotify.com/v1/me/tracks?limit=30', {
+        headers : {
+            'content-type' : 'application/json',
+            'Authorization' : `Bearer ${getSession().access_token}`
+        }
+    });
+}
+
+/**
  * Request for the current track data
  * @function get_featured_playlist
  * @return {Promise}

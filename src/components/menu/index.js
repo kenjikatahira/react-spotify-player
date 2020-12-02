@@ -22,25 +22,29 @@ const Menu = ({playlists, setView, uri, logout, getPlaylists}) => {
             el: <li key="your-library" className="lead"> Your Library </li>
         },
         {
-            name: "Recently Played",
-            uri: "recently-played"
+            name: "Saved",
+            uri: "saved-tracks"
         },
-        {
-            name: "Liked Songs",
-            uri: "liked-songs"
-        },
-        {
-            name: "Albums",
-            uri: "albums"
-        },
-        {
-            name: "Bands",
-            uri: "bands"
-        },
-        {
-            name: "Podcasts",
-            uri: "podcasts"
-        },
+        // {
+        //     name: "Recently Played",
+        //     uri: "recently-played"
+        // },
+        // {
+        //     name: "Liked Songs",
+        //     uri: "liked-songs"
+        // },
+        // {
+        //     name: "Albums",
+        //     uri: "albums"
+        // },
+        // {
+        //     name: "Bands",
+        //     uri: "bands"
+        // },
+        // {
+        //     name: "Podcasts",
+        //     uri: "podcasts"
+        // },
         {
             el: <><hr className="separator"></hr><li key="lead-playlists" className="lead"> Playlists </li></>
         }
