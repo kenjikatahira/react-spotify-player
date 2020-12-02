@@ -2,6 +2,8 @@
 
 This is my first react project. It plays my favorite songs made with spotify apis ( for learning purposes )
 
+*work and refactoring code in progress
+
 ## Technologies & Tools
 
 ![](https://img.shields.io/badge/Code-Javascript-informational?style=flat&logo=javascript&logoColor=white&color=2bbc8a)
@@ -9,7 +11,7 @@ This is my first react project. It plays my favorite songs made with spotify api
 ![](https://img.shields.io/badge/Tools-Redux-informational?style=flat&logo=redux&logoColor=white&color=2bbc8a)
 
 ## Spotify Api Web Api
-[Doc]((https://developer.spotify.com/documentation/web-api/))
+[Doc](https://developer.spotify.com/documentation/web-api/)
 for the Spotify Data Catalogue
 
 ## Spotify Web Playback SDK
