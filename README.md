@@ -1,3 +1,5 @@
+![screenshot_2](https://i.ibb.co/LPd68Jj/image.png)
+
 # React Spotify Player
 
 This is my first react project. It plays my favorite songs made with spotify apis ( for learning purposes )
@@ -32,4 +34,3 @@ Then, in the project directory, you just run:
 ## screenshot
 
 ![screenshot_1](https://i.ibb.co/1Gthjyw/image.png)
-![screenshot_2](https://i.ibb.co/LPd68Jj/image.png)
