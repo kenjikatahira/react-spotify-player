@@ -165,7 +165,6 @@ const init = ({setDeviceId}) => {
 }
 
 const previous = (lastUri) => {
-    console.log(lastUri)
     try {
         fetch('https://api.spotify.com/v1/me/player/previous',{
             method : 'POST',
@@ -201,7 +200,6 @@ const pause = () => {
 }
 
 const resume = async ({device_id}) => {
-    console.log('resume')
    fetch(`https://api.spotify.com/v1/me/player/play?device_id=${device_id}`, {
        method: 'PUT',
        headers: {
@@ -212,7 +210,6 @@ const resume = async ({device_id}) => {
 }
 
 const play = async ({uri,uris,device_id}) => {
-    console.log('play')
     let queue = orderList(uri,(uris || []).map(({uri}) => uri));
     fetch(`https://api.spotify.com/v1/me/player/play?device_id=${device_id}`, {
         method: 'PUT',
