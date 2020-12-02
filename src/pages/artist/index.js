@@ -7,7 +7,8 @@ import { getView, setView } from "../../actions";
 
 import TracklistHeader from "../../components/tracklist-header";
 import Tracklist from "../../components/tracklist";
-import Loading from "../../components/grid/loading";
+import Loading from "../../components/loading";
+import Grid from "../../components/grid";
 
 class Artist extends React.Component {
     componentWillMount() {
@@ -30,6 +31,7 @@ class Artist extends React.Component {
                 <div className="artist">
                     <TracklistHeader props={view} />
                     <Tracklist view={view} limit="5" device_id={device_id} />
+                    <Grid grid={view.albums} />
                 </div>
             );
         } else {

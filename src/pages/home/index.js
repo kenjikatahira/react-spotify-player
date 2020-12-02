@@ -7,7 +7,7 @@ import {
     getHome,
     setView
 } from "../../actions";
-import Loading from "../../components/grid/loading";
+import Loading from "../../components/loading";
 
 class Main extends React.Component {
 

@@ -7,8 +7,9 @@ import {
     getSavedTracks,
     setView
 } from "../../actions";
+
 import Grid from "../../components/grid";
-import Loading from "../../components/grid/loading";
+import Loading from "../../components/loading";
 
 class SavedTracks extends React.Component {
     componentDidMount() {

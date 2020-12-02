@@ -13,11 +13,11 @@ const Menu = ({playlists, setView, uri, logout, getPlaylists}) => {
             uri: "home",
             icon: <i className="fas fa-home">home</i>,
         },
-        {
-            name: "Browse",
-            uri: "browse",
-            icon: <i className="fa fa-folder-open" aria-hidden="true"></i>,
-        },
+        // {
+        //     name: "Browse",
+        //     uri: "browse",
+        //     icon: <i className="fa fa-folder-open" aria-hidden="true"></i>,
+        // },
         {
             el: <li key="your-library" className="lead"> Your Library </li>
         },

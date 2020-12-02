@@ -86,11 +86,15 @@ const TracklistHeader = ({props}) => {
                     {description}
                 </span>
                 <div className="info-details">
-                    <span className="info-owner">
-                        Created by <strong>{(owner || {}).display_name}</strong>
-                    </span>
+                    {
+                        (owner || {}).display_name && (
+                            <span className="info-owner">
+                                Created by <strong>{(owner || {}).display_name}</strong>
+                            </span>
+                        )
+                    }
                     <span className="info-tracks">
-                        {(tracks || []).length} songs,
+                        {(tracks || []).length} songs
                     </span>
                     <span className="info-duration">
                         {total_duration}

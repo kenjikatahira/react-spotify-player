@@ -151,6 +151,21 @@ export const get_album = ({uri}) => {
 }
 
 /**
+ * Request for a artist's albums
+ * @function get_artists_albums
+ * @return {Promise}
+ */
+export const get_artists_albums = ({uri}) => {
+    const id = uri.split(':');
+    return axios.get(`https://api.spotify.com/v1/artists/${id[id.length-1]}/albums`, {
+        headers : {
+            'content-type' : 'application/json',
+            'Authorization' : `Bearer ${getSession().access_token}`
+        }
+    });
+}
+
+/**
  * Request for a playlist
  * @function get_playlist_cover_image
  * @return {Promise}

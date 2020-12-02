@@ -6,7 +6,8 @@ import './style.scss';
 import {
     setView
 } from "../../actions";
-import Loading from "./loading";
+
+import Loading from "./../loading";
 
 class Grid extends React.Component {
     renderAlbums(data) {
@@ -25,6 +26,7 @@ class Grid extends React.Component {
     }
 
     renderRow(row) {
+        console.log(row)
         return (
             <>
                 <h2> {row.message} </h2>
@@ -36,7 +38,7 @@ class Grid extends React.Component {
     }
 
     render() {
-        if(Object.keys(this.props.grid).length && this.props.device_id) {
+        if(this.props.grid && Object.keys(this.props.grid).length && this.props.device_id) {
             return (
                 <div className="grid">
                     {Object.values(this.props.grid).map(this.renderRow.bind(this))}

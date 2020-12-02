@@ -3,13 +3,14 @@ import Home from "../../pages/home";
 import Playlist from "../../pages/playlist";
 import Artist from "../../pages/artist";
 import SavedTracks from "../../pages/saved-tracks";
+import Album from "../../pages/album";
 
 const View = (props) => {
     const { uri } = props;
     return (
             <>
                 {props.uri.indexOf('album') >= 0 ? (
-                    'album'
+                    <Album />
                 ) : uri.indexOf('artist') >= 0 ? (
                     <Artist />
                 ) : uri.indexOf('playlist') >= 0 ? (

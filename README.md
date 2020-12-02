@@ -20,6 +20,8 @@ for the Spotify Data Catalogue
 
 Add your [`client key`](https://developer.spotify.com/dashboard/applications) and [`client secret`](https://developer.spotify.com/dashboard/applications) on src/config.js file
 
+### *Token expires each hour
+
 Then, in the project directory, you just run:
 
 ### `npm install`

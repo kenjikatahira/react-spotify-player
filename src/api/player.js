@@ -2,6 +2,7 @@ import {
     get_album,
     get_playlist_items,
     get_artist,
+    get_artists_albums,
     get_playlist_cover_image,
     get_artist_top_tracks,
     get_a_playlist
@@ -61,15 +62,36 @@ const fetchPlaylist = async (uri) => {
 const fetchAlbum = async (uri) => {
     let album = {};
     const {data} = await get_album({uri});
+
     album.type = 'album';
-    album.tracks = data.tracks.items.filter((i) => i);
+    album.name = data.name;
+    album.tracks = data.tracks.items.map((i) => {
+        return {
+            id : i.id,
+            name : i.name,
+            duration_ms : formatTrackDuration(i.duration_ms),
+            uri : i.uri,
+            artists : i.artists
+        }
+    });
+
+    album.images = data.images;
+
+    album.table = {
+        head :  ['name','artist','duration'],
+        body  : album.tracks
+    }
+
+
     return album;
 }
 
 const fetchArtist = async (uri) => {
+    const ids = [];
     let artist = {};
     const { data } = await get_artist({uri});
     const { data : topTracks } = await get_artist_top_tracks({uri});
+    const { data : albums } = await get_artists_albums({uri});
 
     artist.type = 'artist';
     artist.name = data.name;
@@ -88,6 +110,19 @@ const fetchArtist = async (uri) => {
             uri : i.uri,
         }
     });
+
+    artist.albums = {
+        artistAlbums : {
+            message : 'Albums',
+            type : 'artist',
+            items : albums.items.filter(i => i.album_type === 'album')
+        },
+        artistSingles : {
+            message : 'Singles',
+            type : 'artist',
+            items : albums.items.filter(i => i.album_type === 'single')
+        }
+    };
 
     artist.table = {
         head :  ['name','duration'],

@@ -9,22 +9,12 @@ import TracklistHeader from "../../components/tracklist-header";
 import Tracklist from "../../components/tracklist";
 import Loading from "../../components/loading";
 
-class Playlist extends React.Component {
+class Album extends React.Component {
 
     componentWillMount() {
         this.props.getView({
             uri: this.props.uri
         });
-    }
-
-    UNSAFE_componentWillUpdate(nextProps) {
-        if (
-            ((nextProps.view || {}).tracks || []).length &&
-            ((this.props.view || {}).tracks || []).length &&
-            this.props.uri !== nextProps.uri
-        ) {
-            this.props.getView({ uri: nextProps.uri });
-        }
     }
 
     render() {
@@ -65,4 +55,4 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps, {
     getView,
     setView,
-})(Playlist);
+})(Album);
