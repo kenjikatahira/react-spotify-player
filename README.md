@@ -26,3 +26,8 @@ Then, in the project directory, you just run:
 
 ### `npm install`
 ### `npm start`
+
+## screenshot
+
+![screenshot_1](https://i.ibb.co/1Gthjyw/image.png)
+![screenshot_2](https://i.ibb.co/LPd68Jj/image.png)
