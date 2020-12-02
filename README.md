@@ -1,5 +1,7 @@
 ![screenshot_2](https://i.ibb.co/LPd68Jj/image.png)
 
+[Live Example](https://kenjikatahira.github.io/react-spotify-player/)
+
 # React Spotify Player
 
 This is my first react project. It plays my favorite songs made with spotify apis ( for learning purposes )
