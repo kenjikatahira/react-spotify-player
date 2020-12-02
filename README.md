@@ -4,7 +4,7 @@
 
 This is my first react project. It plays my favorite songs made with spotify apis ( for learning purposes )
 
-*work and refactoring code in progress
+*workin progress ( refactoring code, adding actions to button and a lot more missing things) 
 
 ## Technologies & Tools
 
