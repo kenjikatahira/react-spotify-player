@@ -4,9 +4,9 @@
 
 # React Spotify Player
 
-This is my first react project. It plays my favorite songs made with spotify apis ( for learning purposes )
+This is my first react project with react and spotify api
 
-*workin progress ( refactoring code, adding actions to button and a lot more missing things) 
+*working in progress 
 
 ## Technologies & Tools
 
@@ -28,10 +28,7 @@ react-spotify-login
 https://www.npmjs.com/package/react-spotify-login
 
 ## How to use
-
 Add your [`client key`](https://developer.spotify.com/dashboard/applications) and [`client secret`](https://developer.spotify.com/dashboard/applications) on src/config.js file
-
-### *Token expires each hour
 
 Then, in the project directory, you just run:
 
