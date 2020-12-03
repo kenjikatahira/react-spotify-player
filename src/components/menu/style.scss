@@ -11,19 +11,19 @@ ul.menu {
         justify-content: flex-start;
 
         .spotify-logo {
-            width:100px;
+            width:120px;
             padding-right: 0;
             padding-left:5px;
             display:inline-block;
             color:#fff;
-            align-self: flex-start;
+            align-self: center;
         }
 
         .made {
             padding: 10px 0;
             margin-left: 5px;
-            align-self: flex-start;
-            font-size: 12px;
+            align-self: center;
+            font-size: 14px;
             text-align: center;
         }
     }
@@ -55,6 +55,7 @@ ul.menu {
     }
 
     li {
+        position:relative;
         padding: 0;
         cursor: pointer;
         font-size: 13px;
@@ -70,16 +71,21 @@ ul.menu {
         }
 
         &.active:before {
+            content : "";
             border-left: 3px solid #1db954;
-            position: relative;
-            left: -18px;
+            position: absolute;
+            height: 17px;
+            left: -8px;
+            top: 0;
         }
-        &:hover::after {
+
+        &:hover:after {
                 content: attr(data-owner);
                 position: relative;
+                height:10px;
                 font-size: 12px;
-                left: 10px;
-                color: #fff;
+                left: 0px;
+                color: #ccc;
                 white-space: nowrap;
         }
     }

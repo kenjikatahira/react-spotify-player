@@ -72,6 +72,14 @@ const TracklistHeader = ({props}) => {
         type
     } = props;
 
+    const getDescription = (description) => {
+        return (
+            <>
+                <div dangerouslySetInnerHTML={{__html: description }} />
+            </>
+        )
+    }
+
     return (
         <StyledHeader className="row">
             {(images.length && images[0].url &&
@@ -82,9 +90,7 @@ const TracklistHeader = ({props}) => {
             <div className="col info d-flex flex-column">
                 <strong className="info-type">{type}</strong>
                 <h3 className="info-name">{name}</h3>
-                <span className="info-description">
-                    {description}
-                </span>
+                    {getDescription(description)}
                 <div className="info-details">
                     {
                         (owner || {}).display_name && (

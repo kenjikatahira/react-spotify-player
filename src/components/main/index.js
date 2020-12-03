@@ -33,7 +33,7 @@ class Main extends React.Component {
      */
     run() {
         const { setDeviceId } = this.props;
-        this.props.getPlayer({ setDeviceId })
+        this.props.getPlayer({ setDeviceId });
         this.initiated = true;
     }
     UNSAFE_componentWillUpdate() {
@@ -74,9 +74,9 @@ class Main extends React.Component {
                         />
                     </div>
                     <div className="browser-wrapper">
-                        <a class="github" href="https://github.com/kenjikatahira/react-spotify-player" target="_blank" rel="noopener noreferrer" >
+                        {/* <a class="github" href="https://github.com/kenjikatahira/react-spotify-player" target="_blank" rel="noopener noreferrer" >
                             <img loading="lazy" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_white_ffffff.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1" />
-                        </a>
+                        </a> */}
                         <div className="browser-inner-wrapper">
                             <View
                                 uri={uri}

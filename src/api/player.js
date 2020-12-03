@@ -107,7 +107,7 @@ const fetchArtist = async (uri) => {
             id : i.id,
             name : i.name,
             duration_ms : formatTrackDuration(i.duration_ms),
-            uri : i.uri,
+            uri : i.uri
         }
     });
 
