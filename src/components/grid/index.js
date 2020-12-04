@@ -4,15 +4,21 @@ import { connect } from "react-redux";
 import './style.scss';
 
 import {
-    setView
+    setView,
+    clearView
 } from "../../actions";
 
 import Loading from "./../loading";
 
 class Grid extends React.Component {
+
+    componentWillUnmount() {
+        this.props.clearView();
+    }
+
     renderAlbums({ uri, name, images, artists, id }) {
         return (
-            <div className="album col-sm-3" onClick={(ev) => { ev.stopPropagation(); setView({uri : uri}) }} key={id}>
+            <div className="album col-sm-3" onClick={(ev) => { ev.stopPropagation(); this.props.setView({uri : uri}) }} key={id}>
                 <div className="image" style={
                     { backgroundImage: `url(${images.length && images[0].url})`, backgroundSize :'cover', backgroundPosition:'center center' }
                 }></div>
@@ -59,5 +65,6 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps, {
-    setView
+    setView,
+    clearView
 })(Grid);

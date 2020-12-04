@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 
 import './style.scss';
 
-import { setView } from './../../actions';
+import { setView,clearView } from './../../actions';
 
 class Tracklist extends React.Component {
     constructor(props) {
@@ -13,6 +13,11 @@ class Tracklist extends React.Component {
             limit : props.limit || null
         }
     }
+
+    componentWillUnmount() {
+        this.props.clearView();
+    }
+
     setArtist ({ artist, total, index }) {
         const { id, uri, name } = artist;
         return (
@@ -89,7 +94,8 @@ class Tracklist extends React.Component {
     }
 
     render() {
-        if (this.props.view.tracks) {
+        const { view } = this.props;
+        if (view.tracks) {
             return (
                 <>
                     <div className="tracklist">
@@ -100,11 +106,11 @@ class Tracklist extends React.Component {
                             <thead>
                                 <tr className="header">
                                     <th scope="col"></th>
-                                    {this.props.view.table.head.map(i => (<th key={i}>{i}</th>))}
+                                    {view.table.head.map(i => (<th key={i}>{i}</th>))}
                                 </tr>
                             </thead>
                             <tbody>
-                                {((this.state.filteredItems || []).length > 0 ? this.state.filteredItems : this.props.view.table.body).map((i,index) => {
+                                {((this.state.filteredItems || []).length > 0 ? this.state.filteredItems : view.table.body).map((i,index) => {
                                     if((this.state.limit)) {
                                         return (index < +this.state.limit) && this.renderList(i,index);
                                     } else {
@@ -127,4 +133,4 @@ const mapStateToProps = (state) => {
     };
 };
 
-export default connect(mapStateToProps,{ setView })(Tracklist);
+export default connect(mapStateToProps,{ setView,clearView })(Tracklist);

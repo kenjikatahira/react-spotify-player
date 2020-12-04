@@ -16,7 +16,7 @@ const RelatedArtists = ({view}) => {
     return (
         <div className="related-artists">
             <ul>
-                {relatedArtists.artists.map(renderArtist)}
+                {relatedArtists !== undefined && relatedArtists.artists.map(renderArtist)}
             </ul>
         </div>
     )

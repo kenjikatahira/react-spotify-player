@@ -2,14 +2,24 @@ import { setSession,getSession, removeSession,isAuthenticated } from '../utils';
 import {
     get_user,
     get_saved_tracks,
-    get_devices,get_playlists,
+    get_devices,
+    get_playlists,
     get_recently_tracks,
     get_a_playlist,
     get_featured_playlist,
-    top_artists
+    top_artists,
+    get_album,
+    get_playlist_items,
+    get_artist,
+    get_related_artists,
+    get_artists_albums,
+    get_playlist_cover_image,
+    get_artist_top_tracks,
 } from '../api';
 
-import Api from '../api/player';
+import Player from '../api/player';
+
+import { formatTrackDuration } from './../utils'
 
 /**
  * Retrieves user information
@@ -99,6 +109,158 @@ export const getHome = () => {
             }
         });
     }
+}
+
+const totalDuration = (tracks) => {
+    if(!tracks) return false;
+    let initialValue = 0;
+    const duration = tracks.reduce((total,{duration_ms}) => total + duration_ms,initialValue);
+
+    return formatTrackDuration(Math.floor(duration / 60));
+}
+
+const fetchPlaylist = async (uri) => {
+    let playlistData = {};
+    const promises = {
+        playlist : get_playlist_items({uri}),
+        playlistInfo : get_a_playlist({uri}),
+        playlistCover : get_playlist_cover_image({uri}),
+    }
+    const [ playlist, playlistInfo, playlistCover ] = await Promise.all(Object.values(promises));
+
+    playlistData.type = 'playlist';
+    playlistData.images = playlistCover.data;
+    playlistData.id = playlist.data.id;
+    playlistData.tracks = playlist.data.items.map((i) => i.track).filter((i) => i);
+
+    playlistData.total_duration = totalDuration(playlistData.tracks);
+    playlistData.owner = playlistInfo.data.owner;
+    playlistData.followers = playlistInfo.data.followers.total;
+    playlistData.name = playlistInfo.data.name;
+    playlistData.description = playlistInfo.data.description;
+    playlistData.public = playlistInfo.data.public;
+
+
+    playlistData.tracks = playlistData.tracks.map(i => {
+        return {
+            id : i.id,
+            name : i.name,
+            duration_ms : formatTrackDuration(i.duration_ms),
+            album : i.album,
+            artists : i.artists,
+            uri : i.uri,
+        }
+    });
+
+    playlistData.table = {
+        head :  ['name','artist','album','duration'],
+        body  : playlistData.tracks
+    }
+
+    return playlistData;
+}
+
+const fetchAlbum = async (uri) => {
+    let album = {};
+    const {data} = await get_album({uri});
+
+    album.type = 'album';
+    album.name = data.name;
+    album.total_duration = totalDuration(data.tracks.items);
+
+    album.tracks = data.tracks.items.map((i) => {
+        return {
+            id : i.id,
+            name : i.name,
+            duration_ms : formatTrackDuration(i.duration_ms),
+            uri : i.uri,
+            artists : i.artists
+        }
+    });
+
+
+    album.images = data.images;
+
+    album.table = {
+        head :  ['name','artist','duration'],
+        body  : album.tracks
+    }
+
+
+    return album;
+}
+
+const fetchArtist = async (uri) => {
+    const ids = [];
+    let artist = {};
+    const { data } = await get_artist({uri});
+    const { data : topTracks } = await get_artist_top_tracks({uri});
+    const { data : albums } = await get_artists_albums({uri});
+    const { data : relatedArtists } = await get_related_artists({uri});
+
+    artist.type = 'artist';
+    artist.name = data.name;
+    artist.images = data.images;
+
+    if(!artist.tracks) {
+        artist.tracks = topTracks.tracks;
+    }
+
+    artist.tracks = artist.tracks.map(i => {
+        return {
+            id : i.id,
+            name : i.name,
+            duration_ms : formatTrackDuration(i.duration_ms),
+            uri : i.uri
+        }
+    });
+
+    artist.albums = {
+        artistAlbums : {
+            message : 'Albums',
+            type : 'artist',
+            items : albums.items.filter(i => {
+                if(!ids.includes(i.name) && i.album_type === 'album') {
+                    ids.push(i.name);
+                    return true;
+                }
+                return false;
+            })
+        },
+        artistSingles : {
+            message : 'Singles',
+            type : 'artist',
+            items : albums.items.filter(i => {
+                if(!ids.includes(i.name) && i.album_type === 'single') {
+                    ids.push(i.name);
+                    return true;
+                }
+                return false;
+            })
+        }
+    };
+
+    artist.table = {
+        head :  ['Popular'],
+        body  : artist.tracks
+    }
+
+    artist.relatedArtists = relatedArtists;
+
+    return artist;
+}
+
+const getViewRoute = async ({uri}) => {
+    let content;
+    if(uri.split(':').indexOf('album') >= 0) {
+        content = await fetchAlbum(uri);
+    } else if(uri.split(':').indexOf('playlist') >= 0) {
+        content = await fetchPlaylist(uri);
+    } else if(uri.split(':').indexOf('artist') >= 0) {
+        content = await fetchArtist(uri);
+    }
+
+    return content;
 }
 
 /**
@@ -201,21 +363,6 @@ export const getDevices = () => {
 }
 
 /**
- * Sets a deviceId
- *
- * @function setDeviceId
- * @return {Void}
- */
-export const setDeviceId = (data) => {
-    return dispatch => {
-        dispatch({
-            type : 'SET_DEVICE_ID',
-            payload : data
-        });
-    }
-}
-
-/**
  * Retrieves user's playlists
  *
  * @function getPlay    lists
@@ -267,16 +414,30 @@ export const setView = (props) => {
 }
 
 /**
- * Return the instance of the Player
+ * Return object for a template
  * @function getView
  * @return {Void}
  */
 export const getView = ({uri}) => {
     return async dispatch => {
-        const view = await Api.getView({uri});
+        const view = await getViewRoute({uri});
         dispatch({
             type : 'GET_VIEW',
             payload : view
+        });
+    }
+}
+
+/**
+ * Return a empty array
+ * @function clearView
+ * @return {Void}
+ */
+export const clearView = () => {
+    return dispatch => {
+        dispatch({
+            type : 'CLEAR_VIEW',
+            payload : []
         });
     }
 }
@@ -320,7 +481,7 @@ export const login = (response) => {
 
 export const getPlayer = () => {
     return dispatch => {
-        const player = Api.init();
+        const player = Player.init();
         dispatch({
             type : 'GET_PLAYER',
             payload : player

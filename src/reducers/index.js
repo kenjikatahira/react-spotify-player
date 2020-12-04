@@ -2,11 +2,11 @@ import { combineReducers } from 'redux';
 
 const GET_USER = 'GET_USER';
 const GET_PLAYLISTS = 'GET_PLAYLISTS';
-const SET_DEVICE_ID = 'SET_DEVICE_ID';
 const GET_HOME = 'GET_HOME';
 const SET_VIEW = 'SET_VIEW';
 const GET_FEATURED_PLAYLISTS = 'GET_FEATURED_PLAYLISTS';
 const GET_VIEW = 'GET_VIEW';
+const CLEAR_VIEW = 'CLEAR_VIEW';
 const GET_PLAYER = 'GET_PLAYER';
 const SET_CURRENT_STATE = 'SET_CURRENT_STATE';
 const GET_SAVED_TRACKS = 'GET_SAVED_TRACKS';
@@ -69,16 +69,12 @@ const uriReducer = (state='home',action) => {
     return state;
 }
 
-const deviceIdReducer = (state={},action) => {
-    if(action.type === SET_DEVICE_ID) {
-        return action.payload;
-    }
-    return state;
-}
-
 const viewReducer = (state=[],action) => {
     if(action.type === GET_VIEW) {
         return action.payload;
+    }
+    if(action.type === CLEAR_VIEW ) {
+        return [];
     }
     return state;
 }
@@ -108,7 +104,6 @@ export default combineReducers({
     user : userReducer,
     logged : loginReducer,
     playlists : playlistsReducer,
-    device_id : deviceIdReducer,
     home : homeReducer,
     uri : uriReducer,
     view : viewReducer,

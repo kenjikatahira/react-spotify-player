@@ -8,7 +8,6 @@ import {
     getUser,
     getPlaylists,
     setView,
-    setDeviceId,
     getPlayer
 } from "../../actions";
 
