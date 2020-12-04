@@ -1,7 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-
-import './style.scss';
+import Styled from 'styled-components';
 
 import {
     logout,
@@ -16,14 +15,95 @@ import Login from "../login";
 import Menu from "../menu";
 import NowPlayingBar from "../nowPlayingBar";
 
+const StyledMain = Styled.div`
+    display: grid;
+    grid-template-columns: 14vw;
+    grid-template-rows: auto;
+    grid-template-areas:
+      "sidebar main main main main main"
+      "footer footer footer footer footer footer";
+    overflow: hidden;
+    font-family: "Lato";
+    color: #F5F5F5;
+    overflow: none;
+
+    a {
+        color: #F5F5F5;
+    }
+
+    .github {
+        position: absolute;
+        top:0;
+        right:0;
+        z-index:1000;
+        width:120px;
+        img {
+            width: 120px;
+            height: 120px;
+        }
+    }
+
+    .search {
+        padding: 8px 69px;
+        input {
+            width: 176px;
+            height: 25px;
+            border-radius: 27px;
+        }
+    }
+
+
+    .menu-wrapper, .browser-wrapper {
+        position: relative;
+        overflow-x: hidden;
+        overflow-y: auto;
+        height: 92vh;
+
+        &::-webkit-scrollbar {
+            width: 1em;
+        }
+        &::-webkit-scrollbar-thumb {
+            min-height: 30px;
+            max-height: none;
+            background: hsla(0,0%,100%,.3);
+        }
+    }
+
+    .menu-wrapper {
+        grid-area: sidebar;
+        background: #000;
+        justify-content: stretch;
+        &::-webkit-scrollbar {
+            background: #000;
+        }
+    }
+
+    .browser-wrapper {
+        grid-area: main;
+        background: rgb(2,0,36);
+        background: linear-gradient(0deg, rgba(28,28,28,1) 0%, rgba(28,28,28,1) 70%, rgba(87,87,87,1) 100%);
+        background-position: fixed;
+        .browser-inner-wrapper {
+            max-width: 100%;
+            margin: 15px auto;
+            margin-top: 20px;
+            margin-bottom: 1em;
+        }
+    }
+
+    .now-playing-wrapper {
+        position: relative;
+        width: 100%;
+        background-color: #282828;
+        grid-area: footer;
+    }
+`
 class Main extends React.Component {
     constructor() {
         super();
-        /**
-         * Aplication Initiated Flag
-         * @type {Boolean}
-         */
-        this.initiated = false;
+        this.state ={
+            initiated : false
+        }
     }
     /**
      * Initial configuration
@@ -32,10 +112,12 @@ class Main extends React.Component {
      */
     run() {
         this.props.getPlayer();
-        this.initiated = true;
+        this.setState({
+            initiated : true
+        });
     }
     UNSAFE_componentWillUpdate() {
-        !this.initiated  && this.props.logged.status === true && this.run();
+        !this.state.initiated  && this.props.logged.status === true && this.run();
     }
     componentDidMount() {
         window.onSpotifyWebPlaybackSDKReady = () => {
@@ -62,7 +144,7 @@ class Main extends React.Component {
             return <Login />;
         } else {
             return (
-                <div className="main">
+                <StyledMain className="main">
                     <div className="menu-wrapper">
                         <Menu
                             getPlaylists={getPlaylists}
@@ -86,7 +168,7 @@ class Main extends React.Component {
                     <div className="now-playing-wrapper">
                         <NowPlayingBar />
                     </div>
-                </div>
+                </StyledMain>
             );
         }
 

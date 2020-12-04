@@ -296,7 +296,6 @@ export const getSavedTracks = () => {
                         artists : item.artists
                     };
                 });
-                console.log(tracks)
                 return {
                     next : response.next,
                     limit : response.limit,
@@ -305,7 +304,6 @@ export const getSavedTracks = () => {
                     type : 'saved-tracks'
                 }
             }
-
             dispatch({
                 type : 'GET_SAVED_TRACKS',
                 payload : {

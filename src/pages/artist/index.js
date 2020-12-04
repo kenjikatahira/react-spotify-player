@@ -25,14 +25,14 @@ class Artist extends React.Component {
         }
     }
     render() {
-        const { tracks } = this.props.view;
-        const { view,device_id } = this.props;
+        const { view, player } = this.props;
+        const { tracks } = view;
         if (tracks) {
             return (
                 <div className="artist">
-                    <TracklistHeader props={view} />
+                    <TracklistHeader player={player} props={view} />
                     <div className="artist-top-related">
-                        <Tracklist view={view} limit="5" device_id={device_id} />
+                        <Tracklist view={view} limit="5" />
                         <RelatedArtists view={view} />
                     </div>
                     <Grid grid={view.albums} />
@@ -50,7 +50,7 @@ const mapStateToProps = (state) => {
     return {
         uri: state.uri,
         view: state.view,
-        device_id: state.device_id
+        player: state.player
     };
 };
 

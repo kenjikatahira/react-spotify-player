@@ -1,12 +1,11 @@
 import React from 'react';
 import Styled from 'styled-components';
-import player from '../../api/player';
 
 const StyledHeader = Styled.div`
         padding: 0 32px 24px;
         margin-bottom: 15px;
         display: flex;
-    align-items: center;
+        align-items: center;
         img {
             width: 220px;
         }
@@ -62,7 +61,7 @@ const StyledHeader = Styled.div`
 `
 
 
-const TracklistHeader = ({props,player,device_id}) => {
+const TracklistHeader = ({props,player}) => {
     const {
         tracks,
         images,
@@ -98,7 +97,7 @@ const TracklistHeader = ({props,player,device_id}) => {
     }
 
     return (
-        <StyledHeader className="row">
+        <StyledHeader className="tracklist-header">
             {(images.length && images[0].url &&
                 <div className="artwork col-auto d-none d-lg-block">
                     <img src={images[0].url} alt={name || ''}/>
@@ -120,7 +119,7 @@ const TracklistHeader = ({props,player,device_id}) => {
                         { total_duration && tracksDuration() }
                 </div>
                 <div className="info-interactive">
-                    <div className="play" onClick={ () => { player.play({device_id, uris : (tracks || []) })}}> PLAY </div>
+                    <div className="play" onClick={ () => { player.play({uris : (tracks || []) })}}> PLAY </div>
                 </div>
             </div>
         </StyledHeader>

@@ -1,7 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-
-import './style.scss';
+import Styled from 'styled-components';
 
 import {
     setView,
@@ -9,6 +8,38 @@ import {
 } from "../../actions";
 
 import Loading from "./../loading";
+
+const StyledGrid = Styled.div`
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 32px 24px;
+
+    .albums-row {
+        display: flex;
+        flex-direction: row;
+        flex-flow: row wrap;
+        width: 100%;
+        padding: 10px 0;
+        margin-bottom: 25px;
+        .album {
+            width: 240px;
+            cursor: pointer;
+            .image {
+                width: 240px;
+                height:240px;
+            }
+            .card-body {
+                padding: 10px 0;
+            }
+            .card-body .card-text {
+                display : block;
+                white-space: pre-wrap;
+            }
+        }
+    }
+`
+
+
 
 class Grid extends React.Component {
 
@@ -46,9 +77,9 @@ class Grid extends React.Component {
         const { grid } = this.props;
         if(grid && Object.keys(grid).length) {
             return (
-                <div className="grid">
+                <StyledGrid className="grid">
                     {Object.values(grid).map(this.renderRow.bind(this))}
-                </div>
+                </StyledGrid>
             );
         } else {
             return (

@@ -1,14 +1,18 @@
 import React from 'react';
+import Styled from 'styled-components';
 
 import {formatTrackDuration} from './../../utils';
 
-import './style.scss';
+const StyledTimer = Styled.div`
+    text-align: center;
+    font-size: 13px;
+`
 
 const Timer = ({count,fixed}) => {
     return (
-        <div className="timer">
+        <StyledTimer className="timer">
             {formatTrackDuration(fixed ? fixed : count)}
-        </div>
+        </StyledTimer>
     )
 }
 

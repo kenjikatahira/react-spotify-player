@@ -8,21 +8,21 @@ import Album from "../../pages/album";
 const View = (props) => {
     const { uri } = props;
     return (
-            <>
-                {props.uri.indexOf('album') >= 0 ? (
-                    <Album />
-                ) : uri.indexOf('artist') >= 0 ? (
-                    <Artist />
-                ) : uri.indexOf('playlist') >= 0 ? (
-                    <Playlist />
-                ) : uri.indexOf('home') >= 0 ? (
-                    <Home />
-                ) : uri.indexOf('saved-tracks') >= 0 ? (
-                    <SavedTracks />
-                ) : (
-                    'TRISTE'
-                )}
-            </>
+        <>
+            {props.uri.indexOf('album') >= 0 ? (
+                <Album />
+            ) : uri.indexOf('artist') >= 0 ? (
+                <Artist />
+            ) : uri.indexOf('playlist') >= 0 ? (
+                <Playlist />
+            ) : uri.indexOf('home') >= 0 ? (
+                <Home />
+            ) : uri.indexOf('saved-tracks') >= 0 ? (
+                <SavedTracks />
+            ) : (
+                'Page not defined'
+            )}
+        </>
     );
 
 }

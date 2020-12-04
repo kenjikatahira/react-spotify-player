@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import Timer from '../timer';
+import Timer from '.';
 
 const TimerContainer = ({current_state,fixed}) => {
     const {
@@ -10,7 +10,7 @@ const TimerContainer = ({current_state,fixed}) => {
     } = current_state;
 
     let [state, setState] = useState({
-        count : 0,
+        count : position || 0,
         current_track
     });
 

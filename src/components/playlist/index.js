@@ -1,12 +1,26 @@
 import React from "react";
 import { connect } from "react-redux";
+import Styled from 'styled-components';
 
-import './style.scss';
+const StyledPlaylist = Styled.div`
+    .filter {
+        padding: 3px;
+        input {
+            width: 176px;
+            height: 25px;
+            border-radius: 27px;
+            background: inherit;
+            border-style: none;
+            color: #f5f5f5;
+        }
+    }
+`
 
 import { getView, setView } from "../../actions";
 
 import TracklistHeader from "../tracklist-header";
 import Tracklist from "../tracklist";
+import Tracklist from "../loading";
 
 class Playlist extends React.Component {
 
@@ -29,24 +43,22 @@ class Playlist extends React.Component {
     render() {
         const { tracks } = this.props.view;
         const {
-            view,
-            device_id
+            view
         } = this.props;
 
         if (tracks) {
             return (
-                <div className="playlist">
+                <StyledPlaylist className="playlist">
                     <TracklistHeader
                         props={view}
                     />
                     <Tracklist
                         view={view}
-                        device_id={device_id}
                     />
-                </div>
+                </StyledPlaylist>
             );
         } else {
-            return <>loading</>;
+            return <Loading />
         }
     }
 }
@@ -54,8 +66,7 @@ class Playlist extends React.Component {
 const mapStateToProps = (state) => {
     return {
         uri: state.uri,
-        view: state.view,
-        device_id: state.device_id
+        view: state.view
     };
 };
 
