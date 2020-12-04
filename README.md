@@ -30,6 +30,8 @@ https://www.npmjs.com/package/react-spotify-login
 ## How to use
 Add your [`client key`](https://developer.spotify.com/dashboard/applications) and [`client secret`](https://developer.spotify.com/dashboard/applications) on src/config.js file
 
+Create a [app](https://developer.spotify.com/dashboard/applications) and set Redirect URI to your local
+
 Then, in the project directory, you just run:
 
 ### `npm install`
