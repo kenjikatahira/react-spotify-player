@@ -52,7 +52,7 @@ export const get_saved_tracks = () => {
 }
 
 /**
- * Request for the current track data
+ * Request for the featured playlists from a country
  * @function get_featured_playlist
  * @return {Promise}
  */

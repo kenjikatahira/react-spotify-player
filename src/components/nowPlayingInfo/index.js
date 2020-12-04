@@ -33,7 +33,7 @@ const StyledNowPlayingInfo = Styled.div`
     }
 `
 
-const NowPlayingInfo = (current_track) => {
+const NowPlayingInfo = ({current_track}) => {
     const image = ((((current_track || {}).album || {}).images || [])[0] || {}).url;
     const track = (current_track || {}).name;
     const artist = (((current_track || {}).artists || [])[0] || {}).name;

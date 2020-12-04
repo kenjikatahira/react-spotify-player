@@ -491,6 +491,17 @@ export const getPlayer = () => {
     }
 }
 
+export const getRecentlyTracks = () => {
+    return async dispatch => {
+        const {data} = await get_recently_tracks();
+
+        dispatch({
+            type : 'GET_RECENTLY_TRACKS',
+            payload : data.items[0].track
+        });
+    }
+}
+
 /**
  * Set current track and context data
  * @function setCurrentState

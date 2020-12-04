@@ -7,7 +7,8 @@ import {
     getUser,
     getPlaylists,
     setView,
-    getPlayer
+    getPlayer,
+    getRecentlyTracks
 } from "../../actions";
 
 import View from "../view";
@@ -124,6 +125,9 @@ class Main extends React.Component {
             const lastPage = window.localStorage.getItem('last_uri');
             // Seta a primeira view
             this.props.setView(lastPage ? { uri : lastPage} : '');
+            // faz a primeira busca da ultima musica tocada
+            this.props.getRecentlyTracks();
+            console.log(this.props.player)
         };
     }
     onSearchChange(ev) {
@@ -189,5 +193,6 @@ export default connect(mapStateToProps, {
     getUser,
     getPlaylists,
     setView,
-    getPlayer
+    getPlayer,
+    getRecentlyTracks
 })(Main);

@@ -8,6 +8,7 @@ const GET_VIEW = 'GET_VIEW';
 const CLEAR_VIEW = 'CLEAR_VIEW';
 const GET_PLAYER = 'GET_PLAYER';
 const SET_CURRENT_STATE = 'SET_CURRENT_STATE';
+const GET_RECENTLY_TRACKS = 'GET_RECENTLY_TRACKS';
 const GET_SAVED_TRACKS = 'GET_SAVED_TRACKS';
 const GET_FEATURED_PLAYLISTS = 'GET_FEATURED_PLAYLISTS';
 const LOGIN = 'LOGIN';
@@ -88,6 +89,12 @@ const playerReducer = (state={},action) => {
 const currentStateReducer = (state={},action) => {
     if(action.type === SET_CURRENT_STATE) {
         return action.payload;
+    }
+    if(action.type === GET_RECENTLY_TRACKS) {
+        console.log(action)
+        return {
+            current_track : action.payload
+        };
     }
     return state;
 }
