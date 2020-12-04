@@ -2,12 +2,12 @@ import React from 'react';
 
 import './style.scss';
 
-const Playing = ({current_state : { current_track }}) => {
+const NowPlayingInfo = ({current_state : { current_track }}) => {
     const image = ((((current_track || {}).album || {}).images || [])[0] || {}).url;
     const track = (current_track || {}).name;
     const artist = (((current_track || {}).artists || [])[0] || {}).name;
     return (
-        <div className="playing">
+        <div className="now-playing-info">
             <div className="image">
                 <img src={image} alt={image} />
             </div>
@@ -19,5 +19,5 @@ const Playing = ({current_state : { current_track }}) => {
     )
 }
 
-export default Playing;
+export default NowPlayingInfo;
 

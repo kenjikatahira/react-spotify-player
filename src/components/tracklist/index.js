@@ -113,7 +113,7 @@ class Tracklist extends React.Component {
                                 })}
                             </tbody>
                         </table>
-                        { this.props.limit && <button class="toggleShow" onClick={this.showMore.bind(this)}>show {+this.state.limit === 5 ? 'more' : 'less' }</button>}
+                        { this.props.limit && <button className="toggleShow" onClick={this.showMore.bind(this)}>show {+this.state.limit === 5 ? 'more' : 'less' }</button>}
                     </div>
                 </>
             );

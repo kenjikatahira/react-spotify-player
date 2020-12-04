@@ -227,7 +227,7 @@ export const get_artist_top_tracks = ({uri}) => {
 }
 
 /**
- * Request for a playlist
+ * Request for a artist
  * @function get_artist
  * @return {Promise}
  */
@@ -241,7 +241,20 @@ export const get_artist = ({uri}) => {
     });
 }
 
-
+/**
+ * Request for a artist related artists
+ * @function get_related_artists
+ * @return {Promise}
+ */
+export const get_related_artists = ({uri}) => {
+    const id = uri.split(':');
+    return axios.get('https://api.spotify.com/v1/artists/' + id[id.length-1] + '/related-artists', {
+        headers : {
+            'content-type' : 'application/json',
+            'Authorization' : `Bearer ${getSession().access_token}`
+        }
+    });
+}
 
 /**
  * Request for a playlist

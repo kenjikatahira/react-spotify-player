@@ -1,5 +1,6 @@
 import React from 'react';
 import Styled from 'styled-components';
+import player from '../../api/player';
 
 const StyledHeader = Styled.div`
         padding: 0 32px 24px;
@@ -61,7 +62,7 @@ const StyledHeader = Styled.div`
 `
 
 
-const TracklistHeader = ({props}) => {
+const TracklistHeader = ({props,player,device_id}) => {
     const {
         tracks,
         images,
@@ -77,6 +78,22 @@ const TracklistHeader = ({props}) => {
             <>
                 <div dangerouslySetInnerHTML={{__html: description }} />
             </>
+        )
+    }
+
+    const tracksDuration = () => {
+        return (
+            <span className="info-duration">
+                {`- ${total_duration} hrs`}
+            </span>
+        )
+    }
+
+    const getSongsLenght = () => {
+        return (
+            <span className="info-tracks">
+                {`${(tracks || []).length} songs`}
+            </span>
         )
     }
 
@@ -99,15 +116,11 @@ const TracklistHeader = ({props}) => {
                             </span>
                         )
                     }
-                    <span className="info-tracks">
-                        {(tracks || []).length} songs
-                    </span>
-                    <span className="info-duration">
-                        {total_duration}
-                    </span>
+                        {type !== 'artist' && getSongsLenght() }
+                        { total_duration && tracksDuration() }
                 </div>
                 <div className="info-interactive">
-                    <div className="play"> PLAY </div>
+                    <div className="play" onClick={ () => { player.play({device_id, uris : (tracks || []) })}}> PLAY </div>
                 </div>
             </div>
         </StyledHeader>

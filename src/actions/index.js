@@ -318,9 +318,9 @@ export const login = (response) => {
     }
 }
 
-export const getPlayer = ({ setDeviceId }) => {
+export const getPlayer = () => {
     return dispatch => {
-        const player = Api.init({ setDeviceId });
+        const player = Api.init();
         dispatch({
             type : 'GET_PLAYER',
             payload : player

@@ -2,20 +2,22 @@ import {
     get_album,
     get_playlist_items,
     get_artist,
+    get_related_artists,
     get_artists_albums,
     get_playlist_cover_image,
     get_artist_top_tracks,
     get_a_playlist
 } from "./index";
 
-import { orderList, getSession, formatTrackDuration } from "../utils";
+
+import { orderList, getSession, formatTrackDuration, get_device_id } from "../utils";
 
 const totalDuration = (tracks) => {
     if(!tracks) return false;
     let initialValue = 0;
     const duration = tracks.reduce((total,{duration_ms}) => total + duration_ms,initialValue);
 
-    return formatTrackDuration(duration);
+    return formatTrackDuration(Math.floor(duration / 60));
 }
 
 const fetchPlaylist = async (uri) => {
@@ -65,6 +67,8 @@ const fetchAlbum = async (uri) => {
 
     album.type = 'album';
     album.name = data.name;
+    album.total_duration = totalDuration(data.tracks.items);
+
     album.tracks = data.tracks.items.map((i) => {
         return {
             id : i.id,
@@ -74,6 +78,7 @@ const fetchAlbum = async (uri) => {
             artists : i.artists
         }
     });
+
 
     album.images = data.images;
 
@@ -87,11 +92,11 @@ const fetchAlbum = async (uri) => {
 }
 
 const fetchArtist = async (uri) => {
-    const ids = [];
     let artist = {};
     const { data } = await get_artist({uri});
     const { data : topTracks } = await get_artist_top_tracks({uri});
     const { data : albums } = await get_artists_albums({uri});
+    const { data : relatedArtists } = await get_related_artists({uri});
 
     artist.type = 'artist';
     artist.name = data.name;
@@ -99,7 +104,6 @@ const fetchArtist = async (uri) => {
 
     if(!artist.tracks) {
         artist.tracks = topTracks.tracks;
-        artist.total_duration = totalDuration(artist.tracks);
     }
 
     artist.tracks = artist.tracks.map(i => {
@@ -125,9 +129,11 @@ const fetchArtist = async (uri) => {
     };
 
     artist.table = {
-        head :  ['name','duration'],
+        head :  ['Popular'],
         body  : artist.tracks
     }
+
+    artist.relatedArtists = relatedArtists;
 
     return artist;
 }
@@ -145,16 +151,14 @@ const getView = async ({uri}) => {
     return content;
 }
 
-const init = ({setDeviceId}) => {
+const init = () => {
     console.log('____init___');
-
     const player = new window.Spotify.Player({
         playerInstance: new window.Spotify.Player({ name: 'Kenjicas Player' }),
         name: 'Kenjicas Player',
         getOAuthToken: callback => callback(getSession().access_token)
     });
 
-    player.setDeviceId = setDeviceId;
     player.play = play;
     player.next = next;
     player.previous = previous;
@@ -199,8 +203,8 @@ const pause = () => {
     });
 }
 
-const resume = async ({device_id}) => {
-   fetch(`https://api.spotify.com/v1/me/player/play?device_id=${device_id}`, {
+const resume = async () => {
+   fetch(`https://api.spotify.com/v1/me/player/play?device_id=${get_device_id()}`, {
        method: 'PUT',
        headers: {
            'Content-Type': 'application/json',
@@ -209,9 +213,9 @@ const resume = async ({device_id}) => {
    });
 }
 
-const play = async ({uri,uris,device_id}) => {
+const play = async ({uri,uris}) => {
     let queue = orderList(uri,(uris || []).map(({uri}) => uri));
-    fetch(`https://api.spotify.com/v1/me/player/play?device_id=${device_id}`, {
+    fetch(`https://api.spotify.com/v1/me/player/play?device_id=${get_device_id()}`, {
         method: 'PUT',
         body: JSON.stringify({ uris : queue.length ? queue : [uri] }),
         headers: {

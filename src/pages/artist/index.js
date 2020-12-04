@@ -6,6 +6,7 @@ import './style.scss';
 import { getView, setView } from "../../actions";
 
 import TracklistHeader from "../../components/tracklist-header";
+import RelatedArtists from "../../components/relatedArtists";
 import Tracklist from "../../components/tracklist";
 import Loading from "../../components/loading";
 import Grid from "../../components/grid";
@@ -30,7 +31,10 @@ class Artist extends React.Component {
             return (
                 <div className="artist">
                     <TracklistHeader props={view} />
-                    <Tracklist view={view} limit="5" device_id={device_id} />
+                    <div className="artist-top-related">
+                        <Tracklist view={view} limit="5" device_id={device_id} />
+                        <RelatedArtists view={view} />
+                    </div>
                     <Grid grid={view.albums} />
                 </div>
             );

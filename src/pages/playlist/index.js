@@ -31,7 +31,8 @@ class Playlist extends React.Component {
         const { tracks } = this.props.view;
         const {
             view,
-            device_id
+            device_id,
+            player
         } = this.props;
 
         if (tracks) {
@@ -39,6 +40,8 @@ class Playlist extends React.Component {
                 <div className="playlist">
                     <TracklistHeader
                         props={view}
+                        player={player}
+                        device_id={device_id}
                     />
                     <Tracklist
                         view={view}
@@ -58,6 +61,7 @@ const mapStateToProps = (state) => {
     return {
         uri: state.uri,
         view: state.view,
+        player: state.player,
         device_id: state.device_id
     };
 };

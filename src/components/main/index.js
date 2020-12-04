@@ -15,7 +15,7 @@ import {
 import View from "../view";
 import Login from "../login";
 import Menu from "../menu";
-import NowPlaying from "../nowplaying";
+import NowPlayingBar from "../nowPlayingBar";
 
 class Main extends React.Component {
     constructor() {
@@ -32,8 +32,7 @@ class Main extends React.Component {
      * @return {Void}
      */
     run() {
-        const { setDeviceId } = this.props;
-        this.props.getPlayer({ setDeviceId });
+        this.props.getPlayer();
         this.initiated = true;
     }
     UNSAFE_componentWillUpdate() {
@@ -59,6 +58,7 @@ class Main extends React.Component {
             setView,
             playlists
         } = this.props;
+
         if(!logged.status) {
             return <Login />;
         } else {
@@ -85,7 +85,7 @@ class Main extends React.Component {
                         </div>
                     </div>
                     <div className="now-playing-wrapper">
-                        <NowPlaying />
+                        <NowPlayingBar />
                     </div>
                 </div>
             );
@@ -99,8 +99,7 @@ const mapStateToProps = (state) => {
         user: state.user,
         logged: state.logged,
         playlists: state.playlists,
-        uri: state.uri,
-        device_id: state.device_id
+        uri: state.uri
     };
 };
 
@@ -109,6 +108,5 @@ export default connect(mapStateToProps, {
     getUser,
     getPlaylists,
     setView,
-    setDeviceId,
     getPlayer
 })(Main);

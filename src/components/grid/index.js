@@ -10,38 +10,38 @@ import {
 import Loading from "./../loading";
 
 class Grid extends React.Component {
-    renderAlbums(data) {
+    renderAlbums({ uri, name, images, artists, id }) {
         return (
-            <div className="album col-sm-3" onClick={(ev) => { ev.stopPropagation(); this.props.setView({uri : data.uri}) }} key={data.id}>
+            <div className="album col-sm-3" onClick={(ev) => { ev.stopPropagation(); setView({uri : uri}) }} key={id}>
                 <div className="image" style={
-                    { backgroundImage: `url(${data.images.length && data.images[0].url})`, backgroundSize :'cover', backgroundPosition:'center center' }
+                    { backgroundImage: `url(${images.length && images[0].url})`, backgroundSize :'cover', backgroundPosition:'center center' }
                 }></div>
-                <div className="card-body" onClick={(ev) => { ev.stopPropagation(); this.props.player.play({uri : data.uri, device_id : this.props.device_id }) }}>
+                <div className="card-body" onClick={(ev) => { ev.stopPropagation(); this.props.player.play({ uri : uri }) }}>
                     <p>PLAY</p>
-                    <p className="card-title">{data.name}</p>
-                    <small className="card-text" onClick={(ev) => { ev.stopPropagation(); this.props.setView({uri : data.artists[0].uri}) }}>{data.artists[0].name}</small>
+                    <p className="card-title">{name}</p>
+                    <small className="card-text" onClick={(ev) => { ev.stopPropagation(); this.props.setView({uri : artists[0].uri}) }}>{artists[0].name}</small>
                 </div>
             </div>
         )
     }
 
-    renderRow(row) {
-        console.log(row)
+    renderRow({message,type,items}) {
         return (
             <>
-                <h2> {row.message} </h2>
-                <div className="albums-row" key={row.type}>
-                    {row.items.map(this.renderAlbums.bind(this))}
+                <h2> {message} </h2>
+                <div className="albums-row" key={type}>
+                    {items.map(this.renderAlbums.bind(this))}
                 </div>
             </>
         )
     }
 
     render() {
-        if(this.props.grid && Object.keys(this.props.grid).length && this.props.device_id) {
+        const { grid } = this.props;
+        if(grid && Object.keys(grid).length) {
             return (
                 <div className="grid">
-                    {Object.values(this.props.grid).map(this.renderRow.bind(this))}
+                    {Object.values(grid).map(this.renderRow.bind(this))}
                 </div>
             );
         } else {
@@ -54,8 +54,7 @@ class Grid extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        player: state.player,
-        device_id : state.device_id
+        player: state.player
     };
 };
 

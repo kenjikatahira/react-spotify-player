@@ -3,9 +3,11 @@ import './style.scss';
 import { connect } from "react-redux";
 import { setCurrentState } from '../../actions';
 
-import Playing from '../playing';
+import Playing from '../nowPlayingInfo';
 import TimerContainer from '../timerContainer';
 import Timer from '../timer';
+
+import { set_device_id } from './../../utils';
 
 class NowPlaying extends React.Component {
     componentDidUpdate() {
@@ -29,10 +31,7 @@ class NowPlaying extends React.Component {
     configurePlayer(player) {
         if(!player) return;
         // player -> instancia do spotify player
-        player.addListener('ready', ({device_id}) => {
-            console.log('Ready - Device ID', device_id);
-            player.setDeviceId(device_id);
-        });
+        player.addListener('ready', ({device_id}) => set_device_id(device_id));
         // update status - action
         player.addListener('player_state_changed', this.onChange.bind(this));
         // player connected
@@ -48,7 +47,7 @@ class NowPlaying extends React.Component {
                 <button
                     className="btn btn-outline-secondary control-button play"
                     onClick={() => {
-                        this.props.player.resume({device_id : this.props.device_id || ''})
+                        this.props.player.resume()
                     }}
                 >
                     <i className="fas fa-play"></i>
@@ -71,38 +70,35 @@ class NowPlaying extends React.Component {
 
         const { current_track } = current_state;
 
-        // verify if player device_id is ready to take commands
-        if(this.props.device_id) {
-            return(
-                <>
-                    <div className="now-playing">
-                        <div className="playing-wrapper">
-                            <Playing current_state={current_state} />
+        return(
+            <>
+                <div className="now-playing">
+                    <div className="playing-wrapper">
+                        <Playing current_state={current_state} />
+                    </div>
+                    <div className="inner-now-playing">
+                        <div className="controls-buttons">
+                            <button className="btn control-button" onClick={() => {player.previous(this.teste)}}>
+                                <i className="fas fa-backward"></i>
+                            </button>
+                            {this.togglePlayButton()}
+                            <button className="btn control-button" onClick={player.next}>
+                                <i className="fas fa-forward"></i>
+                            </button>
                         </div>
-                        <div className="inner-now-playing">
-                            <div className="controls-buttons">
-                                <button className="btn control-button" onClick={() => {player.previous(this.teste)}}>
-                                    <i className="fas fa-backward"></i>
-                                </button>
-                                {this.togglePlayButton()}
-                                <button className="btn control-button" onClick={player.next}>
-                                    <i className="fas fa-forward"></i>
-                                </button>
+                        <div className="playback-bar">
+                            <TimerContainer current_state={current_state} />
+                            <div className="playback-progress-bar">
+                                <div className="progress-bar-inner"></div>
                             </div>
-                            <div className="playback-bar">
-                                <TimerContainer current_state={current_state} />
-                                <div className="playback-progress-bar">
-                                    <div className="progress-bar-inner"></div>
-                                </div>
-                                {
-                                    (current_track || {}).duration_ms && <Timer fixed={(current_track || {}).duration_ms} />
-                                }
-                            </div>
+                            {
+                                (current_track || {}).duration_ms && <Timer fixed={(current_track || {}).duration_ms} />
+                            }
                         </div>
                     </div>
-                </>
-            )
-        }
+                </div>
+            </>
+        )
     }
 }
 const mapStateToProps = (state) => {
