@@ -1,4 +1,10 @@
-import { setSession,getSession, removeSession,isAuthenticated } from '../utils';
+import {
+    setSession,getSession,
+    removeSession,
+    isAuthenticated,
+    formatTrackDuration
+} from '../utils';
+
 import {
     get_user,
     get_saved_tracks,
@@ -18,8 +24,6 @@ import {
 } from '../api';
 
 import Player from '../api/player';
-
-import { formatTrackDuration } from './../utils'
 
 /**
  * Retrieves user information
