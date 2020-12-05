@@ -367,7 +367,7 @@ export const getDevices = () => {
 /**
  * Retrieves user's playlists
  *
- * @function getPlay    lists
+ * @function getPlaylists
  * @return {Void}
  */
 export const getPlaylists = () => {
