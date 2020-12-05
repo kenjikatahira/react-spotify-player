@@ -124,10 +124,9 @@ class Main extends React.Component {
         window.onSpotifyWebPlaybackSDKReady = () => {
             const lastPage = window.localStorage.getItem('last_uri');
             // Seta a primeira view
-            this.props.setView(lastPage ? { uri : lastPage} : '');
+            this.props.setView(lastPage ? { uri : lastPage } : '');
             // faz a primeira busca da ultima musica tocada
             this.props.getRecentlyTracks();
-            console.log(this.props.player)
         };
     }
     onSearchChange(ev) {

@@ -7,6 +7,7 @@ import {
     clearView
 } from "../../actions";
 
+import AlbumCard from "../album-card";
 import Loading from "./../loading";
 
 const StyledGrid = Styled.div`
@@ -39,26 +40,15 @@ const StyledGrid = Styled.div`
     }
 `
 
-
-
 class Grid extends React.Component {
 
     componentWillUnmount() {
         this.props.clearView();
     }
 
-    renderAlbums({ uri, name, images, artists, id }) {
+    renderAlbums(album) {
         return (
-            <div className="album col-sm-3" onClick={(ev) => { ev.stopPropagation(); this.props.setView({uri : uri}) }} key={id}>
-                <div className="image" style={
-                    { backgroundImage: `url(${images.length && images[0].url})`, backgroundSize :'cover', backgroundPosition:'center center' }
-                }></div>
-                <div className="card-body" onClick={(ev) => { ev.stopPropagation(); this.props.player.play({ uri : uri }) }}>
-                    <p>PLAY</p>
-                    <p className="card-title">{name}</p>
-                    <small className="card-text" onClick={(ev) => { ev.stopPropagation(); this.props.setView({uri : artists[0].uri}) }}>{artists[0].name}</small>
-                </div>
-            </div>
+            <AlbumCard album={album} player={this.props.player} setView={this.props.setView} />
         )
     }
 

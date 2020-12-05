@@ -17,7 +17,7 @@ class SavedTracks extends React.Component {
     }
 
     render() {
-        if(Object.keys(this.props.grid).length && this.props.device_id) {
+        if(Object.keys(this.props.grid).length) {
             return (
                 <Grid grid={this.props.grid} />
             );
