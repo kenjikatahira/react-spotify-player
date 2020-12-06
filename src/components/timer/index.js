@@ -17,4 +17,3 @@ const Timer = ({count,fixed}) => {
 }
 
 export default Timer;
-

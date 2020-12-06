@@ -22,7 +22,8 @@ const StyledMain = Styled.div`
     grid-template-rows: auto;
     grid-template-areas:
       "sidebar main main main main main"
-      "footer footer footer footer footer footer";
+      "footer footer footer footer footer footer"
+      "devicesBar devicesBar devicesBar devicesBar devicesBar devicesBar";
     overflow: hidden;
     font-family: "Lato";
     color: #F5F5F5;
@@ -58,7 +59,7 @@ const StyledMain = Styled.div`
         position: relative;
         overflow-x: hidden;
         overflow-y: auto;
-        height: 92vh;
+        height: 89vh;
 
         &::-webkit-scrollbar {
             width: 1em;
@@ -96,6 +97,10 @@ const StyledMain = Styled.div`
         background-color: #282828;
         grid-area: footer;
     }
+
+    .devices-bar-wrapper {
+        grid-area: devicesBar;
+    }
 `
 class Main extends React.Component {
     constructor() {
@@ -110,6 +115,7 @@ class Main extends React.Component {
      * @return {Void}
      */
     run() {
+        this.props.getRecentlyTracks();
         this.props.getPlayer();
         this.setState({
             initiated : true
@@ -120,13 +126,12 @@ class Main extends React.Component {
     }
     componentDidMount() {
         window.onSpotifyWebPlaybackSDKReady = () => {
-            // const lastPage = window.localStorage.getItem('last_uri');
-            // this.props.setView(lastPage ? { uri : lastPage } : '');
+            const lastPage = window.localStorage.getItem('last_uri');
+            this.props.setView(lastPage ? { uri : lastPage } : '');
             // Seta a primeira view
             // Force start from home
-            this.props.setView('home');
+            // this.props.setView('home');
             // faz a primeira busca da ultima musica tocada
-            this.props.getRecentlyTracks();
         };
     }
     onSearchChange(ev) {
@@ -158,9 +163,6 @@ class Main extends React.Component {
                         />
                     </div>
                     <div className="browser-wrapper">
-                        {/* <a class="github" href="https://github.com/kenjikatahira/react-spotify-player" target="_blank" rel="noopener noreferrer" >
-                            <img loading="lazy" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_white_ffffff.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1" />
-                        </a> */}
                         <div className="browser-inner-wrapper">
                             <View
                                 uri={uri}
@@ -183,7 +185,8 @@ const mapStateToProps = (state) => {
         user: state.user,
         logged: state.logged,
         playlists: state.playlists,
-        uri: state.uri
+        uri: state.uri,
+        devices: state.devices
     };
 };
 

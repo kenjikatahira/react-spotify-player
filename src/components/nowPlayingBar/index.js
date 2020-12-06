@@ -139,7 +139,9 @@ class NowPlaying extends React.Component {
             player,
             current_state
         } = this.props;
+
         const { current_track } = current_state;
+
         return(
             <StyledPlayingBar className="now-playing">
                 <div className="playing-wrapper">
