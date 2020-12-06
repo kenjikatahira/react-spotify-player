@@ -1,8 +1,9 @@
 import React from 'react';
+import { connect } from "react-redux";
 import Styled from 'styled-components';
 
 const StyledHeader = Styled.div`
-        padding: 0 32px 24px;
+        padding: 15px 32px;
         margin-bottom: 15px;
         display: flex;
         align-items: center;
@@ -60,19 +61,8 @@ const StyledHeader = Styled.div`
         }
 `
 
-
-const TracklistHeader = ({props,player}) => {
-    const {
-        tracks,
-        images,
-        name,
-        description,
-        owner,
-        total_duration,
-        type
-    } = props;
-
-    const getDescription = (description) => {
+class TracklistHeader extends React.Component {
+    getDescription(description) {
         return (
             <>
                 <div dangerouslySetInnerHTML={{__html: description }} />
@@ -80,7 +70,7 @@ const TracklistHeader = ({props,player}) => {
         )
     }
 
-    const tracksDuration = () => {
+    tracksDuration(total_duration) {
         return (
             <span className="info-duration">
                 {`- ${total_duration} hrs`}
@@ -88,7 +78,7 @@ const TracklistHeader = ({props,player}) => {
         )
     }
 
-    const getSongsLenght = () => {
+    getSongsLenght(tracks) {
         return (
             <span className="info-tracks">
                 {`${(tracks || []).length} songs`}
@@ -96,34 +86,53 @@ const TracklistHeader = ({props,player}) => {
         )
     }
 
-    return (
-        <StyledHeader className="tracklist-header">
-            {(images.length && images[0].url &&
-                <div className="artwork col-auto d-none d-lg-block">
-                    <img src={images[0].url} alt={name || ''}/>
+    render() {
+        const {
+            tracks,
+            image,
+            name,
+            description,
+            owner,
+            total_duration,
+            type
+        } = this.props.header;
+
+        return (
+            <StyledHeader className="tracklist-header">
+                {(image && image.url &&
+                    <div className="artwork">
+                        <img src={image.url} alt={name || ''}/>
+                    </div>
+                )}
+                <div className="col info d-flex flex-column">
+                    <strong className="info-type">{type}</strong>
+                    <h3 className="info-name">{name}</h3>
+                        {this.getDescription(description)}
+                    <div className="info-details">
+                        {
+                            (owner || {}).display_name && (
+                                <span className="info-owner">
+                                    Created by <strong>{(owner || {}).display_name}</strong>
+                                </span>
+                            )
+                        }
+                            { type !== 'artist' && this.getSongsLenght(tracks) }
+                            { type !== 'artist' && total_duration && this.tracksDuration(total_duration) }
+                    </div>
+                    <div className="info-interactive">
+                        <div className="play" onClick={ () => { this.props.player.play({uris : (tracks || []) })}}> PLAY </div>
+                    </div>
                 </div>
-            )}
-            <div className="col info d-flex flex-column">
-                <strong className="info-type">{type}</strong>
-                <h3 className="info-name">{name}</h3>
-                    {getDescription(description)}
-                <div className="info-details">
-                    {
-                        (owner || {}).display_name && (
-                            <span className="info-owner">
-                                Created by <strong>{(owner || {}).display_name}</strong>
-                            </span>
-                        )
-                    }
-                        {type !== 'artist' && getSongsLenght() }
-                        { total_duration && tracksDuration() }
-                </div>
-                <div className="info-interactive">
-                    <div className="play" onClick={ () => { player.play({uris : (tracks || []) })}}> PLAY </div>
-                </div>
-            </div>
-        </StyledHeader>
-    )
+            </StyledHeader>
+        )
+    }
+
 }
 
-export default TracklistHeader;
+const mapStateToProps = (state) => {
+    return {
+        player: state.player
+    };
+};
+
+export default connect(mapStateToProps, {})(TracklistHeader);

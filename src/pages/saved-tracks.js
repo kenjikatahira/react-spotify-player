@@ -1,15 +1,13 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import './style.scss';
-
 import {
     getSavedTracks,
     setView
-} from "../../actions";
+} from "../actions";
 
-import Grid from "../../components/grid";
-import Loading from "../../components/loading";
+import Grid from "../components/grid";
+import Loading from "../components/loading";
 
 class SavedTracks extends React.Component {
     componentDidMount() {
@@ -17,9 +15,9 @@ class SavedTracks extends React.Component {
     }
 
     render() {
-        if(Object.keys(this.props.grid).length) {
+        if(Object.keys(this.props.view).length) {
             return (
-                <Grid grid={this.props.grid} />
+                <Grid view={this.props.view} />
             );
         } else {
             return (
@@ -31,7 +29,7 @@ class SavedTracks extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        grid: state.grid,
+        view: state.view,
         player: state.player,
         device_id : state.device_id
     };

@@ -104,12 +104,22 @@ export const getHome = () => {
             };
         }
 
-        dispatch({
-            type : 'GET_HOME',
-            payload : {
+        console.log({
+            grid : {
                 recentlyTracks : factoryRecentlyTracks(recentlyTracks),
                 featuredPlaylists : factoryPlaylists(featuredPlaylists),
                 top_artists : factoryTopArtists(topArtists)
+            }
+        })
+
+        dispatch({
+            type : 'GET_VIEW',
+            payload : {
+                grid : {
+                    recentlyTracks : factoryRecentlyTracks(recentlyTracks),
+                    featuredPlaylists : factoryPlaylists(featuredPlaylists),
+                    top_artists : factoryTopArtists(topArtists)
+                }
             }
         });
     }
@@ -132,126 +142,155 @@ const fetchPlaylist = async (uri) => {
     }
     const [ playlist, playlistInfo, playlistCover ] = await Promise.all(Object.values(promises));
 
-    playlistData.type = 'playlist';
-    playlistData.images = playlistCover.data;
-    playlistData.id = playlist.data.id;
+    const [image] = playlistCover.data;
+
     playlistData.tracks = playlist.data.items.map((i) => i.track).filter((i) => i);
 
-    playlistData.total_duration = totalDuration(playlistData.tracks);
-    playlistData.owner = playlistInfo.data.owner;
-    playlistData.followers = playlistInfo.data.followers.total;
-    playlistData.name = playlistInfo.data.name;
-    playlistData.description = playlistInfo.data.description;
-    playlistData.public = playlistInfo.data.public;
-
-
-    playlistData.tracks = playlistData.tracks.map(i => {
-        return {
-            id : i.id,
-            name : i.name,
-            duration_ms : formatTrackDuration(i.duration_ms),
-            album : i.album,
-            artists : i.artists,
-            uri : i.uri,
+    const tableFactory = (data) => {
+        const trackModel = (i) => {
+            return {
+                id : i.id,
+                name : i.name,
+                duration_ms : formatTrackDuration(i.duration_ms),
+                album : i.album,
+                artists : i.artists,
+                uri : i.uri,
+            }
         }
-    });
-
-    playlistData.table = {
-        head :  ['name','artist','album','duration'],
-        body  : playlistData.tracks
+        return {
+            head :  ['name','artist','album','duration'],
+            body  : data.tracks.map(trackModel)
+        }
     }
 
-    return playlistData;
+    return {
+        type : 'playlist',
+        header : {
+            type : 'playlist',
+            name : playlistInfo.data.name,
+            image: image,
+            tracks : tableFactory(playlistData).body,
+            total_duration : totalDuration(playlistData.tracks),
+            owner : playlistInfo.data.owner,
+            followers : playlistInfo.data.followers.total,
+            description : playlistInfo.data.description,
+            public : playlistInfo.data.public
+        },
+        table : tableFactory(playlistData)
+    }
 }
 
 const fetchAlbum = async (uri) => {
-    let album = {};
-    const {data} = await get_album({uri});
+    const {data: album} = await get_album({uri});
+    const [image] = album.images;
 
-    album.type = 'album';
-    album.name = data.name;
-    album.total_duration = totalDuration(data.tracks.items);
-
-    album.tracks = data.tracks.items.map((i) => {
-        return {
-            id : i.id,
-            name : i.name,
-            duration_ms : formatTrackDuration(i.duration_ms),
-            uri : i.uri,
-            artists : i.artists
+    const tableFactory = (album) => {
+        const trackModel = (i) => {
+            return {
+                id : i.id,
+                name : i.name,
+                duration_ms : formatTrackDuration(i.duration_ms),
+                uri : i.uri,
+                artists : i.artists
+            }
         }
-    });
-
-
-    album.images = data.images;
-
-    album.table = {
-        head :  ['name','artist','duration'],
-        body  : album.tracks
+        return {
+            head :  ['name','artist','duration'],
+            body  : album.tracks.items.map(trackModel)
+        }
     }
 
+    console.log({
+        type: 'album',
+        header : {
+            name : album.name,
+            image : image,
+            tracks  : album.tracks,
+            total_duration : totalDuration(album.tracks.items)
+        },
+        table : tableFactory(album)
+    });
 
-    return album;
+    return {
+        type: 'album',
+        header : {
+            name : album.name,
+            image : image,
+            tracks : tableFactory(album).body,
+            total_duration : totalDuration(album.tracks.items)
+        },
+        table : tableFactory(album)
+    };
 }
 
 const fetchArtist = async (uri) => {
-    const ids = [];
     let artist = {};
     const { data } = await get_artist({uri});
     const { data : topTracks } = await get_artist_top_tracks({uri});
     const { data : albums } = await get_artists_albums({uri});
     const { data : relatedArtists } = await get_related_artists({uri});
 
-    artist.type = 'artist';
-    artist.name = data.name;
-    artist.images = data.images;
-
+    const [image] = data.images;
+    console.log(image)
     if(!artist.tracks) {
         artist.tracks = topTracks.tracks;
     }
 
-    artist.tracks = artist.tracks.map(i => {
+    const artistAlbumsFactory = (albums) => {
+        const ids = [];
         return {
-            id : i.id,
-            name : i.name,
-            duration_ms : formatTrackDuration(i.duration_ms),
-            uri : i.uri
+            artistAlbums : {
+                message : 'Albums',
+                type : 'artist',
+                items : albums.items.filter(i => {
+                    if(!ids.includes(i.name) && i.album_type === 'album') {
+                        ids.push(i.name);
+                        return true;
+                    }
+                    return false;
+                })
+            },
+            artistSingles : {
+                message : 'Singles',
+                type : 'artist',
+                items : albums.items.filter(i => {
+                    if(!ids.includes(i.name) && i.album_type === 'single') {
+                        ids.push(i.name);
+                        return true;
+                    }
+                    return false;
+                })
+            }
         }
-    });
-
-    artist.albums = {
-        artistAlbums : {
-            message : 'Albums',
-            type : 'artist',
-            items : albums.items.filter(i => {
-                if(!ids.includes(i.name) && i.album_type === 'album') {
-                    ids.push(i.name);
-                    return true;
-                }
-                return false;
-            })
-        },
-        artistSingles : {
-            message : 'Singles',
-            type : 'artist',
-            items : albums.items.filter(i => {
-                if(!ids.includes(i.name) && i.album_type === 'single') {
-                    ids.push(i.name);
-                    return true;
-                }
-                return false;
-            })
-        }
-    };
-
-    artist.table = {
-        head :  ['Popular'],
-        body  : artist.tracks
     }
 
-    artist.relatedArtists = relatedArtists;
+    const tableFactory = (artist) => {
+        const trackModel = (i) => {
+            return {
+                id : i.id,
+                name : i.name,
+                duration_ms : formatTrackDuration(i.duration_ms),
+                uri : i.uri
+            }
+        }
+        return {
+            head :  ['Popular'],
+            body  : artist.tracks.map(trackModel)
+        }
+    }
 
-    return artist;
+    return {
+        type : 'artist',
+        header : {
+            type : 'artist',
+            name : data.name,
+            image : image,
+            tracks : tableFactory(artist).body
+        },
+        table : tableFactory(artist),
+        grid : artistAlbumsFactory(albums),
+        relatedArtists : relatedArtists
+    };
 }
 
 const getViewRoute = async ({uri}) => {
@@ -263,7 +302,6 @@ const getViewRoute = async ({uri}) => {
     } else if(uri.split(':').indexOf('artist') >= 0) {
         content = await fetchArtist(uri);
     }
-
     return content;
 }
 
@@ -305,7 +343,7 @@ export const getSavedTracks = () => {
                 }
             }
             dispatch({
-                type : 'GET_SAVED_TRACKS',
+                type : 'GET_VIEW',
                 payload : {
                     savedTracks : factorySavedTracks(data)
                 }
@@ -328,22 +366,6 @@ export const getFeaturedPlaylist = () => {
                 payload : data.data
             });
         })
-    }
-}
-
-/**
- * Retrieves a playlist
- *
- * @function getPlaylist
- * @return {Void}
- */
-export const getPlaylist = (id) => {
-    return async dispatch => {
-        let {data} = await get_a_playlist(id);
-        dispatch({
-            type : 'GET_PLAYLIST',
-            payload : data
-        });
     }
 }
 
@@ -522,8 +544,6 @@ export const setCurrentState = (state) => {
                 previous_tracks
             }
         } = state;
-
-        console.log(state);
 
         dispatch({
             type : 'SET_CURRENT_STATE',

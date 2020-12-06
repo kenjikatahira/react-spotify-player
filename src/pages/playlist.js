@@ -2,27 +2,29 @@ import React from "react";
 import { connect } from "react-redux";
 import Styled from 'styled-components';
 
+import {
+    getView,
+    setView
+} from "./../actions";
+
+import TracklistHeader from "../components/tracklist-header";
+import Tracklist from "../components/tracklist";
+import Loading from "../components/loading";
+
 const StyledPlaylist = Styled.div`
 `
 
-import { getView, setView } from "../../actions";
-
-import TracklistHeader from "../tracklist-header";
-import Tracklist from "../tracklist";
-import Tracklist from "../loading";
-
 class Playlist extends React.Component {
-
     componentWillMount() {
         this.props.getView({
             uri: this.props.uri
         });
     }
 
-    UNSAFE_componentWillUpdate(nextProps) {
+    componentWillUpdate(nextProps) {
         if (
-            ((nextProps.view || {}).tracks || []).length &&
-            ((this.props.view || {}).tracks || []).length &&
+            (nextProps.view || {}).table &&
+            (this.props.view || {}).table &&
             this.props.uri !== nextProps.uri
         ) {
             this.props.getView({ uri: nextProps.uri });
@@ -30,19 +32,21 @@ class Playlist extends React.Component {
     }
 
     render() {
-        if (Object.keys(this.props.view||{}).length && Object.keys(this.props.view.table|| {}).length) {
+        if ((this.props.view || {}).table) {
             return (
                 <StyledPlaylist className="playlist">
-                    {/* <TracklistHeader
-                        props={view}
-                    /> */}
+                    <TracklistHeader
+                        header={this.props.view.header}
+                    />
                     <Tracklist
                         table={this.props.view.table}
                     />
                 </StyledPlaylist>
             );
         } else {
-            return <Loading />
+            return (
+                <Loading />
+            );
         }
     }
 }
@@ -50,7 +54,8 @@ class Playlist extends React.Component {
 const mapStateToProps = (state) => {
     return {
         uri: state.uri,
-        view: state.view
+        view: state.view,
+        player: state.player
     };
 };
 

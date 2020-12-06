@@ -7,8 +7,14 @@ import { setView,clearView } from './../../actions';
 const StyledTracklist = Styled.div`
     padding: 0 32px 24px;
     .filter {
+        padding: 3px;
         input {
-            font-size:14px;
+            width: 176px;
+            height: 25px;
+            border-radius: 27px;
+            background: inherit;
+            border-style: none;
+            color: #f5f5f5;
         }
     }
     .toggleShow {
@@ -121,8 +127,7 @@ class Tracklist extends React.Component {
                 onClick={() => {
                     this.props.player.play({
                         uri: item.uri,
-                        uris: this.props.view.tracks,
-                        device_id: this.props.device_id,
+                        uris: this.props.table.tracks
                     });
                 }}
             >
@@ -159,7 +164,7 @@ class Tracklist extends React.Component {
 
     onFilter(ev) {
         this.setState({
-            filteredItems : this.props.view.table.body.filter(({name}) => name.toLowerCase().replace('ã','a').indexOf(ev.target.value.toLowerCase()) > -1 )
+            filteredItems : this.props.table.body.filter(({name}) => name.toLowerCase().replace('ã','a').indexOf(ev.target.value.toLowerCase()) > -1 )
         })
     }
 
@@ -168,34 +173,31 @@ class Tracklist extends React.Component {
     }
 
     render() {
-        const { view } = this.props;
-        if (view.tracks) {
-            return (
-                <StyledTracklist className="tracklist">
-                    <div className="filter">
-                        <input type="text" placeholder="Filter" onChange={(ev) => { this.onFilter(ev) }} />
-                    </div>
-                    <table className="table">
-                        <thead>
-                            <tr className="header">
-                                <th scope="col"></th>
-                                {view.table.head.map(i => (<th key={i}>{i}</th>))}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {((this.state.filteredItems || []).length > 0 ? this.state.filteredItems : view.table.body).map((i,index) => {
-                                if((this.state.limit)) {
-                                    return (index < +this.state.limit) && this.renderList(i,index);
-                                } else {
-                                    return this.renderList(i,index);
-                                }
-                            })}
-                        </tbody>
-                    </table>
-                    { this.props.limit && <button className="toggleShow" onClick={this.showMore.bind(this)}>show {+this.state.limit === 5 ? 'more' : 'less' }</button>}
-                </StyledTracklist>
-            );
-        }
+        return (
+            <StyledTracklist className="tracklist">
+                <div className="filter">
+                    <input type="text" placeholder="Filter" onChange={(ev) => { this.onFilter(ev) }} />
+                </div>
+                <table className="table">
+                    <thead>
+                        <tr className="header">
+                            <th scope="col"></th>
+                            {this.props.table.head.map(i => (<th key={i}>{i}</th>))}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {((this.state.filteredItems || []).length > 0 ? this.state.filteredItems : this.props.table.body).map((i,index) => {
+                            if((this.state.limit)) {
+                                return (index < +this.state.limit) && this.renderList(i,index);
+                            } else {
+                                return this.renderList(i,index);
+                            }
+                        })}
+                    </tbody>
+                </table>
+                { this.props.limit && <button className="toggleShow" onClick={this.showMore.bind(this)}>show {+this.state.limit === 5 ? 'more' : 'less' }</button>}
+            </StyledTracklist>
+        );
     }
 }
 

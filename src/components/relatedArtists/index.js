@@ -1,10 +1,7 @@
 import React from 'react';
 
-const RelatedArtists = ({view}) => {
-    const {
-        relatedArtists
-    } = view;
-
+const RelatedArtists = ({relatedArtists}) => {
+    console.log(relatedArtists)
     const renderArtist = (artist) => {
         return (
             <li key={artist.id}>

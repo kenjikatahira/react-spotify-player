@@ -86,8 +86,6 @@ const StyledMain = Styled.div`
         background-position: fixed;
         .browser-inner-wrapper {
             max-width: 100%;
-            margin: 15px auto;
-            margin-top: 20px;
             margin-bottom: 1em;
         }
     }
@@ -122,9 +120,11 @@ class Main extends React.Component {
     }
     componentDidMount() {
         window.onSpotifyWebPlaybackSDKReady = () => {
-            const lastPage = window.localStorage.getItem('last_uri');
+            // const lastPage = window.localStorage.getItem('last_uri');
+            // this.props.setView(lastPage ? { uri : lastPage } : '');
             // Seta a primeira view
-            this.props.setView(lastPage ? { uri : lastPage } : '');
+            // Force start from home
+            this.props.setView('home');
             // faz a primeira busca da ultima musica tocada
             this.props.getRecentlyTracks();
         };
