@@ -54,10 +54,10 @@ class Grid extends React.Component {
         this.props.clearView();
     }
 
-    renderAlbums({images,uri,id,name,artists,album}) {
+    renderAlbums({images,uri,id,name,artists}) {
         return (
             <div className="album col-xs-12 col-sm-6 col-md-4 col-lg-3" key={id}>
-            <div className="image" onClick={(ev) => { this.props.setView({uri : album.uri});}} style={
+            <div className="image" onClick={(ev) => { this.props.setView({uri});}} style={
                 { backgroundImage: `url(${images.length && images[0].url})`, backgroundSize :'cover', backgroundPosition:'center center' }
             }></div>
             <div className="card-body">
