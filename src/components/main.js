@@ -8,6 +8,7 @@ import Login from './login';
 import Menu from './menu';
 import NowPlayingBar from './nowPlayingBar';
 import Home from './../pages/home';
+import Playlist from "../pages/playlist";
 
 const StyledMain = Styled.div`
     display: grid;
@@ -156,6 +157,16 @@ const Main = () => {
         });
     }
 
+    const renderView = () => {
+        if(uri) {
+            if(uri.indexOf('home') !== -1) {
+                return <Home player={player} setUri={setUri} />
+            } else if(uri.indexOf('playlist') !== -1) {
+                return <Playlist player={player} setUri={setUri} />
+            }
+        }
+    }
+
     if(!state.isLogged) {
         return <Login onLogin={onLogin}/>;
     } else {
@@ -163,13 +174,12 @@ const Main = () => {
             <StyledMain className="main">
                 <div className="menu-wrapper">
                     <Menu
+                        setUri={setUri}
                         uri={uri}
                     />
                 </div>
                 <div className="browser-wrapper">
-                    {
-                        (uri || '').includes('home') && <Home player={player} setUri={setUri} />
-                    }
+                    {renderView()}
                 </div>
                 <div className="now-playing-wrapper">
                     <NowPlayingBar currentTrack={currentTrack} player={player} />

@@ -164,7 +164,7 @@ const Menu = ({uri, setUri}) => {
                     className={uri === item.uri ? "active" : ""}
                     data-owner={display_name ? ` * by ${display_name}`: "" }
                     id={item.uri}
-                    onClick={() => setUri({ uri: item.uri })}
+                    onClick={() => { console.log('item.uri', item.uri); setUri({ uri: item.uri }); }}
                 >
                     {item.icon ? item.icon : ''} {item.name}
                 </li>
