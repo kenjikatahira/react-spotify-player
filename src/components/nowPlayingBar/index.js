@@ -69,12 +69,12 @@ const StyledPlayingBar = Styled.div`
             .playback-progress-bar {
                 width: 100%;
                 margin: 0 10px;
-
+                background-color:#1a1a1a;
                 .progress-bar-inner {
                     background-color: #b3b3b3;
                     border-radius: 2px;
                     height: 4px;
-                    width: 100%;
+                    width:40%;
                 }
             }
         }
@@ -155,6 +155,7 @@ class NowPlaying extends React.Component {
                         {this.togglePlayButton()}
                         <button className="btn control-button" onClick={player.next}>
                             <i className="fas fa-forward"></i>
+                            {/* <i className="fas fa-forward" style={{ width: 100*(current_track || {}).duration_ms/total }}></i> */}
                         </button>
                     </div>
                     <div className="playback-bar">

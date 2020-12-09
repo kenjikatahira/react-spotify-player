@@ -3,26 +3,23 @@ import { connect } from "react-redux";
 import Styled from 'styled-components';
 
 import {
-    getHome,
+    getView,
     setView
 } from "./../actions";
 
 import Loading from "../components/loading";
 import Grid from "../components/grid";
 
-const StyledHome = Styled.div`
-
-`
-class Main extends React.Component {
+class GenericGrid extends React.Component {
 
     componentDidMount() {
-        this.props.getHome({uri : 'home'});
+        this.props.getView({uri : this.props.uri });
     }
 
     componentDidUpdate(nextProps) {
         if (
-            ((nextProps.view || {}).table) &&
-            ((this.props.view || {}).table) &&
+            ((nextProps.view || {}).grid) &&
+            ((this.props.view || {}).grid) &&
             this.props.uri !== nextProps.uri
         ) {
             this.props.getView({ uri: nextProps.uri });
@@ -32,9 +29,10 @@ class Main extends React.Component {
     render() {
         if((this.props.view || {}).grid) {
             return (
-                <StyledHome className="home">
+                <>
+                    teste
                     <Grid grid={this.props.view.grid} />
-                </StyledHome>
+                </>
             )
         } else {
             return (
@@ -51,6 +49,6 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps, {
-    getHome,
+    getView,
     setView
-})(Main);
+})(GenericGrid);

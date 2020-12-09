@@ -20,7 +20,6 @@ const StyledGrid = Styled.div`
         padding: 10px 0;
         margin-bottom: 25px;
         padding: 10px;
-        resize: horizontal;
         overflow: auto;
         max-width: 100%;
         .album {
@@ -50,10 +49,6 @@ const StyledGrid = Styled.div`
 
 class Grid extends React.Component {
 
-    componentWillUnmount() {
-        this.props.clearView();
-    }
-
     renderAlbums({images,uri,id,name,artists}) {
         return (
             <div className="album col-xs-12 col-sm-6 col-md-4 col-lg-3" key={id}>
@@ -70,14 +65,16 @@ class Grid extends React.Component {
     }
 
     renderRow({message,type,items}) {
-        return (
-            <>
-                <h2> {message} </h2>
-                <div className="albums-row" key={type}>
-                    {items.map(this.renderAlbums.bind(this))}
-                </div>
-            </>
-        )
+        if(items) {
+            return (
+                <>
+                    <h2> {message} </h2>
+                    <div className="albums-row" key={type}>
+                        {items.map(this.renderAlbums.bind(this))}
+                    </div>
+                </>
+            )
+        }
     }
 
     render() {

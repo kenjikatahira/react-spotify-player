@@ -7,13 +7,19 @@ const StyledHeader = Styled.div`
         margin-bottom: 15px;
         display: flex;
         align-items: center;
-        img {
-            width: 220px;
+
+        .artwork-wrapper {
+            overflow: auto;
+            width: 300px;
+            .artwork {
+                width: 100%;
+                padding-bottom: 100%;
+            }
         }
 
         .info {
             align-self: flex-end;
-            padding: 0 10px;
+            padding: 0 25px;
             p { margin: 0; }
             .info-type {
                 position: relative;
@@ -23,8 +29,8 @@ const StyledHeader = Styled.div`
                 font-size: 15px;
             }
             .info-name {
-                font-size: 82px;
-                line-height: 82px;
+                font-size: 64px;
+                line-height: 64px;
                 padding: 0.08em 0px;
                 font-weight: 600;
                 margin-bottom: 0;
@@ -100,8 +106,10 @@ class TracklistHeader extends React.Component {
         return (
             <StyledHeader className="tracklist-header">
                 {(image && image.url &&
-                    <div className="artwork">
-                        <img src={image.url} alt={name || ''}/>
+                    <div className="artwork-wrapper">
+                        <div className="artwork" style={
+                        { backgroundImage: `url(${image.url})`, backgroundSize :'cover', backgroundPosition:'center center' }
+                    }></div>
                     </div>
                 )}
                 <div className="col info d-flex flex-column">

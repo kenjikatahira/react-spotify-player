@@ -62,10 +62,10 @@ const uriReducer = (state='home',action) => {
 
 const viewReducer = (state=[],action) => {
     if(action.type === GET_VIEW) {
-        return action.payload;
+        return action.payload || null;
     }
     if(action.type === CLEAR_VIEW ) {
-        return [];
+        return null;
     }
     return state;
 }

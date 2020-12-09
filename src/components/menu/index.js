@@ -97,7 +97,7 @@ const StyledMenu = Styled.ul`
     }
 `
 
-const Menu = ({playlists, setView, uri, logout, getPlaylists}) => {
+const Menu = ({playlists, setView, uri, getPlaylists}) => {
     // Retorna a playlist do usuario
     !Object.keys(playlists).length && getPlaylists && getPlaylists();
     // Menu de itens fixos
@@ -119,10 +119,10 @@ const Menu = ({playlists, setView, uri, logout, getPlaylists}) => {
             name: "Saved",
             uri: "saved-tracks"
         },
-        // {
-        //     name: "Recently Played",
-        //     uri: "recently-played"
-        // },
+        {
+            name: "Recently Played",
+            uri: "recently-tracks"
+        },
         // {
         //     name: "Liked Songs",
         //     uri: "liked-songs"
@@ -191,8 +191,7 @@ const Menu = ({playlists, setView, uri, logout, getPlaylists}) => {
 Menu.propTypes = {
     playlists : PropTypes.object,
     uri : PropTypes.string,
-    setView : PropTypes.func,
-    logout : PropTypes.func
+    setView : PropTypes.func
 }
 
 export default Menu;
