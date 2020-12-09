@@ -1,56 +1,35 @@
-import React from "react";
-import { connect } from "react-redux";
+import React, { useEffect, useState } from "react";
+import PropTypes from 'prop-types';
 import Styled from 'styled-components';
 
-import {
-    getHome,
-    setView
-} from "./../actions";
+import { getViewRoute } from './../api';
 
-import Loading from "../components/loading";
+// import Loading from "../components/loading";
 import Grid from "../components/grid";
 
 const StyledHome = Styled.div`
 
 `
-class Main extends React.Component {
+const Home = ({player, setUri}) => {
+    const [data,setData] = useState(null);
 
-    componentDidMount() {
-        this.props.getHome({uri : 'home'});
-    }
-
-    componentDidUpdate(nextProps) {
-        if (
-            ((nextProps.view || {}).table) &&
-            ((this.props.view || {}).table) &&
-            this.props.uri !== nextProps.uri
-        ) {
-            this.props.getView({ uri: nextProps.uri });
+    useEffect(() => {
+        if(!data) {
+            getViewRoute({uri : 'home'})
+                .then(setData);
         }
-    }
+    },[data]);
 
-    render() {
-        if((this.props.view || {}).grid) {
-            return (
-                <StyledHome className="home">
-                    <Grid grid={this.props.view.grid} />
-                </StyledHome>
-            )
-        } else {
-            return (
-                <Loading />
-            )
-        }
-    }
+    return (
+        <StyledHome className="home">
+            <Grid grid={(data || {}).grid} player={player} setUri={setUri} />
+        </StyledHome>
+    )
 }
 
-const mapStateToProps = (state) => {
-    return {
-        view: state.view
-    };
-};
+Home.propTypes = {
+    player : PropTypes.object,
+    setUri : PropTypes.func
+}
 
-export default connect(mapStateToProps, {
-    getHome,
-    setView
-})(Main);
+export default Home;

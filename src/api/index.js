@@ -1,272 +1,388 @@
-import axios from 'axios';
+import {
+    formatTrackDuration
+} from '../utils';
 
-import { getSession } from '../utils';
+import {
+    get_featured_playlist,
+    get_saved_tracks,
+    get_recently_tracks,
+    get_a_playlist,
+    top_artists,
+    get_album,
+    get_playlist_items,
+    get_artist,
+    get_related_artists,
+    get_artists_albums,
+    get_playlist_cover_image,
+    get_artist_top_tracks,
+    get_playlists,
+} from './spotify';
 
 /**
- * Scope to provide the right acess to information
- * @type scope
+ * Get the data for the route
+ *
+ * @function getViewRoute
+ * @return {Object} data for the view
  */
-export const scope = 'user-read-private user-library-read user-read-playback-state user-read-playback-position user-modify-playback-state user-top-read user-read-recently-played streaming user-read-email'
-
-/**
- * Basic request with the token provided
- * @function get
- * @param request url
- * @return {Promise}
- */
-export const get = (url) => {
-    return axios.get(url, {
-        headers : {
-            'content-type' : 'application/json',
-            'Authorization' : `Bearer ${getSession().access_token}`
-        }
-    });
+export const getViewRoute = async ({uri}) => {
+    let content;
+    if(uri === 'home') {
+        content = await getHome();
+    } else if(uri === 'recently-tracks') {
+        content = await getRecentlyTracks();
+    } else if(uri.split(':').indexOf('album') >= 0) {
+        content = await fetchAlbum(uri);
+    } else if(uri.split(':').indexOf('playlist') >= 0) {
+        content = await fetchPlaylist(uri);
+    } else if(uri.split(':').indexOf('artist') >= 0) {
+        content = await fetchArtist(uri);
+    }
+    return content;
 }
 
 /**
- * Request for the user data
- * @function get_user
- * @return {Promise}
+ * Retrieves home data
+ *
+ * @function getHome
+ * @return {Void}
  */
-export const get_user = () => {
-    return axios.get('https://api.spotify.com/v1/me', {
-        headers : {
-            'content-type' : 'application/json',
-            'Authorization' : `Bearer ${getSession().access_token}`
+export const getHome = async () => {
+    try {
+        const promises = [get_recently_tracks(),get_featured_playlist(),top_artists()];
+        const [ { data : recentlyTracks }, { data : featuredPlaylists }, { data : topArtists } ] = await Promise.all(Object.values(promises));
+        /**
+         * Model array of recently tracks to albums for the homepage view
+         *
+         * @function factoryRecentlyTracks
+         * @return {Void}
+         */
+        const factoryRecentlyTracks = (response) => {
+            let  ids = [];
+            let albums = response.items.map(item => item.track.album);
+
+            albums = albums.filter(item => {
+                if(ids.includes(item.id)) return false;
+                ids.push(item.id);
+                return item;
+            });
+
+            return {
+                href : response.href,
+                message : 'Recently Played',
+                items : albums,
+                type : 'recently-played'
+            }
         }
-    });
+        /**
+         * Model the playlist response for the homepage view
+         *
+         * @function factoryPlaylists
+         * @return {Void}
+         */
+        const factoryPlaylists = (response) => {
+            return {
+                message : response.message,
+                items : response.playlists.items,
+                type : 'playlists'
+            }
+        }
+        /**
+         * Model user's top artists response for the homepage view
+         *
+         * @function factoryTopArtists
+         * @return {Void}
+         */
+        const factoryTopArtists = (response) => {
+            return {
+                message : 'Top Artists',
+                items : response.items,
+                type : 'top-artists'
+            };
+        }
+
+        return {
+            type : 'home',
+            grid : {
+                featuredPlaylists : factoryPlaylists(featuredPlaylists),
+                top_artists : factoryTopArtists(topArtists),
+                recentlyTracks : factoryRecentlyTracks(recentlyTracks),
+            }
+        }
+    } catch(e) {
+        throw new Error(e);
+    }
 }
 
 /**
- * Request user's saved tracks
- * @function get_saved_tracks
- * @return {Promise}
+ * Retrieves user's recently played tracks
+ *
+ * @function getRecentlyTracks
+ * @return {Void}
  */
-export const get_saved_tracks = () => {
-    return axios.get('https://api.spotify.com/v1/me/tracks?limit=30', {
-        headers : {
-            'content-type' : 'application/json',
-            'Authorization' : `Bearer ${getSession().access_token}`
-        }
-    });
+export const getRecentlyTracks = () => {
+    return dispatch => {
+        get_recently_tracks().then( ({data}) => {
+            /**
+             * Model array of recently tracks to albums for the homepage view
+             *
+             * @function factoryRecentlyTracks
+             * @return {Void}
+             */
+            const factoryRecentlyTracks = (response) => {
+                let  ids = [];
+                let albums = response.items.map(item => item.track.album);
+
+                albums = albums.filter(item => {
+                    if(ids.includes(item.id)) return false;
+                    ids.push(item.id);
+                    return item;
+                });
+
+                return {
+                    recentlyTracks : {
+                        message : 'Recently Played',
+                        items : albums,
+                        type : 'recently-tracks'
+                    }
+                }
+            }
+
+            dispatch({
+                type : 'GET_VIEW',
+                payload : {
+                    grid : factoryRecentlyTracks(data)
+                }
+            });
+        })
+        .catch(err => console.log(err));
+    }
 }
 
 /**
- * Request for the featured playlists from a country
- * @function get_featured_playlist
- * @return {Promise}
+ * Retrieves user's saved tracks
+ *
+ * @function getSavedTracks
+ * @return {Void}
  */
-export const get_featured_playlist = () => {
-    return axios.get('https://api.spotify.com/v1/browse/featured-playlists?country=CA&limit=4', {
-        headers : {
-            'content-type' : 'application/json',
-            'Authorization' : `Bearer ${getSession().access_token}`
-        }
-    });
+export const getSavedTracks = () => {
+    return dispatch => {
+        get_saved_tracks().then( ({data}) => {
+            /**
+             * Model array of recently tracks to albums for the saved tracks
+             *
+             * @function savedTracksFactory
+             * @return {Void}
+             */
+            const savedTracksFactory = (response) => {
+                let tracks = response.items.map(item => item.track);
+
+                tracks = tracks.map(item => {
+                    return {
+                        images : item.album.images,
+                        name : item.name,
+                        uri : item.uri,
+                        album : {
+                            uri : item.album.uri
+                        },
+                        artists : item.artists
+                    };
+                });
+
+                return {
+                    savedTracks : {
+                        message : 'Saved Tracks',
+                        type : 'saved-tracks',
+                        items : tracks
+                    }
+                }
+            }
+
+            dispatch({
+                type : 'GET_VIEW',
+                payload : {
+                    grid : savedTracksFactory(data)
+                }
+            });
+        })
+        .catch(err => console.log(err));
+    }
 }
 
-/**
- * Request for the current track data
- * @function get_current_track
- * @return {Promise}
- */
-export const get_current_track = () => {
-    return axios.get('https://api.spotify.com/v1/me/player/currently-playing', {
-        headers : {
-            'content-type' : 'application/json',
-            'Authorization' : `Bearer ${getSession().access_token}`
-        }
-    });
+const totalDuration = (tracks) => {
+    if(!tracks) return false;
+    let initialValue = 0;
+    const duration = tracks.reduce((total,{duration_ms}) => total + duration_ms,initialValue);
+
+    return formatTrackDuration(Math.floor(duration / 60));
 }
 
-/**
- * Request for the top artists list
- * @function top_artists
- * @return {Promise}
- */
-export const top_artists = () => {
-    return axios.get('https://api.spotify.com/v1/me/top/artists', {
-        headers : {
-            'content-type' : 'application/json',
-            'Authorization' : `Bearer ${getSession().access_token}`
+const fetchPlaylist = async (uri) => {
+    try {
+        let playlistData = {};
+        const promises = {
+            playlist : get_playlist_items({uri}),
+            playlistInfo : get_a_playlist({uri}),
+            playlistCover : get_playlist_cover_image({uri}),
         }
-    });
+        const [ playlist, playlistInfo, playlistCover ] = await Promise.all(Object.values(promises));
+
+        const [image] = playlistCover.data;
+
+        playlistData.tracks = playlist.data.items.map((i) => i.track).filter((i) => i);
+
+        const tableFactory = (data) => {
+            const trackModel = (i) => {
+                return {
+                    id : i.id,
+                    name : i.name,
+                    duration_ms : formatTrackDuration(i.duration_ms),
+                    album : i.album,
+                    artists : i.artists,
+                    uri : i.uri,
+                }
+            }
+            return {
+                head :  ['name','artist','album','duration'],
+                body  : data.tracks.map(trackModel)
+            }
+        }
+
+        return {
+            type : 'playlist',
+            header : {
+                type : 'playlist',
+                name : playlistInfo.data.name,
+                image: image,
+                tracks : tableFactory(playlistData).body,
+                total_duration : totalDuration(playlistData.tracks),
+                owner : playlistInfo.data.owner,
+                followers : playlistInfo.data.followers.total,
+                description : playlistInfo.data.description,
+                public : playlistInfo.data.public
+            },
+            table : tableFactory(playlistData)
+        }
+    } catch(e) {
+        console.error(e);
+    }
 }
 
-/**
- * Request for the recently listened music of the user
- * @function get_recently_tracks
- * @return {Promise}
- */
-export const get_recently_tracks = () => {
-    return axios.get('https://api.spotify.com/v1/me/player/recently-played', {
-        headers : {
-            'content-type' : 'application/json',
-            'Authorization' : `Bearer ${getSession().access_token}`
+const fetchAlbum = async (uri) => {
+    try {
+        const {data: album} = await get_album({uri});
+        const [image] = album.images;
+
+        const tableFactory = (album) => {
+            const trackModel = (i) => {
+                return {
+                    id : i.id,
+                    name : i.name,
+                    duration_ms : formatTrackDuration(i.duration_ms),
+                    uri : i.uri,
+                    artists : i.artists
+                }
+            }
+            return {
+                head :  ['name','artist','duration'],
+                body  : album.tracks.items.map(trackModel)
+            }
         }
-    });
+
+        return {
+            type: 'album',
+            header : {
+                name : album.name,
+                image : image,
+                tracks : tableFactory(album).body,
+                total_duration : totalDuration(album.tracks.items)
+            },
+            table : tableFactory(album)
+        };
+    } catch(e) {
+        console.error(e);
+    }
 }
 
-/**
- * Retrieves the devices avaiable
- * @function get_devices
- * @return {Promise}
- */
-export const get_devices = () => {
-    return axios.get('https://api.spotify.com/v1/me/player/devices', {
-        headers : {
-            'content-type' : 'application/json',
-            'Authorization' : `Bearer ${getSession().access_token}`
+const fetchArtist = async (uri) => {
+    try {
+        let artist = {};
+        const { data } = await get_artist({uri});
+        const { data : topTracks } = await get_artist_top_tracks({uri});
+        const { data : albums } = await get_artists_albums({uri});
+        const { data : relatedArtists } = await get_related_artists({uri});
+
+        const [image] = data.images;
+
+        if(!artist.tracks) {
+            artist.tracks = topTracks.tracks;
         }
-    });
+
+        const artistAlbumsFactory = (albums) => {
+            const ids = [];
+            return {
+                artistAlbums : {
+                    message : 'Albums',
+                    type : 'artist',
+                    items : albums.items.filter(i => {
+                        if(!ids.includes(i.name) && i.album_type === 'album') {
+                            ids.push(i.name);
+                            return true;
+                        }
+                        return false;
+                    })
+                },
+                artistSingles : {
+                    message : 'Singles',
+                    type : 'artist',
+                    items : albums.items.filter(i => {
+                        if(!ids.includes(i.name) && i.album_type === 'single') {
+                            ids.push(i.name);
+                            return true;
+                        }
+                        return false;
+                    })
+                }
+            }
+        }
+
+        const tableFactory = (artist) => {
+            const trackModel = (i) => {
+                return {
+                    id : i.id,
+                    name : i.name,
+                    duration_ms : formatTrackDuration(i.duration_ms),
+                    uri : i.uri
+                }
+            }
+            return {
+                head :  ['Popular'],
+                body  : artist.tracks.map(trackModel)
+            }
+        }
+
+        return {
+            type : 'artist',
+            header : {
+                type : 'artist',
+                name : data.name,
+                image : image,
+                tracks : tableFactory(artist).body
+            },
+            table : tableFactory(artist),
+            grid : artistAlbumsFactory(albums),
+            relatedArtists : relatedArtists
+        };
+
+    } catch(e) {
+        console.error(e);
+    }
 }
 
-/**
- * Request for the user's playlists
- * @function get_playlists
- * @return {Promise}
- */
-export const get_playlists = () => {
-    return axios.get('https://api.spotify.com/v1/me/playlists?limit=30&offset=0', {
-        headers : {
-            'content-type' : 'application/json',
-            'Authorization' : `Bearer ${getSession().access_token}`
-        }
-    });
-}
-
-/**
- * Request for a album
- * @function get_album
- * @return {Promise}
- */
-export const get_album = ({uri}) => {
-    const id = uri.split(':');
-    return axios.get('https://api.spotify.com/v1/albums/' + id[id.length-1], {
-        headers : {
-            'content-type' : 'application/json',
-            'Authorization' : `Bearer ${getSession().access_token}`
-        }
-    });
-}
-
-/**
- * Request for a artist's albums
- * @function get_artists_albums
- * @return {Promise}
- */
-export const get_artists_albums = ({uri}) => {
-    const id = uri.split(':');
-    return axios.get(`https://api.spotify.com/v1/artists/${id[id.length-1]}/albums`, {
-        headers : {
-            'content-type' : 'application/json',
-            'Authorization' : `Bearer ${getSession().access_token}`
-        }
-    });
-}
-
-/**
- * Request for a playlist
- * @function get_playlist_cover_image
- * @return {Promise}
- */
-export const get_playlist_cover_image = ({uri}) => {
-    const id = uri.split(':');
-    return axios.get(`https://api.spotify.com/v1/playlists/${id[id.length-1]}/images`, {
-        headers : {
-            'content-type' : 'application/json',
-            'Authorization' : `Bearer ${getSession().access_token}`
-        }
-    });
-}
-
-/**
- * Request for a playlist
- * @function get_playlist_items
- * @return {Promise}
- */
-export const get_playlist_items = ({uri}) => {
-    const id = uri.split(':');
-    return axios.get(`https://api.spotify.com/v1/playlists/${id[id.length-1]}/tracks`, {
-        headers : {
-            'content-type' : 'application/json',
-            'Authorization' : `Bearer ${getSession().access_token}`
-        }
-    });
-}
-
-/**
- * Request for a playlist
- * @function get_a_playlist
- * @return {Promise}
- */
-export const get_a_playlist = ({uri}) => {
-    const id = uri.split(':');
-    return axios.get('https://api.spotify.com/v1/playlists/' + id[id.length-1], {
-        headers : {
-            'content-type' : 'application/json',
-            'Authorization' : `Bearer ${getSession().access_token}`
-        }
-    });
-}
-
-
-/**
- * Request for a get_artist_top_tracks
- * @function get_artist_top_tracks
- * @return {Promise}
- */
-export const get_artist_top_tracks = ({uri}) => {
-    const id = uri.split(':');
-    return axios.get(`https://api.spotify.com/v1/artists/${id[id.length-1]}/top-tracks?country=BR`, {
-        headers : {
-            'content-type' : 'application/json',
-            'Authorization' : `Bearer ${getSession().access_token}`
-        }
-    });
-}
-
-/**
- * Request for a artist
- * @function get_artist
- * @return {Promise}
- */
-export const get_artist = ({uri}) => {
-    const id = uri.split(':');
-    return axios.get('https://api.spotify.com/v1/artists/' + id[id.length-1], {
-        headers : {
-            'content-type' : 'application/json',
-            'Authorization' : `Bearer ${getSession().access_token}`
-        }
-    });
-}
-
-/**
- * Request for a artist related artists
- * @function get_related_artists
- * @return {Promise}
- */
-export const get_related_artists = ({uri}) => {
-    const id = uri.split(':');
-    return axios.get('https://api.spotify.com/v1/artists/' + id[id.length-1] + '/related-artists', {
-        headers : {
-            'content-type' : 'application/json',
-            'Authorization' : `Bearer ${getSession().access_token}`
-        }
-    });
-}
-
-/**
- * Request for a playlist
- * @function get_track
- * @return {Promise}
- */
-export const get_track = ({uri}) => {
-    const id = uri.split(':');
-    return axios.get('https://api.spotify.com/v1/tracks/' + id[id.length-1], {
-        headers : {
-            'content-type' : 'application/json',
-            'Authorization' : `Bearer ${getSession().access_token}`
-        }
-    });
+export const getPlaylists = async () => {
+    try {
+        const { data } = await get_playlists();
+        return data;
+    } catch(e) {
+        console.log(e);
+    }
 }

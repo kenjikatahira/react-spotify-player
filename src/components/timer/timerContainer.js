@@ -2,23 +2,22 @@ import React, { useState, useEffect } from 'react';
 
 import Timer from '.';
 
-const TimerContainer = ({current_state,fixed}) => {
+const TimerContainer = ({currentTrack,fixed,onChangePosition}) => {
     const {
         paused,
-        position,
-        current_track
-    } = current_state;
+        position
+    } = currentTrack;
 
     let [state, setState] = useState({
         count : position || 0,
-        current_track
+        currentTrack
     });
 
     // se trocar a musica, zera a contagem
-    if((current_track || {}).id !== (state.current_track || {}).id) {
+    if((currentTrack || {}).id !== (state.currentTrack || {}).id) {
         setState({
             count: 0,
-            current_track : current_track
+            currentTrack : currentTrack
         });
     }
 
@@ -27,8 +26,9 @@ const TimerContainer = ({current_state,fixed}) => {
             start : () => setTimeout(() => {
                 setState({
                     count : state.count + 1000,
-                    current_track
+                    currentTrack
                 });
+                onChangePosition(state.count);
             }, 1000),
             stop : () => {
                 if((this || {}).start) {

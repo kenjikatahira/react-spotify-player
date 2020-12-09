@@ -1,8 +1,10 @@
-import React from "react";
+import React,{ useState, useEffect } from "react";
 import PropTypes from 'prop-types';
 import Styled from 'styled-components';
 
-import SpotifyLogo from './../../svg/spotify';
+import { getPlaylists } from './../api';
+
+import SpotifyLogo from './../svg/spotify';
 
 const StyledMenu = Styled.ul`
     list-style: none;
@@ -97,52 +99,60 @@ const StyledMenu = Styled.ul`
     }
 `
 
-const Menu = ({playlists, setView, uri, getPlaylists}) => {
-    // Retorna a playlist do usuario
-    !Object.keys(playlists).length && getPlaylists && getPlaylists();
-    // Menu de itens fixos
-    let  menuItems = [
-        {
-            name: "Home",
-            uri: "home",
-            icon: <i className="fas fa-home">home</i>,
-        },
-        // {
-        //     name: "Browse",
-        //     uri: "browse",
-        //     icon: <i className="fa fa-folder-open" aria-hidden="true"></i>,
-        // },
-        {
-            el: <li key="your-library" className="lead"> Your Library </li>
-        },
-        {
-            name: "Saved",
-            uri: "saved-tracks"
-        },
-        {
-            name: "Recently Played",
-            uri: "recently-tracks"
-        },
-        // {
-        //     name: "Liked Songs",
-        //     uri: "liked-songs"
-        // },
-        // {
-        //     name: "Albums",
-        //     uri: "albums"
-        // },
-        // {
-        //     name: "Bands",
-        //     uri: "bands"
-        // },
-        // {
-        //     name: "Podcasts",
-        //     uri: "podcasts"
-        // },
-        {
-            el: <><hr className="separator"></hr><li key="lead-playlists" className="lead"> Playlists </li></>
+// Menu de itens fixos
+let  menuItems = [
+    {
+        name: "Home",
+        uri: "home",
+        icon: <i className="fas fa-home">home</i>,
+    },
+    {
+        name: "Browse",
+        uri: "browse",
+        icon: <i className="fa fa-folder-open" aria-hidden="true"></i>,
+    },
+    {
+        el: <li key="your-library" className="lead"> Your Library </li>
+    },
+    {
+        name: "Saved",
+        uri: "saved-tracks"
+    },
+    {
+        name: "Recently Played",
+        uri: "recently-tracks"
+    },
+    {
+        name: "Liked Songs",
+        uri: "liked-songs"
+    },
+    {
+        name: "Albums",
+        uri: "albums"
+    },
+    {
+        name: "Bands",
+        uri: "bands"
+    },
+    {
+        name: "Podcasts",
+        uri: "podcasts"
+    },
+    {
+        el: <><hr className="separator"></hr><li key="lead-playlists" className="lead"> Playlists </li></>
+    }
+];
+
+const Menu = ({uri, setUri}) => {
+    const [playlists,setPlaylists] = useState(null)
+
+    useEffect(() => {
+        if(!playlists) {
+            getPlaylists()
+                .then(setPlaylists);
         }
-    ];
+    },[playlists]);
+
     const renderList = (item) => {
         const display_name = ((item || {}).owner || {}).display_name
         if(item.el) {
@@ -154,14 +164,14 @@ const Menu = ({playlists, setView, uri, getPlaylists}) => {
                     className={uri === item.uri ? "active" : ""}
                     data-owner={display_name ? ` * by ${display_name}`: "" }
                     id={item.uri}
-                    onClick={() => setView({ uri: item.uri })}
+                    onClick={() => setUri({ uri: item.uri })}
                 >
                     {item.icon ? item.icon : ''} {item.name}
                 </li>
             );
         }
     }
-    if((playlists.items || []).length) {
+    if(((playlists || {}).items || []).length) {
         return (
             <StyledMenu className="menu">
                 <div className="logo-wrapper">
@@ -180,6 +190,11 @@ const Menu = ({playlists, setView, uri, getPlaylists}) => {
     } else {
         return (
             <StyledMenu className="menu">
+                <div className="logo-wrapper">
+                    <SpotifyLogo />
+                    <span className="made"><a href="https://github.com/kenjikatahira/react-spotify-player/">github</a></span>
+                </div>
+                <hr className="separator"></hr>
                 <div className="fixed-pages">
                     {menuItems.map((i) => renderList(i))}
                 </div>
@@ -189,9 +204,8 @@ const Menu = ({playlists, setView, uri, getPlaylists}) => {
 }
 
 Menu.propTypes = {
-    playlists : PropTypes.object,
     uri : PropTypes.string,
-    setView : PropTypes.func
+    setUri : PropTypes.func
 }
 
 export default Menu;

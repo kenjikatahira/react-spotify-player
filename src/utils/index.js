@@ -16,9 +16,14 @@ export const removeSession = () => {
 }
 
 export const getSession = () => {
-    return {
-        access_token : localStorage.getItem('access_token'),
-        token_type : localStorage.getItem('token_type')
+    if(isAuthenticated()) {
+        return {
+            access_token : localStorage.getItem('access_token'),
+            token_type : localStorage.getItem('token_type')
+        }
+    } else {
+        removeSession();
+        return {}
     }
 }
 

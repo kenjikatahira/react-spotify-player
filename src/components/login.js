@@ -1,11 +1,8 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import SpotifyLogin from 'react-spotify-login';
 import styled from 'styled-components';
-
-import { clientId, redirectUri } from './../../config';
-import { logout, login } from './../../actions';
-import { scope } from './../../api';
+import { clientId, redirectUri } from '../config';
+import { scope } from '../api/spotify';
 
 const StyledLogin = styled.div`
     @font-face {
@@ -42,13 +39,10 @@ const StyledLogin = styled.div`
 
 class Login extends React.Component {
     onSuccess(response) {
-        this.props.login(response);
+        this.props.onLogin(response);
     }
     onFailure(err) {
-        console.log('fail',err);
-    }
-    logout() {
-        this.props.logout();
+        throw new Error(err);
     }
     render() {
         return (
@@ -68,10 +62,4 @@ class Login extends React.Component {
     }
 }
 
-const mapStateToProps = (state) => {
-    return {
-        user : state.user
-    };
-}
-
-export default connect(mapStateToProps, { login,logout })(Login);
+export default Login

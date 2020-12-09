@@ -33,10 +33,10 @@ const StyledNowPlayingInfo = Styled.div`
     }
 `
 
-const NowPlayingInfo = ({current_track}) => {
-    const image = ((((current_track || {}).album || {}).images || [])[0] || {}).url;
-    const track = (current_track || {}).name;
-    const artist = (((current_track || {}).artists || [])[0] || {}).name;
+const NowPlayingInfo = ({currentTrack}) => {
+    const image = ((((currentTrack || {}).album || {}).images || [])[0] || {}).url;
+    const track = (currentTrack || {}).name;
+    const artist = (((currentTrack || {}).artists || [])[0] || {}).name;
     return (
         <StyledNowPlayingInfo className="now-playing-info">
             <div className="image">
