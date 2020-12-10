@@ -1,14 +1,15 @@
 import React, {useState,useEffect} from "react";
 import Styled from 'styled-components';
 
-import { setSession, getSession, set_device_id } from './../utils';
+import { set_device_id } from './../utils';
 import Player from './../api/player';
 
-import Login from './login';
 import Menu from './menu';
 import NowPlayingBar from './nowPlayingBar';
 import Home from './../pages/home';
 import Playlist from "../pages/playlist";
+import Album from "../pages/album";
+import Artist from "../pages/artist";
 
 const StyledMain = Styled.div`
     display: grid;
@@ -53,7 +54,7 @@ const StyledMain = Styled.div`
         position: relative;
         overflow-x: hidden;
         overflow-y: auto;
-        height: 89vh;
+        height: 92vh;
 
         &::-webkit-scrollbar {
             width: 1em;
@@ -77,7 +78,7 @@ const StyledMain = Styled.div`
     .browser-wrapper {
         grid-area: main;
         background: rgb(2,0,36);
-        background: linear-gradient(0deg, rgba(28,28,28,1) 0%, rgba(28,28,28,1) 70%, rgba(87,87,87,1) 100%);
+        background: linear-gradient(0deg, rgba(12,12,12,1) 0%, rgba(12,12,12,1) 70%, rgba(50,50,50,1) 100%);
         background-position: fixed;
         .browser-inner-wrapper {
             max-width: 100%;
@@ -98,24 +99,24 @@ const StyledMain = Styled.div`
 `
 
 const Main = () => {
-    const [state,setState] = useState({ isLogged : false });
     const [player,setPlayer] = useState(null);
-    const [uri,setUri] = useState(null);
+    const [uri,setUri] = useState(localStorage.getItem('lastUri') || 'home');
     const [currentTrack,setCurrentTrack] = useState(null);
 
     // init
     useEffect(() => {
-        if(getSession().access_token) {
-            setState({
-                isLogged : true
-            });
-        }
-        init();
-    }, [state.isLogged])
+        const script = document.createElement("script");
+
+        script.src = "https://sdk.scdn.co/spotify-player.js";
+        script.async = true;
+
+        document.body.appendChild(script);
+    }, [])
 
     // init
     useEffect(() => {
         setUri(uri);
+        localStorage.setItem('lastUri',uri);
         return () => {
             setUri(null);
         }
@@ -123,70 +124,53 @@ const Main = () => {
 
     // player
     useEffect(() => {
+        window.onSpotifyWebPlaybackSDKReady = () => {
+            setPlayer(Player.init());
+        };
         if(player) {
             player.addListener('ready', ({device_id}) => {
                 set_device_id(device_id);
                 // player.play({uri : 'spotify:track:3y4I9VECfNbDXYN2bXh9hV'});
             });
             player.addListener('player_state_changed', (state) => {
-                console.log(state)
                 setCurrentTrack({...state.track_window.current_track,...state})
             });
             player.connect();
         }
     },[player])
 
-    const init = () => {
-        window.onSpotifyWebPlaybackSDKReady = () => {
-            console.log('SDK ready...')
-            if(!state.initiated  && state.isLogged === true) {
-                setPlayer(Player.init());
-                setState({
-                    initiated : true,
-                    isLogged : state.isLogged
-                });
-                setUri('home');
-            };
-        };
-    }
-
-    const onLogin = (response) => {
-        setSession(response);
-        setState({
-            isLogged : response.access_token !== '' ? true : false
-        });
-    }
-
     const renderView = () => {
         if(uri) {
             if(uri.indexOf('home') !== -1) {
                 return <Home player={player} setUri={setUri} />
             } else if(uri.indexOf('playlist') !== -1) {
-                return <Playlist player={player} setUri={setUri} />
+                return <Playlist uri={uri} player={player} setUri={setUri} />
+            } else if(uri.indexOf('album') !== -1) {
+                return <Album uri={uri} player={player} setUri={setUri} />
+            } else if(uri.indexOf('artist') !== -1) {
+                return <Artist uri={uri} player={player} setUri={setUri} />
+            } else {
+                return <h3>{uri}</h3>
             }
         }
     }
 
-    if(!state.isLogged) {
-        return <Login onLogin={onLogin}/>;
-    } else {
-        return (
-            <StyledMain className="main">
-                <div className="menu-wrapper">
-                    <Menu
-                        setUri={setUri}
-                        uri={uri}
-                    />
-                </div>
-                <div className="browser-wrapper">
-                    {renderView()}
-                </div>
-                <div className="now-playing-wrapper">
-                    <NowPlayingBar currentTrack={currentTrack} player={player} />
-                </div>
-            </StyledMain>
-        );
-    }
+    return (
+        <StyledMain className="main">
+            <div className="menu-wrapper">
+                <Menu
+                    setUri={setUri}
+                    uri={uri}
+                />
+            </div>
+            <div className="browser-wrapper">
+                {renderView()}
+            </div>
+            <div className="now-playing-wrapper">
+                <NowPlayingBar currentTrack={currentTrack} player={player} />
+            </div>
+        </StyledMain>
+    );
 }
 
 export default Main;

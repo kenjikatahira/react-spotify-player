@@ -4,7 +4,7 @@ import Styled from 'styled-components';
 
 import { getPlaylists } from './../api';
 
-import SpotifyLogo from './../svg/spotify';
+import SpotifyLogo from './../assets/spotify';
 
 const StyledMenu = Styled.ul`
     list-style: none;
@@ -104,12 +104,12 @@ let  menuItems = [
     {
         name: "Home",
         uri: "home",
-        icon: <i className="fas fa-home">home</i>,
+        icon: <i key="home" className="fas fa-home">home</i>,
     },
     {
         name: "Browse",
         uri: "browse",
-        icon: <i className="fa fa-folder-open" aria-hidden="true"></i>,
+        icon: <i key="browse" className="fa fa-folder-open" aria-hidden="true"></i>,
     },
     {
         el: <li key="your-library" className="lead"> Your Library </li>
@@ -139,7 +139,10 @@ let  menuItems = [
         uri: "podcasts"
     },
     {
-        el: <><hr className="separator"></hr><li key="lead-playlists" className="lead"> Playlists </li></>
+        el: <hr key="sep" className="separator"></hr>
+    },
+    {
+        el: <li key="lead-playlists" className="lead"> Playlists </li>
     }
 ];
 
@@ -153,18 +156,18 @@ const Menu = ({uri, setUri}) => {
         }
     },[playlists]);
 
-    const renderList = (item) => {
+    const renderList = (item,index) => {
         const display_name = ((item || {}).owner || {}).display_name
         if(item.el) {
             return item.el;
         } else {
             return (
                 <li
-                    key={item.uri}
+                    key={item.uri+'#'+index}
                     className={uri === item.uri ? "active" : ""}
                     data-owner={display_name ? ` * by ${display_name}`: "" }
                     id={item.uri}
-                    onClick={() => { console.log('item.uri', item.uri); setUri({ uri: item.uri }); }}
+                    onClick={() => setUri(item.uri)}
                 >
                     {item.icon ? item.icon : ''} {item.name}
                 </li>
@@ -192,7 +195,7 @@ const Menu = ({uri, setUri}) => {
             <StyledMenu className="menu">
                 <div className="logo-wrapper">
                     <SpotifyLogo />
-                    <span className="made"><a href="https://github.com/kenjikatahira/react-spotify-player/">github</a></span>
+                    <span className="made"><a target="_blank" rel="noopener noreferrer" href="https://github.com/kenjikatahira/react-spotify-player/">github</a></span>
                 </div>
                 <hr className="separator"></hr>
                 <div className="fixed-pages">

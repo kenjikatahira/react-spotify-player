@@ -82,8 +82,17 @@ const NowPlaying = ({player,currentTrack}) => {
     const [barTracking,setBarTracking] = useState(0);
 
     const togglePlayButton =() => {
-        const paused = true;
-        if(paused === undefined || paused) {
+        const paused = (currentTrack || {}).paused;
+
+        if(paused) {
+            return (
+                <button className="btn btn-outline-secondary control-button play" onClick={player.pause}>
+                    <i className="fas fa-pause" onClick={player.pause}></i>
+                </button>
+            )
+        }
+
+        if(!paused) {
             return (
                 <button
                     className="btn btn-outline-secondary control-button play"
@@ -92,12 +101,6 @@ const NowPlaying = ({player,currentTrack}) => {
                     }}
                 >
                     <i className="fas fa-play"></i>
-                </button>
-            )
-        } else {
-            return (
-                <button className="btn btn-outline-secondary control-button play" onClick={player.pause}>
-                    <i className="fas fa-pause" onClick={player.pause}></i>
                 </button>
             )
         }
@@ -111,7 +114,7 @@ const NowPlaying = ({player,currentTrack}) => {
     return(
         <StyledPlayingBar className="now-playing">
             <div className="playing-wrapper">
-                <NowPlayingInfo />
+                <NowPlayingInfo currentTrack={currentTrack} />
             </div>
             <div className="inner-now-playing">
                 <div className="controls-buttons">

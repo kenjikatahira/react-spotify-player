@@ -110,7 +110,6 @@ export const getHome = () => {
                     type : 'top-artists'
                 };
             }
-
             dispatch({
                 type : 'GET_VIEW',
                 payload : {

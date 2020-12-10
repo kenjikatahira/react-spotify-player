@@ -1,16 +1,12 @@
-import React, {useState,useEffect} from "react";
-import Styled from 'styled-components';
+import React, { useState, useEffect } from "react";
 
 import { getViewRoute } from './../api';
 
-import Loading from "./../components/loading";
+import TracklistHeader from "./../components/tracklistHeader";
 import Tracklist from "./../components/tracklist";
-import TracklistHeader from './../components/tracklistHeader';
+import Loading from "../components/loading";
 
-const StyledPlaylist = Styled.div`
-`
-
-const Playlist = ({uri,setUri,player}) => {
+const Album = ({uri,player,setUri}) => {
     const [data,setData] = useState(null);
 
     useEffect(() => {
@@ -26,9 +22,9 @@ const Playlist = ({uri,setUri,player}) => {
     },[uri])
 
     if (data) {
-        const { table, header } = data;
+        const {table,header,label,releaseDate} = data;
         return (
-            <StyledPlaylist className="playlist">
+            <div className="album">
                 <TracklistHeader
                     player={player}
                     header={header}
@@ -37,8 +33,9 @@ const Playlist = ({uri,setUri,player}) => {
                     table={table}
                     setUri={setUri}
                     player={player}
+                    copyright={`© ${releaseDate} ${label}`}
                 />
-            </StyledPlaylist>
+            </div>
         );
     } else {
         return (
@@ -46,5 +43,4 @@ const Playlist = ({uri,setUri,player}) => {
         );
     }
 }
-
-export default Playlist;
+export default Album;

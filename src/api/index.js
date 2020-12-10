@@ -271,7 +271,8 @@ const fetchAlbum = async (uri) => {
     try {
         const {data: album} = await get_album({uri});
         const [image] = album.images;
-
+        console.log(album)
+        console.log(album.release_date.replace(/(\d{4})-\d{2}-\d{2}/g,'$1'))
         const tableFactory = (album) => {
             const trackModel = (i) => {
                 return {
@@ -290,6 +291,8 @@ const fetchAlbum = async (uri) => {
 
         return {
             type: 'album',
+            releaseDate : album.release_date.replace(/(\d{4})-\d{2}-\d{2}/g,'$1'),
+            label : album.label,
             header : {
                 name : album.name,
                 image : image,
@@ -319,30 +322,40 @@ const fetchArtist = async (uri) => {
 
         const artistAlbumsFactory = (albums) => {
             const ids = [];
-            return {
-                artistAlbums : {
-                    message : 'Albums',
-                    type : 'artist',
-                    items : albums.items.filter(i => {
-                        if(!ids.includes(i.name) && i.album_type === 'album') {
-                            ids.push(i.name);
-                            return true;
-                        }
-                        return false;
-                    })
-                },
-                artistSingles : {
-                    message : 'Singles',
-                    type : 'artist',
-                    items : albums.items.filter(i => {
-                        if(!ids.includes(i.name) && i.album_type === 'single') {
-                            ids.push(i.name);
-                            return true;
-                        }
-                        return false;
-                    })
-                }
+            const artistAlbums = {}
+
+            const _albums = {
+                message : 'Albums',
+                type : 'artist',
+                items : albums.items.filter(i => {
+                    if(!ids.includes(i.name) && i.album_type === 'album') {
+                        ids.push(i.name);
+                        return true;
+                    }
+                    return false;
+                })
             }
+
+            const _singles = {
+                message : 'Singles',
+                type : 'artist',
+                items : albums.items.filter(i => {
+                    if(!ids.includes(i.name) && i.album_type === 'single') {
+                        ids.push(i.name);
+                        return true;
+                    }
+                    return false;
+                })
+            }
+
+            if(_albums.items.length) {
+                artistAlbums._albums = _albums;
+            }
+            if(_singles.items.length) {
+                artistAlbums._singles = _singles;
+            }
+
+            return artistAlbums;
         }
 
         const tableFactory = (artist) => {

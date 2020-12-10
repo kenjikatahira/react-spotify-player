@@ -1,5 +1,4 @@
-import React from "react";
-import { connect } from "react-redux";
+import React,{ useState } from "react";
 import Styled from 'styled-components';
 
 const StyledTracklist = Styled.div`
@@ -20,6 +19,10 @@ const StyledTracklist = Styled.div`
         background: none;
         border: none;
         color: hsla(0,0%,100%,.7);
+    }
+    .copyright {
+        margin: 15px 0;
+        color: #aaa;
     }
     table {
         list-style: none;
@@ -85,27 +88,19 @@ const StyledTracklist = Styled.div`
     }
 `
 
-class Tracklist extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            filteredItems : [],
-            limit : props.limit || null
-        }
-    }
+const Tracklist = ({table,player,limit : hasLimit,setUri, copyright}) => {
 
-    componentWillUnmount() {
-        this.props.clearView();
-    }
+    const [limit,setLimit] = useState(hasLimit || null);
+    const [filteredItems,setFilteredItems] = useState([]);
 
-    setArtist ({ artist, total, index }) {
+    const setArtist = ({ artist, total, index }) => {
         const { id, uri, name } = artist;
         return (
             <span
                 key={id+'#'+index}
                 onClick={(ev) => {
                     ev.stopPropagation();
-                    this.props.setView({ uri });
+                    setUri(uri);
                 }}
             >
                 {total > 1 && index !== total - 1 ? `${name}, ` : name}
@@ -113,19 +108,19 @@ class Tracklist extends React.Component {
         );
     }
 
-    setAlbum(ev,item) {
+    const setAlbum = (ev,item) => {
         ev.stopPropagation();
-        this.props.setView({ uri: item.album.uri });
+        setUri(item.album.uri);
     }
 
-    renderList(item,index) {
+    const renderList = (item,index) => {
         return (
             <tr
                 key={item.id+'#'+index}
                 onClick={() => {
-                    this.props.player.play({
+                    player.play({
                         uri: item.uri,
-                        uris: this.props.table.tracks
+                        uris: table.body
                     });
                 }}
             >
@@ -141,13 +136,13 @@ class Tracklist extends React.Component {
                 {
                     item.artists &&
                     <td>
-                        <span className="link">{item.artists && Object.values(item.artists).map((artist, index) => this.setArtist({ artist,total: (item.artists || []).length, index }))}</span>
+                        <span className="link">{item.artists && Object.values(item.artists).map((artist, index) => setArtist({ artist,total: (item.artists || []).length, index }))}</span>
                     </td>
                 }
                 {
                     item.album &&
                     <td>
-                        <span className="link" onClick={(ev) => this.setAlbum(ev,item)}> {item.album.name} </span>
+                        <span className="link" onClick={(ev) => setAlbum(ev,item)}> {item.album.name} </span>
                     </td>
                 }
                 {
@@ -160,49 +155,40 @@ class Tracklist extends React.Component {
         );
     }
 
-    onFilter(ev) {
-        this.setState({
-            filteredItems : this.props.table.body.filter(({name}) => name.toLowerCase().replace('ã','a').indexOf(ev.target.value.toLowerCase()) > -1 )
-        })
+    const onFilter = (ev) => {
+        setFilteredItems(table.body.filter(({name}) => name.toLowerCase().replace('ã','a').indexOf(ev.target.value.toLowerCase()) > -1 ))
     }
 
-    showMore() {
-        this.setState({ limit : +this.state.limit === 5 ? 10 : 5 });
+    const showMore = () =>{
+        setLimit(+limit === 5 ? 10 : 5);
     }
 
-    render() {
-        return (
-            <StyledTracklist className="tracklist">
-                <div className="filter">
-                    <input type="text" placeholder="Filter" onChange={(ev) => { this.onFilter(ev) }} />
-                </div>
-                <table className="table">
-                    <thead>
-                        <tr className="header">
-                            <th scope="col"></th>
-                            {this.props.table.head.map(i => (<th key={i}>{i}</th>))}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {((this.state.filteredItems || []).length > 0 ? this.state.filteredItems : this.props.table.body).map((i,index) => {
-                            if((this.state.limit)) {
-                                return (index < +this.state.limit) && this.renderList(i,index);
-                            } else {
-                                return this.renderList(i,index);
-                            }
-                        })}
-                    </tbody>
-                </table>
-                { this.props.limit && <button className="toggleShow" onClick={this.showMore.bind(this)}>show {+this.state.limit === 5 ? 'more' : 'less' }</button>}
-            </StyledTracklist>
-        );
-    }
+    return (
+        <StyledTracklist className="tracklist">
+            <div className="filter">
+                <input type="text" placeholder="Filter" onChange={(ev) => { onFilter(ev) }} />
+            </div>
+            <table className="table">
+                <thead>
+                    <tr className="header">
+                        <th scope="col"></th>
+                        {table.head.map(i => (<th key={i}>{i}</th>))}
+                    </tr>
+                </thead>
+                <tbody>
+                    {((filteredItems || []).length > 0 ? filteredItems : table.body).map((i,index) => {
+                        if((limit)) {
+                            return (index < +limit) && renderList(i,index);
+                        } else {
+                            return renderList(i,index);
+                        }
+                    })}
+                </tbody>
+            </table>
+            { limit && <button className="toggleShow" onClick={showMore}>show {+limit === 5 ? 'more' : 'less' }</button>}
+            { copyright && <div className="copyright">{copyright}</div>}
+        </StyledTracklist>
+    );
 }
 
-const mapStateToProps = (state) => {
-    return {
-        player: state.player
-    };
-};
-
-export default connect(mapStateToProps,{ setView,clearView })(Tracklist);
+export default Tracklist;
