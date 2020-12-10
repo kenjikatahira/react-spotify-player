@@ -4,7 +4,7 @@
 
 # React Spotify Player
 
-This is my first project with react and spotify api
+Spotify web player made with react
 
 *working in progress 
 
