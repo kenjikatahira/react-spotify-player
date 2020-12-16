@@ -1,4 +1,4 @@
-![screenshot_2](https://i.imgur.com/G6awvsH.png)
+![screenshot_2](https://i.imgur.com/sgM4qvY.png)
 
 [Live Example](https://kenjikatahira.github.io/react-spotify-player/)
 
