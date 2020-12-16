@@ -24,8 +24,8 @@ const StyledGrid = Styled.div`
         max-width: 100%;
         .album {
             position: relative;
-            padding-right: 5px;
-            padding-left: 5px;
+            padding-right: 10px;
+            padding-left: 10px;
             cursor: pointer;
             .image {
                 width: 100%;

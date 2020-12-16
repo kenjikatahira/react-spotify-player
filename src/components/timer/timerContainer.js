@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 
 import Timer from '.';
 
@@ -50,6 +51,12 @@ const TimerContainer = ({currentTrack,fixed,onChangePosition}) => {
     return (
         <Timer count={state.count} fixed={fixed} />
     )
+}
+
+TimerContainer.propTypes = {
+    currentTrack : PropTypes.object,
+    fixed : PropTypes.string,
+    onChangePosition : PropTypes.func
 }
 
 export default TimerContainer;

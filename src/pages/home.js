@@ -8,11 +8,11 @@ import { getViewRoute } from './../api';
 import Grid from "../components/grid";
 
 const StyledHome = Styled.div`
-
+    width: 90%;
+    margin: 0 auto;
 `
 const Home = ({player, setUri}) => {
     const [data,setData] = useState(null);
-
     useEffect(() => {
         if(!data) {
             getViewRoute({uri : 'home'})

@@ -16,6 +16,7 @@ import {
     get_playlist_cover_image,
     get_artist_top_tracks,
     get_playlists,
+    get_user,
 } from './spotify';
 
 /**
@@ -397,5 +398,14 @@ export const getPlaylists = async () => {
         return data;
     } catch(e) {
         console.log(e);
+    }
+}
+
+export const getUser = async () => {
+    try {
+        const { data } = await get_user();
+        return data;
+    } catch(e) {
+        console.log(e)
     }
 }

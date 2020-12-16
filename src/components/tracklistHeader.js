@@ -1,15 +1,15 @@
 import React from 'react';
 import Styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 const StyledHeader = Styled.div`
         padding: 15px 32px;
         margin-bottom: 15px;
         display: flex;
         align-items: center;
-
         .artwork-wrapper {
             overflow: auto;
-            width: 300px;
+            width: 240px;
             .artwork {
                 width: 100%;
                 padding-bottom: 100%;
@@ -108,8 +108,8 @@ const TracklistHeader = ({player,header}) => {
             {(image && image.url &&
                 <div className="artwork-wrapper">
                     <div className="artwork" style={
-                    { backgroundImage: `url(${image.url})`, backgroundSize :'cover', backgroundPosition:'center center' }
-                }></div>
+                        { backgroundImage: `url(${image.url})`, backgroundSize :'cover', backgroundPosition:'center center' }
+                    }></div>
                 </div>
             )}
             <div className="col info d-flex flex-column">
@@ -133,7 +133,11 @@ const TracklistHeader = ({player,header}) => {
             </div>
         </StyledHeader>
     )
+}
 
+TracklistHeader.propTypes = {
+    player : PropTypes.object,
+    header : PropTypes.object
 }
 
 export default TracklistHeader

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import PropTypes from 'prop-types';
 import { getViewRoute } from './../api';
 
 import TracklistHeader from "./../components/tracklistHeader";
@@ -43,4 +43,11 @@ const Album = ({uri,player,setUri}) => {
         );
     }
 }
+
+Album.propTypes = {
+    player : PropTypes.object,
+    setUri : PropTypes.func,
+    uri : PropTypes.string
+}
+
 export default Album;

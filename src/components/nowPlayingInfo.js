@@ -1,5 +1,6 @@
 import React from 'react';
 import Styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 const StyledNowPlayingInfo = Styled.div`
     display: grid;
@@ -48,6 +49,10 @@ const NowPlayingInfo = ({currentTrack}) => {
             </div>
         </StyledNowPlayingInfo>
     )
+}
+
+NowPlayingInfo.propTypes = {
+    currentTrack : PropTypes.object
 }
 
 export default NowPlayingInfo;

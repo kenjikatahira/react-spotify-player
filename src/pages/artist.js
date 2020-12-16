@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Styled from 'styled-components';
-
+import PropTypes from 'prop-types';
 import { getViewRoute } from './../api';
 
 import TracklistHeader from "./../components/tracklistHeader";
@@ -31,13 +31,15 @@ const StyledArtist = Styled.div`
     }
 `
 
-const Artist = ({uri, setUri, player}) => {
+const Artist = ({uri, setUri, player, setTopBar}) => {
     const [data,setData] = useState(null);
 
     useEffect(() => {
         if(!data) {
             getViewRoute({uri})
                 .then(setData);
+        } else {
+            setTopBar(data.header.name);
         }
     },[data,uri]);
 
@@ -70,6 +72,12 @@ const Artist = ({uri, setUri, player}) => {
             <Loading />
         )
     }
+}
+
+Artist.propTypes = {
+    player : PropTypes.object,
+    setUri : PropTypes.func,
+    uri : PropTypes.string
 }
 
 export default Artist;

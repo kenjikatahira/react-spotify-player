@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 import NowPlayingInfo from './nowPlayingInfo';
 import TimerContainer from './timer/timerContainer';
@@ -83,27 +84,27 @@ const NowPlaying = ({player,currentTrack}) => {
 
     const togglePlayButton =() => {
         const paused = (currentTrack || {}).paused;
-
-        if(paused) {
-            return (
-                <button className="btn btn-outline-secondary control-button play" onClick={player.pause}>
-                    <i className="fas fa-pause" onClick={player.pause}></i>
-                </button>
-            )
-        }
-
-        if(!paused) {
+        if(paused === false || paused === null) {
             return (
                 <button
                     className="btn btn-outline-secondary control-button play"
-                    onClick={() => {
-                        player.resume()
-                    }}
+                    onClick={player.pause}
                 >
-                    <i className="fas fa-play"></i>
+                    <i class="fas fa-pause"></i>
                 </button>
             )
         }
+
+        return (
+            <button
+                className="btn btn-outline-secondary control-button play"
+                onClick={() => {
+                    player.resume()
+                }}
+            >
+                <i className="fas fa-play"></i>
+            </button>
+        )
     }
 
     const onChangePosition = (position) => {
@@ -139,6 +140,12 @@ const NowPlaying = ({player,currentTrack}) => {
         </StyledPlayingBar>
     )
 }
+
+NowPlaying.propTypes = {
+    player : PropTypes.object,
+    currentTrack : PropTypes.object
+}
+
 
 export default NowPlaying;
 

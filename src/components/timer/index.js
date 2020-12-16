@@ -1,5 +1,6 @@
 import React from 'react';
 import Styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 import {formatTrackDuration} from './../../utils';
 
@@ -14,6 +15,11 @@ const Timer = ({count,fixed}) => {
             {formatTrackDuration(fixed ? fixed : count)}
         </StyledTimer>
     )
+}
+
+Timer.propTypes = {
+    count : PropTypes.number,
+    fixed : PropTypes.number
 }
 
 export default Timer;

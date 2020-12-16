@@ -1,5 +1,6 @@
 import React from "react";
 import Styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 const StyledRelatedArtists = Styled.div`
     padding: 15px 0;
@@ -24,8 +25,7 @@ const StyledRelatedArtists = Styled.div`
     }
 `
 
-const relatedArtists = ({setUri, relatedArtists}) => {
-    console.log(relatedArtists)
+const RelatedArtists = ({setUri, relatedArtists}) => {
     const renderArtist = (artist) => {
         console.log(artist)
         return (
@@ -50,10 +50,15 @@ const relatedArtists = ({setUri, relatedArtists}) => {
         <StyledRelatedArtists className="relatedArtists">
             <h4>Fans Also Like</h4>
             <ul>
-                {relatedArtists.artists.filter((item,index) => index < 6).map(renderArtist)}
+                {relatedArtists.artists.filter((o,index) => index < 6).map(renderArtist)}
             </ul>
         </StyledRelatedArtists>
     )
 }
 
-export default relatedArtists;
+RelatedArtists.propTypes = {
+    setUri : PropTypes.func,
+    relatedArtists : PropTypes.object
+}
+
+export default RelatedArtists;

@@ -73,3 +73,10 @@ export const delay = async (time) => {
         setTimeout(resolve,time);
     })
 }
+
+export const label = (uri) => {
+    const dict = {
+        home : 'Home'
+    }
+    return dict[uri]
+}

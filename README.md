@@ -6,13 +6,12 @@
 
 This is my first project with react and spotify api
 
-*working in progress 
+*working in progress
 
 ## Technologies & Tools
 
 ![](https://img.shields.io/badge/Code-Javascript-informational?style=flat&logo=javascript&logoColor=white&color=2bbc8a)
 ![](https://img.shields.io/badge/Code-React-informational?style=flat&logo=react&logoColor=white&color=2bbc8a)
-![](https://img.shields.io/badge/Tools-Redux-informational?style=flat&logo=redux&logoColor=white&color=2bbc8a)
 
 ## Spotify Api Web Api
 [Doc](https://developer.spotify.com/documentation/web-api/)

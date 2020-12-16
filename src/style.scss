@@ -9,3 +9,30 @@ body {
     user-select:none;
     -o-user-select:none;
 }
+
+@keyframes slide-top {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(-80px);
+    }
+}
+
+@keyframes mushroom-bottom {
+    0% {
+        height:60px;
+    }
+    100% {
+        height: 120px;
+    }
+}
+
+@keyframes fade-in {
+    0% {
+        opacity:0;
+    }
+    100% {
+        opacity: 1;
+    }
+}

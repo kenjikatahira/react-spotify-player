@@ -1,5 +1,6 @@
 import React,{ useState } from "react";
 import Styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 const StyledTracklist = Styled.div`
     padding: 0 32px 24px;
@@ -189,6 +190,13 @@ const Tracklist = ({table,player,limit : hasLimit,setUri, copyright}) => {
             { copyright && <div className="copyright">{copyright}</div>}
         </StyledTracklist>
     );
+}
+
+Tracklist.propTypes = {
+    table : PropTypes.object,
+    limit : PropTypes.string,
+    setUri : PropTypes.func,
+    copyright : PropTypes.string
 }
 
 export default Tracklist;
