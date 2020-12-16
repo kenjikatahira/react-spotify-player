@@ -13,7 +13,7 @@ Spotify web player made with react
 ![](https://img.shields.io/badge/Code-Javascript-informational?style=flat&logo=javascript&logoColor=white&color=2bbc8a)
 ![](https://img.shields.io/badge/Code-React-informational?style=flat&logo=react&logoColor=white&color=2bbc8a)
 
-## Spotify Api Web Api
+## Spotify Web Api
 [Doc](https://developer.spotify.com/documentation/web-api/)
 for the Spotify Data Catalogue
 
@@ -26,10 +26,10 @@ for the Spotify Data Catalogue
 react-spotify-login
 https://www.npmjs.com/package/react-spotify-login
 
-## How to use
+## How to run local
 Add your [`client key`](https://developer.spotify.com/dashboard/applications) and [`client secret`](https://developer.spotify.com/dashboard/applications) on src/config.js file
 
-Create a [app](https://developer.spotify.com/dashboard/applications) and set Redirect URI to your local (http://localhost:3000/)
+Create a [app](https://developer.spotify.com/dashboard/applications) and set Redirect URIs to your local (http://localhost:3000/)
 
 Then, in the project directory, you just run:
 
