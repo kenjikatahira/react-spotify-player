@@ -27,7 +27,6 @@ const StyledRelatedArtists = Styled.div`
 
 const RelatedArtists = ({setUri, relatedArtists}) => {
     const renderArtist = (artist) => {
-        console.log(artist)
         return (
             <li
                 key={artist.id}
