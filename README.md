@@ -1,12 +1,12 @@
-![screenshot_2](https://i.imgur.com/sgM4qvY.png)
-
-[Live Example](https://kenjikatahira.github.io/react-spotify-player/)
-
-# React Spotify Player
+# React Spotify Web Player
 
 Spotify web player made with react
 
 *working in progress
+
+![screenshot_2](https://i.imgur.com/sgM4qvY.png)
+
+[Live Example](https://kenjikatahira.github.io/react-spotify-player/)
 
 ## Technologies & Tools
 
