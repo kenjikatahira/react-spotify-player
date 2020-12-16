@@ -115,12 +115,8 @@ let  menuItems = [
         el: <li key="your-library" className="lead"> Your Library </li>
     },
     {
-        name: "Saved",
-        uri: "saved-tracks"
-    },
-    {
         name: "Recently Played",
-        uri: "recently-tracks"
+        uri: "recently-played"
     },
     {
         name: "Liked Songs",
@@ -179,7 +175,7 @@ const Menu = ({uri, setUri}) => {
             <StyledMenu className="menu">
                 <div className="logo-wrapper">
                     <SpotifyLogo />
-                    <span className="made"><a target="_blank" href="https://github.com/kenjikatahira/react-spotify-player/">github</a></span>
+                    <span className="made"><a target="_blank" rel="noopener noreferrer" href="https://github.com/kenjikatahira/react-spotify-player/">github</a></span>
                 </div>
                 <hr className="separator"></hr>
                 <div className="fixed-pages">

@@ -11,6 +11,7 @@ import Playlist from "../pages/playlist";
 import Album from "../pages/album";
 import Artist from "../pages/artist";
 import TopBar from "./topBar";
+import RecentlyPlayed from "../pages/recentlyPlayed";
 
 const StyledMain = Styled.div`
     display: grid;
@@ -156,8 +157,11 @@ const Main = () => {
 
     const renderView = () => {
         if(uri) {
+            console.log(uri)
             if(uri.indexOf('home') !== -1) {
                 return <Home player={player} setUri={setUri}/>
+            } else if(uri.indexOf('recently-played') !== -1) {
+                return <RecentlyPlayed player={player} setUri={setUri}/>
             } else if(uri.indexOf('spotify:playlist') !== -1) {
                 return <Playlist uri={uri} player={player} setUri={setUri} setTopBar={setTopBar}/>
             } else if(uri.indexOf('spotify:album') !== -1) {

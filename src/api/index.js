@@ -29,7 +29,7 @@ export const getViewRoute = async ({uri}) => {
     let content;
     if(uri === 'home') {
         content = await getHome();
-    } else if(uri === 'recently-tracks') {
+    } else if(uri === 'recently-played') {
         content = await getRecentlyTracks();
     } else if(uri.split(':').indexOf('album') >= 0) {
         content = await fetchAlbum(uri);
@@ -115,51 +115,6 @@ export const getHome = async () => {
 }
 
 /**
- * Retrieves user's recently played tracks
- *
- * @function getRecentlyTracks
- * @return {Void}
- */
-export const getRecentlyTracks = () => {
-    return dispatch => {
-        get_recently_tracks().then( ({data}) => {
-            /**
-             * Model array of recently tracks to albums for the homepage view
-             *
-             * @function factoryRecentlyTracks
-             * @return {Void}
-             */
-            const factoryRecentlyTracks = (response) => {
-                let  ids = [];
-                let albums = response.items.map(item => item.track.album);
-
-                albums = albums.filter(item => {
-                    if(ids.includes(item.id)) return false;
-                    ids.push(item.id);
-                    return item;
-                });
-
-                return {
-                    recentlyTracks : {
-                        message : 'Recently Played',
-                        items : albums,
-                        type : 'recently-tracks'
-                    }
-                }
-            }
-
-            dispatch({
-                type : 'GET_VIEW',
-                payload : {
-                    grid : factoryRecentlyTracks(data)
-                }
-            });
-        })
-        .catch(err => console.log(err));
-    }
-}
-
-/**
  * Retrieves user's saved tracks
  *
  * @function getSavedTracks
@@ -209,6 +164,12 @@ export const getSavedTracks = () => {
     }
 }
 
+/**
+ * Calculate a album or tracklist duration
+ *
+ * @function totalDuration
+ * @return {String} Formated duration
+ */
 const totalDuration = (tracks) => {
     if(!tracks) return false;
     let initialValue = 0;
@@ -217,6 +178,12 @@ const totalDuration = (tracks) => {
     return formatTrackDuration(Math.floor(duration / 60));
 }
 
+/**
+ * Retrieves a playlist
+ *
+ * @function fetchPlaylist
+ * @return {Object} playlist's data
+ */
 const fetchPlaylist = async (uri) => {
     try {
         let playlistData = {};
@@ -268,6 +235,12 @@ const fetchPlaylist = async (uri) => {
     }
 }
 
+/**
+ * Retrieves a album
+ *
+ * @function fetchAlbum
+ * @return {Object} album's data
+ */
 const fetchAlbum = async (uri) => {
     try {
         const {data: album} = await get_album({uri});
@@ -307,6 +280,12 @@ const fetchAlbum = async (uri) => {
     }
 }
 
+/**
+ * Retrieves a artist
+ *
+ * @function fetchArtist
+ * @return {Object} artist's data
+ */
 const fetchArtist = async (uri) => {
     try {
         let artist = {};
@@ -392,6 +371,12 @@ const fetchArtist = async (uri) => {
     }
 }
 
+/**
+ * Retrieves user's playlists
+ *
+ * @function getPlaylists
+ * @return {Object} Playlists
+ */
 export const getPlaylists = async () => {
     try {
         const { data } = await get_playlists();
@@ -401,6 +386,53 @@ export const getPlaylists = async () => {
     }
 }
 
+/**
+ * Model array of recently tracks to albums for the homepage view
+ *
+ * @function getRecentlyTracks
+ * @return {Void}
+ */
+export const getRecentlyTracks = async () => {
+    try {
+
+        const { data } = await get_recently_tracks();
+
+        const factoryRecentlyTracks = (response) => {
+            let  ids = [];
+            let albums = response.items.map(item => item.track.album);
+
+            albums = albums.filter(item => {
+                if(ids.includes(item.id)) return false;
+                ids.push(item.id);
+                return item;
+            });
+
+            return {
+                href : response.href,
+                message : 'Recently Played',
+                items : albums,
+                type : 'recently-played'
+            }
+        }
+
+        return {
+            grid : {
+                recently : factoryRecentlyTracks(data)
+            }
+        };
+
+    } catch(e) {
+        console.log(e);
+    }
+}
+
+
+/**
+ * Retrieves user's info
+ *
+ * @function getUser
+ * @return {Object} User info
+ */
 export const getUser = async () => {
     try {
         const { data } = await get_user();

@@ -76,7 +76,8 @@ export const delay = async (time) => {
 
 export const label = (uri) => {
     const dict = {
-        home : 'Home'
+        home : 'Home',
+        'recently-played' : 'Recently Played'
     }
     return dict[uri]
 }
