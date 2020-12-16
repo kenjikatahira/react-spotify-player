@@ -81,7 +81,7 @@ const Grid = ({grid, player, setUri}) => {
                             console.log(uri)
                         }}
                     >
-                        <i className="fas fa-play"></i>
+                        <FontAwesomeIcon icon="play" />
                     </button> */}
                 </div>
                 <div className="card-body">

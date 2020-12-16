@@ -56,8 +56,8 @@ export const get_saved_tracks = () => {
  * @function get_featured_playlist
  * @return {Promise}
  */
-export const get_featured_playlist = () => {
-    return axios.get('https://api.spotify.com/v1/browse/featured-playlists?country=BR&limit=4', {
+export const get_featured_playlist = (country='CA') => {
+    return axios.get('https://api.spotify.com/v1/browse/featured-playlists?country='+country+'&limit=8', {
         headers : {
             'content-type' : 'application/json',
             'Authorization' : `Bearer ${getSession().access_token}`

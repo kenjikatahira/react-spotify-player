@@ -119,6 +119,10 @@ let  menuItems = [
         uri: "recently-played"
     },
     {
+        name: "Countries",
+        uri: "featured-playlists-countries"
+    },
+    {
         name: "Liked Songs",
         uri: "liked-songs"
     },

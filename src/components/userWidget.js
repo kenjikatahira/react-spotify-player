@@ -27,7 +27,6 @@ const UserWidget = () => {
     const [data,setData] = useState(null);
 
     useEffect(() => {
-        console.log(data)
         if(!data) {
             getUser()
                 .then(setData);

@@ -47,7 +47,20 @@ const StyledHeader = Styled.div`
             .info-owner {
                 strong { color:#fff; }
                 &:after {
-                    content:"*";
+                    content: "•";
+                    margin: 0px 4px;
+                }
+            }
+            .info-release-date {
+                &:after {
+                    content: "•";
+                    margin: 0px 4px;
+                }
+            }
+            .info-artist {
+                display: block;
+                strong { color:#fff; }
+                &:after {
                     padding: 0 6px;
                 }
             }
@@ -93,6 +106,8 @@ const TracklistHeader = ({player,header}) => {
         )
     }
 
+    const releaseDate = (releaseDate) => <span className="info-release-date">{releaseDate}</span>
+
     const {
         tracks,
         image,
@@ -124,8 +139,16 @@ const TracklistHeader = ({player,header}) => {
                             </span>
                         )
                     }
-                        { type !== 'artist' && getSongsLenght(tracks) }
-                        { type !== 'artist' && total_duration && tracksDuration(total_duration) }
+                    {
+                        (type === 'album' && header.artists.length) && (
+                            <span className="info-artist">
+                                By <strong>{(header.artists || [])[0].name}</strong>
+                            </span>
+                        )
+                    }
+                    { type === 'album' && releaseDate((header || {}).releaseDate)}
+                    { type !== 'artist' && getSongsLenght(tracks) }
+                    { type !== 'artist' && total_duration && tracksDuration(total_duration) }
                 </div>
                 <div className="info-interactive">
                     <div className="play" onClick={ () => { player.play({uris : (tracks || []) })}}> PLAY </div>

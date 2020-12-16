@@ -11,7 +11,7 @@ import TracklistHeader from './../components/tracklistHeader';
 const StyledPlaylist = Styled.div`
 `
 
-const Playlist = ({uri,setUri,player,setTopBar}) => {
+const Playlist = ({uri,setUri,player,setTopBar,currentTrack}) => {
     const [data,setData] = useState(null);
 
     useEffect(() => {
@@ -40,6 +40,7 @@ const Playlist = ({uri,setUri,player,setTopBar}) => {
                     table={table}
                     setUri={setUri}
                     player={player}
+                    currentTrack={currentTrack}
                 />
             </StyledPlaylist>
         );

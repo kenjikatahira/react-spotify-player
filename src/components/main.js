@@ -157,17 +157,16 @@ const Main = () => {
 
     const renderView = () => {
         if(uri) {
-            console.log(uri)
             if(uri.indexOf('home') !== -1) {
                 return <Home player={player} setUri={setUri}/>
             } else if(uri.indexOf('recently-played') !== -1) {
                 return <RecentlyPlayed player={player} setUri={setUri}/>
             } else if(uri.indexOf('spotify:playlist') !== -1) {
-                return <Playlist uri={uri} player={player} setUri={setUri} setTopBar={setTopBar}/>
+                return <Playlist uri={uri} player={player} setUri={setUri} setTopBar={setTopBar} currentTrack={currentTrack} />
             } else if(uri.indexOf('spotify:album') !== -1) {
-                return <Album uri={uri} player={player} setUri={setUri} setTopBar={setTopBar}/>
+                return <Album uri={uri} player={player} setUri={setUri} setTopBar={setTopBar} currentTrack={currentTrack} />
             } else if(uri.indexOf('spotify:artist') !== -1) {
-                return <Artist uri={uri} player={player} setUri={setUri} setTopBar={setTopBar}/>
+                return <Artist uri={uri} player={player} setUri={setUri} setTopBar={setTopBar} currentTrack={currentTrack} />
             } else {
                 return <h3>{uri}</h3>
             }

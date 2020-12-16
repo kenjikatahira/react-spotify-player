@@ -1,5 +1,6 @@
 import React,{ useState } from "react";
 import Styled from 'styled-components';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import PropTypes from 'prop-types';
 
 const StyledTracklist = Styled.div`
@@ -68,18 +69,22 @@ const StyledTracklist = Styled.div`
             overflow: hidden;
 
             &:hover {
-                .play {
+                .action {
                     visibility: visible;
                 }
             }
 
-            .play {
+            .action {
                 border: 1px solid #fff;
                 padding: 5px;
                 width: 20px;
                 height: 20px;
                 border-radius: 100%;
                 visibility: hidden;
+
+                &.selected {
+                    visibility: visible;
+                }
             }
 
             span.link:hover {
@@ -89,8 +94,7 @@ const StyledTracklist = Styled.div`
     }
 `
 
-const Tracklist = ({table,player,limit : hasLimit,setUri, copyright}) => {
-
+const Tracklist = ({table,player,limit : hasLimit,setUri, copyright,currentTrack}) => {
     const [limit,setLimit] = useState(hasLimit || null);
     const [filteredItems,setFilteredItems] = useState([]);
 
@@ -114,6 +118,14 @@ const Tracklist = ({table,player,limit : hasLimit,setUri, copyright}) => {
         setUri(item.album.uri);
     }
 
+    const renderIcon = (uri='') => {
+        if(uri === (currentTrack || {}).uri) {
+            return <FontAwesomeIcon className="action selected" icon="pause" />
+        } else{
+            return <FontAwesomeIcon className="action" icon="play" />
+        }
+    }
+
     const renderList = (item,index) => {
         return (
             <tr
@@ -126,7 +138,7 @@ const Tracklist = ({table,player,limit : hasLimit,setUri, copyright}) => {
                 }}
             >
                 <td>
-                    <span><i className="play fas fa-play"></i></span>
+                    <span>{renderIcon(item.uri)}</span>
                 </td>
                 {
                     item.name &&

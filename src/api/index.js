@@ -49,8 +49,9 @@ export const getViewRoute = async ({uri}) => {
  */
 export const getHome = async () => {
     try {
-        const promises = [get_recently_tracks(),get_featured_playlist(),top_artists()];
-        const [ { data : recentlyTracks }, { data : featuredPlaylists }, { data : topArtists } ] = await Promise.all(Object.values(promises));
+        const promises = [get_recently_tracks(),get_user(),top_artists()];
+        const [ { data : recentlyTracks }, { data : user }, { data : topArtists } ] = await Promise.all(Object.values(promises));
+        const { data : featuredPlaylists } = await get_featured_playlist(user.country);
         /**
          * Model array of recently tracks to albums for the homepage view
          *
@@ -244,9 +245,10 @@ const fetchPlaylist = async (uri) => {
 const fetchAlbum = async (uri) => {
     try {
         const {data: album} = await get_album({uri});
+        const { data : albums } = await get_artists_albums({uri : album.artists[0].uri});
+
         const [image] = album.images;
-        console.log(album)
-        console.log(album.release_date.replace(/(\d{4})-\d{2}-\d{2}/g,'$1'))
+
         const tableFactory = (album) => {
             const trackModel = (i) => {
                 return {
@@ -263,17 +265,45 @@ const fetchAlbum = async (uri) => {
             }
         }
 
+        const artistAlbumsFactory = (albums) => {
+            const ids = [];
+            const artistAlbums = {}
+
+            const _albums = {
+                message : 'More by ' + album.artists[0].name,
+                type : 'artist',
+                items : albums.items.filter((i , index) => {
+                    // Remove repeated albums and itself from the list . Limited by four albums only
+                    if(!ids.includes(i.name) && i.album_type === 'album' && i.id !== album.id && index <= 4) {
+                        ids.push(i.name);
+                        return true;
+                    }
+                    return false;
+                })
+            }
+
+            if(_albums.items.length) {
+                artistAlbums._albums = _albums;
+            }
+
+            return artistAlbums;
+        }
+
         return {
             type: 'album',
             releaseDate : album.release_date.replace(/(\d{4})-\d{2}-\d{2}/g,'$1'),
             label : album.label,
             header : {
+                type : 'album',
+                artists : album.artists,
                 name : album.name,
                 image : image,
                 tracks : tableFactory(album).body,
-                total_duration : totalDuration(album.tracks.items)
+                total_duration : totalDuration(album.tracks.items),
+                releaseDate : album.release_date.replace(/(\d{4})-\d{2}-\d{2}/g,'$1')
             },
-            table : tableFactory(album)
+            table : tableFactory(album),
+            grid : artistAlbumsFactory(albums)
         };
     } catch(e) {
         console.error(e);

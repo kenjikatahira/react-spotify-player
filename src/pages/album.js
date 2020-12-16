@@ -5,6 +5,7 @@ import { getViewRoute } from './../api';
 import TracklistHeader from "./../components/tracklistHeader";
 import Tracklist from "./../components/tracklist";
 import Loading from "../components/loading";
+import Grid from "../components/grid";
 
 const Album = ({uri,player,setUri}) => {
     const [data,setData] = useState(null);
@@ -22,7 +23,7 @@ const Album = ({uri,player,setUri}) => {
     },[uri])
 
     if (data) {
-        const {table,header,label,releaseDate} = data;
+        const {table,header,label,releaseDate,grid} = data;
         return (
             <div className="album">
                 <TracklistHeader
@@ -35,6 +36,7 @@ const Album = ({uri,player,setUri}) => {
                     player={player}
                     copyright={`© ${releaseDate} ${label}`}
                 />
+                <Grid grid={grid} setUri={setUri} player={player} />
             </div>
         );
     } else {

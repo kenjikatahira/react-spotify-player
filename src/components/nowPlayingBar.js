@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Styled from 'styled-components';
 import PropTypes from 'prop-types';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import NowPlayingInfo from './nowPlayingInfo';
 import TimerContainer from './timer/timerContainer';
 import Timer from './timer';
@@ -33,23 +33,38 @@ const StyledPlayingBar = Styled.div`
             width: 150px;
 
             .control-button {
+                display: flex;
+                align-items: center;
+                justify-content: center;
                 color: #b3b3b3;
                 position: relative;
                 width: 32px;
                 min-width: 32px;
                 height: 32px;
 
-                &.play {
+                &.play,&.pause {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
                     border: 1px solid #b3b3b3;
                     border-radius: 32px;
+                    svg {
+                        position: relative;
+                    }
                 }
 
-                svg {
-                    position: relative;
-                    top: -3px;
-                    left: -3px;
-                    height: 15px;
-                    width: 15px;
+                &.play {
+                    svg {
+                        height: 15px;
+                        width: 15px;
+                    }
+                }
+
+                &.pause {
+                    svg {
+                        height: 15px;
+                        width: 15px;
+                    }
                 }
             }
         }
@@ -83,35 +98,32 @@ const NowPlaying = ({player,currentTrack}) => {
     const [barTracking,setBarTracking] = useState(0);
 
     const togglePlayButton =() => {
-        const paused = (currentTrack || {}).paused;
-        if(paused === false || paused === null) {
+        if(((currentTrack || {}).disallows || {}).resuming) {
+            return (
+                <button
+                    className="btn btn-outline-secondary control-button pause"
+                    onClick={player.pause}
+                >
+                    <FontAwesomeIcon icon="pause" />
+                </button>
+            )
+        } else {
             return (
                 <button
                     className="btn btn-outline-secondary control-button play"
-                    onClick={player.pause}
+                    onClick={() => {
+                        player.resume()
+                    }}
                 >
-                    <i class="fas fa-pause"></i>
+                    <FontAwesomeIcon icon="play" />
                 </button>
             )
         }
-
-        return (
-            <button
-                className="btn btn-outline-secondary control-button play"
-                onClick={() => {
-                    player.resume()
-                }}
-            >
-                <i className="fas fa-play"></i>
-            </button>
-        )
     }
 
-    const onChangePosition = (position) => {
-        setBarTracking(Math.floor(100*position/(currentTrack || {}).duration_ms));
-    }
+    const onChangePosition = (position) => setBarTracking(Math.floor(100*position/(currentTrack || {}).duration_ms))
 
-    if(Object.keys((player || {})).length === 0 && (currentTrack || {})) return (<div className="now-playing">não existe</div>)
+    if(Object.keys((player || {})).length === 0 && (currentTrack || {})) return (<div className="now-playing"></div>)
     return(
         <StyledPlayingBar className="now-playing">
             <div className="playing-wrapper">
@@ -120,11 +132,11 @@ const NowPlaying = ({player,currentTrack}) => {
             <div className="inner-now-playing">
                 <div className="controls-buttons">
                     <button className="btn control-button" onClick={player.prev}>
-                        <i className="fas fa-backward"></i>
+                        <FontAwesomeIcon icon="backward" />
                     </button>
                     {togglePlayButton()}
                     <button className="btn control-button" onClick={player.next}>
-                        <i className="fas fa-forward"></i>
+                        <FontAwesomeIcon icon="forward" />
                     </button>
                 </div>
                 <div className="playback-bar">
