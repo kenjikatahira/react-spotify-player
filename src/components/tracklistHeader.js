@@ -9,7 +9,7 @@ const StyledHeader = Styled.div`
         align-items: center;
         .artwork-wrapper {
             overflow: auto;
-            width: 240px;
+            width: 300px;
             .artwork {
                 width: 100%;
                 padding-bottom: 100%;

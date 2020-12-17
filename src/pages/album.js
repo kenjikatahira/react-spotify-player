@@ -7,13 +7,15 @@ import Tracklist from "./../components/tracklist";
 import Loading from "../components/loading";
 import Grid from "../components/grid";
 
-const Album = ({uri,player,setUri}) => {
+const Album = ({uri,player,setUri,setTopBar}) => {
     const [data,setData] = useState(null);
 
     useEffect(() => {
         if(!data) {
             getViewRoute({uri})
                 .then(setData);
+        } else {
+            setTopBar(data.header.name);
         }
     },[data,uri]);
 

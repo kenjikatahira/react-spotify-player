@@ -29,6 +29,8 @@ export const getViewRoute = async ({uri}) => {
     let content;
     if(uri === 'home') {
         content = await getHome();
+    } else if(uri === 'featured-playlists-countries') {
+        content = await getCountries();
     } else if(uri === 'recently-played') {
         content = await getRecentlyTracks();
     } else if(uri.split(':').indexOf('album') >= 0) {
@@ -114,6 +116,57 @@ export const getHome = async () => {
         throw new Error(e);
     }
 }
+
+/**
+ * Retrieves countries playlists data
+ *
+ * @function getCountries
+ * @return {Void}
+ */
+export const getCountries = async () => {
+    try {
+        let _countries = ['NZ','CH','CA','US','IT','FR','JP','RU','IS'];
+        let countries = ['NZ','CH','CA','US','IT','FR','JP','RU','IS'];
+
+        countries = countries.map(async (country) => await get_featured_playlist(country));
+
+        const resolves = await Promise.all(countries)
+
+        /**
+         * Model the playlist response for the homepage view
+         *
+         * @function factoryPlaylists
+         * @return {Void}
+         */
+        const factoryPlaylists = (resolves) => {
+            const labels = {
+                'BR' : 'Brasil',
+                'CH' : 'Chile',
+                'CA' : 'Canada',
+                'US' : 'United States',
+                'RU' : 'Russia',
+                'IT' : 'Italy',
+                'JP' : 'Japan',
+                'NZ' : 'New Zealand'
+            }
+            return resolves.map(({data},index) => {
+                return {
+                    message :`${data.message} ${labels[_countries[index]] ? ' - ' + labels[_countries[index]] : ''}`,
+                    items : data.playlists.items,
+                    type : 'playlists'
+                }
+            })
+        }
+
+        return {
+            type : 'home',
+            grid : factoryPlaylists(resolves)
+        }
+    } catch(e) {
+        throw new Error(e);
+    }
+}
+
 
 /**
  * Retrieves user's saved tracks

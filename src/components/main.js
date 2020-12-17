@@ -7,6 +7,7 @@ import Player from './../api/player';
 import Menu from './menu';
 import NowPlayingBar from './nowPlayingBar';
 import Home from './../pages/home';
+import Countries from './../pages/countries';
 import Playlist from "../pages/playlist";
 import Album from "../pages/album";
 import Artist from "../pages/artist";
@@ -161,6 +162,8 @@ const Main = () => {
                 return <Home player={player} setUri={setUri}/>
             } else if(uri.indexOf('recently-played') !== -1) {
                 return <RecentlyPlayed player={player} setUri={setUri}/>
+            } else if(uri.indexOf('featured-playlists-countries') !== -1) {
+                return <Countries player={player} setUri={setUri}/>
             } else if(uri.indexOf('spotify:playlist') !== -1) {
                 return <Playlist uri={uri} player={player} setUri={setUri} setTopBar={setTopBar} currentTrack={currentTrack} />
             } else if(uri.indexOf('spotify:album') !== -1) {
