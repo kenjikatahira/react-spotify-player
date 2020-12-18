@@ -2,7 +2,7 @@ import React,{ useState, useEffect } from "react";
 import PropTypes from 'prop-types';
 import Styled from 'styled-components';
 
-import { getPlaylists } from './../api';
+import { fetchPlaylists } from './../api';
 
 import SpotifyLogo from './../assets/spotify';
 
@@ -128,7 +128,7 @@ let  menuItems = [
     },
     {
         name: "Artists",
-        uri: "artist"
+        uri: "artists-list"
     },
     {
         el: <hr key="sep" className="separator"></hr>
@@ -143,7 +143,7 @@ const Menu = ({uri, setUri}) => {
 
     useEffect(() => {
         if(!playlists) {
-            getPlaylists()
+            fetchPlaylists()
                 .then(setPlaylists);
         }
     },[playlists]);

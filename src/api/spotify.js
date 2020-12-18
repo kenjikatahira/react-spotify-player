@@ -276,8 +276,8 @@ export const get_track = ({uri}) => {
  * @function get_following
  * @return {Promise}
  */
-export const get_following = (type) => {
-    return axios.get('https://api.spotify.com/v1/me/following?type=' + type + '&limit=20', {
+export const get_following = () => {
+    return axios.get('https://api.spotify.com/v1/me/following?type=' + 'artist' + '&limit=20', {
         headers : {
             'content-type' : 'application/json',
             'Authorization' : `Bearer ${getSession().access_token}`

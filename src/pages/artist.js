@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
 import Styled from 'styled-components';
-import PropTypes from 'prop-types';
 import { getViewRoute } from './../api';
 
 import { SpotifyContext } from "../components/main";
@@ -74,12 +73,6 @@ const Artist = () => {
             <Loading />
         )
     }
-}
-
-Artist.propTypes = {
-    player : PropTypes.object,
-    setUri : PropTypes.func,
-    uri : PropTypes.string
 }
 
 export default Artist;

@@ -208,7 +208,8 @@ Tracklist.propTypes = {
     table : PropTypes.object,
     limit : PropTypes.string,
     setUri : PropTypes.func,
-    copyright : PropTypes.string
+    copyright : PropTypes.string,
+    currentTrack : PropTypes.object
 }
 
 export default Tracklist;

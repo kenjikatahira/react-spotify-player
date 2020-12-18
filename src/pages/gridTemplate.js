@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useContext, useRef } from "react";
 import Styled from 'styled-components';
-
 import { getViewRoute } from '../api';
 import { SpotifyContext } from "../components/main";
+
+import Pages from '../constants';
 
 // import Loading from "../components/loading";
 import Grid from "../components/grid";
@@ -19,9 +20,8 @@ const usePrev = (value) => {
     });
     return ref.current;
 }
-
 const GridTemplate = () => {
-    const {player, setUri, uri} = useContext(SpotifyContext);
+    const {player, setUri, uri, setTopBar} = useContext(SpotifyContext);
     const [data, setData] = useState(null);
     const prevUri = usePrev(uri);
 
@@ -29,8 +29,10 @@ const GridTemplate = () => {
         if(uri !== prevUri) {
             getViewRoute({uri})
                 .then(setData);
+        } else {
+            setTopBar((Pages[uri] || {}).title || uri)
         }
-    },[uri,prevUri]);
+    },[uri,prevUri,setTopBar]);
 
     return (
         <StyledGridTemplate className={uri}>

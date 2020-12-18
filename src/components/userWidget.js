@@ -44,7 +44,4 @@ const UserWidget = () => {
     )
 }
 
-UserWidget.propTypes = {
-}
-
 export default UserWidget;

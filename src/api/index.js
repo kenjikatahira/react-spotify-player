@@ -28,26 +28,25 @@ import {
  * @return {Object} data for the view
  */
 export const getViewRoute = async ({uri}) => {
-    console.log(uri)
     let content;
     if(uri === 'home') {
-        content = await getHome();
+        content = await fetchHome();
     } else if(uri === 'browse') {
-        content = await getBrowse({uri});
+        content = await fetchBrowse({uri});
     } else if(uri === 'featured-playlists-countries') {
-        content = await getCountries();
+        content = await fetchCountries();
     } else if(uri === 'liked-songs') {
-        content = await getSavedTracks();
+        content = await fetchSavedSongs();
     } else if(uri === 'recently-played') {
-        content = await getRecentlyTracks();
+        content = await fetchRecentlyTracks();
     } else if(uri.indexOf('spotify:album') >= 0) {
         content = await fetchAlbum(uri);
     } else if(uri.indexOf('spotify:playlist') >= 0) {
         content = await fetchPlaylist(uri);
     } else if(uri.indexOf('spotify:artist') >= 0) {
         content = await fetchArtist(uri);
-    } else if(uri === 'artist') {
-        content = await getFollowing(uri)
+    } else if(uri === 'artists-list') {
+        content = await fetchFollowing(uri)
     }
     return content;
 }
@@ -55,10 +54,10 @@ export const getViewRoute = async ({uri}) => {
 /**
  * Retrieves browse list
  *
- * @function getBrowse
+ * @function fetchBrowse
  * @return {Void}
  */
-export const getBrowse = async ({uri,country}) => {
+export const fetchBrowse = async ({uri,country}) => {
     try {
         const promises = [get_new_releases(country)];
         let [{data}] = await Promise.all(Object.values(promises));
@@ -85,10 +84,10 @@ export const getBrowse = async ({uri,country}) => {
 /**
  * Retrieves home data
  *
- * @function getHome
+ * @function fetchHome
  * @return {Void}
  */
-export const getHome = async () => {
+export const fetchHome = async () => {
     try {
         const promises = [get_recently_tracks(),get_user(),top_artists()];
         const [ { data : recentlyTracks }, { data : user }, { data : topArtists } ] = await Promise.all(Object.values(promises));
@@ -159,10 +158,10 @@ export const getHome = async () => {
 /**
  * Retrieves countries playlists data
  *
- * @function getCountries
+ * @function fetchCountries
  * @return {Void}
  */
-export const getCountries = async () => {
+export const fetchCountries = async () => {
     try {
         let _countries = ['NZ','CH','CA','US','IT','FR','JP','RU','IS'];
         let countries = ['NZ','CH','CA','US','IT','FR','JP','RU','IS'];
@@ -210,10 +209,10 @@ export const getCountries = async () => {
 /**
  * Retrieves user's saved tracks
  *
- * @function getSavedTracks
+ * @function fetchSavedSongs
  * @return {Void}
  */
-export const getSavedTracks = async() => {
+export const fetchSavedSongs = async() => {
     try {
         const { data } = await get_saved_tracks();
         /**
@@ -494,10 +493,10 @@ const fetchArtist = async (uri) => {
 /**
  * Retrieves user's playlists
  *
- * @function getPlaylists
+ * @function fetchPlaylists
  * @return {Object} Playlists
  */
-export const getPlaylists = async () => {
+export const fetchPlaylists = async () => {
     try {
         const { data } = await get_playlists();
         return data;
@@ -509,10 +508,10 @@ export const getPlaylists = async () => {
 /**
  * Model array of recently tracks to albums for the homepage view
  *
- * @function getRecentlyTracks
+ * @function fetchRecentlyTracks
  * @return {Void}
  */
-export const getRecentlyTracks = async () => {
+export const fetchRecentlyTracks = async () => {
     try {
 
         const { data } = await get_recently_tracks();
@@ -550,10 +549,10 @@ export const getRecentlyTracks = async () => {
 /**
  * Retrieves user's followings
  *
- * @function getFollowing
+ * @function fetchFollowing
  * @return {Object} User info
  */
-export const getFollowing = async (uri) => {
+export const fetchFollowing = async (uri) => {
     try {
         const { data } = await get_following(uri);
 
@@ -562,7 +561,7 @@ export const getFollowing = async (uri) => {
             return {
                 following : {
                     type : uri,
-                    message : uri,
+                    message : 'Your Artists',
                     items : data.items
                 }
             }

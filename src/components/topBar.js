@@ -1,6 +1,8 @@
 import React from "react";
 import Styled from 'styled-components';
 import UserWidget from "./userWidget";
+import PropTypes from 'prop-types';
+
 
 const StyledtopBar = Styled.div`
     width:100%;
@@ -89,5 +91,9 @@ const TopBar = ({scroll,title}) => {
     }
 }
 
+TopBar.propTypes = {
+    scroll : PropTypes.number,
+    title : PropTypes.string
+}
 
 export default TopBar;

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import NowPlayingInfo from './nowPlayingInfo';
 import TimerContainer from './timer/timerContainer';
 import Timer from './timer';
