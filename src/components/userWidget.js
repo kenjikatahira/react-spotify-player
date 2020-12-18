@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import Styled from 'styled-components';
-import PropTypes from 'prop-types';
 import { getUser } from '../api';
 
 const StyledUserWidget = Styled.div`
@@ -36,7 +35,7 @@ const UserWidget = () => {
     return (
         <StyledUserWidget className="user-widget">
             <div className="avatar">
-                <img src={data.images[0].url} alt="user-image" />
+                <img src={data.images[0].url} alt="userimage" />
             </div>
             <div className="user">
                 {data.display_name}

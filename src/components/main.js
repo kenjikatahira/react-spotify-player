@@ -141,25 +141,22 @@ const Main = () => {
         window.onSpotifyWebPlaybackSDKReady = () => {
             setPlayer(Player.init());
         };
-        if(player) connectPlayer();
-    },[player])
-
-    const connectPlayer = () => {
-        const onReady = ({device_id}) => {
-            set_device_id(device_id);
-        }
-        const onChanged = (state) => {
-            if(state && state.track_window) {
-                setCurrentTrack({...state.track_window.current_track, ...state})
-            } else {
-                console.log(state)
+        if(player) {
+            const onReady = ({device_id}) => {
+                set_device_id(device_id);
             }
+            const onChanged = (state) => {
+                if(state && state.track_window) {
+                    setCurrentTrack({...state.track_window.current_track, ...state})
+                } else {
+                    console.log(state)
+                }
+            }
+            player.addListener('ready', onReady);
+            player.addListener('player_state_changed', onChanged);
+            player.connect();
         }
-        player.addListener('ready', onReady);
-        player.addListener('player_state_changed', onChanged);
-        player.connect();
-    }
-
+    },[player])
     const renderView = () => {
         if(uri) {
             if(uri.indexOf('spotify:playlist') !== -1) {

@@ -43,7 +43,7 @@ const Artist = () => {
         } else {
             setTopBar(data.header.name);
         }
-    },[data,uri]);
+    },[data,uri,setTopBar]);
 
     // reseta o data
     useEffect(() => {

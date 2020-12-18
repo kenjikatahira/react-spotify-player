@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from 'prop-types';
 import Styled from 'styled-components';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const StyledGrid = Styled.div`
     width:90%;

@@ -11,15 +11,16 @@ const StyledGridTemplate = Styled.div`
     width: 90%;
     margin: 0 auto;
 `
-const GridTemplate = () => {
 
-    const usePrev = (value) => {
-        const ref = useRef();
-        useEffect(() => {
-            ref.current = value;
-        });
-        return ref.current;
-    }
+const usePrev = (value) => {
+    const ref = useRef();
+    useEffect(() => {
+        ref.current = value;
+    });
+    return ref.current;
+}
+
+const GridTemplate = () => {
     const {player, setUri, uri} = useContext(SpotifyContext);
     const [data, setData] = useState(null);
     const prevUri = usePrev(uri);
@@ -29,7 +30,7 @@ const GridTemplate = () => {
             getViewRoute({uri})
                 .then(setData);
         }
-    },[uri]);
+    },[uri,prevUri]);
 
     return (
         <StyledGridTemplate className={uri}>
