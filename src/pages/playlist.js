@@ -1,8 +1,9 @@
-import React, {useState,useEffect} from "react";
+import React, {useState,useEffect,useContext} from "react";
 import Styled from 'styled-components';
 import PropTypes from 'prop-types';
 
 import { getViewRoute } from './../api';
+import { SpotifyContext } from "../components/main";
 
 import Loading from "./../components/loading";
 import Tracklist from "./../components/tracklist";
@@ -11,7 +12,8 @@ import TracklistHeader from './../components/tracklistHeader';
 const StyledPlaylist = Styled.div`
 `
 
-const Playlist = ({uri,setUri,player,setTopBar,currentTrack}) => {
+const Playlist = () => {
+    const {uri,setUri,player,setTopBar,currentTrack} = useContext(SpotifyContext);
     const [data,setData] = useState(null);
 
     useEffect(() => {

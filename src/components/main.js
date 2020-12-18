@@ -6,13 +6,14 @@ import Player from './../api/player';
 
 import Menu from './menu';
 import NowPlayingBar from './nowPlayingBar';
-import Home from './../pages/home';
-import Countries from './../pages/countries';
 import Playlist from "../pages/playlist";
 import Album from "../pages/album";
 import Artist from "../pages/artist";
 import TopBar from "./topBar";
-import RecentlyPlayed from "../pages/recentlyPlayed";
+import Grid from "../pages/gridTemplate";
+
+export const SpotifyContext = React.createContext();
+
 
 const StyledMain = Styled.div`
     display: grid;
@@ -140,38 +141,35 @@ const Main = () => {
         window.onSpotifyWebPlaybackSDKReady = () => {
             setPlayer(Player.init());
         };
-        if(player) {
-            player.addListener('ready', ({device_id}) => {
-                set_device_id(device_id);
-                // player.play({uri : 'spotify:track:3y4I9VECfNbDXYN2bXh9hV'});
-            });
-            player.addListener('player_state_changed', (state) => {
-                if(state && state.track_window) {
-                    setCurrentTrack({...state.track_window.current_track, ...state})
-                } else {
-                    console.log(state)
-                }
-            });
-            player.connect();
-        }
+        if(player) connectPlayer();
     },[player])
+
+    const connectPlayer = () => {
+        const onReady = ({device_id}) => {
+            set_device_id(device_id);
+        }
+        const onChanged = (state) => {
+            if(state && state.track_window) {
+                setCurrentTrack({...state.track_window.current_track, ...state})
+            } else {
+                console.log(state)
+            }
+        }
+        player.addListener('ready', onReady);
+        player.addListener('player_state_changed', onChanged);
+        player.connect();
+    }
 
     const renderView = () => {
         if(uri) {
-            if(uri.indexOf('home') !== -1) {
-                return <Home player={player} setUri={setUri}/>
-            } else if(uri.indexOf('recently-played') !== -1) {
-                return <RecentlyPlayed player={player} setUri={setUri}/>
-            } else if(uri.indexOf('featured-playlists-countries') !== -1) {
-                return <Countries player={player} setUri={setUri}/>
-            } else if(uri.indexOf('spotify:playlist') !== -1) {
-                return <Playlist uri={uri} player={player} setUri={setUri} setTopBar={setTopBar} currentTrack={currentTrack} />
+            if(uri.indexOf('spotify:playlist') !== -1) {
+                return <Playlist />
             } else if(uri.indexOf('spotify:album') !== -1) {
-                return <Album uri={uri} player={player} setUri={setUri} setTopBar={setTopBar} currentTrack={currentTrack} />
+                return <Album />
             } else if(uri.indexOf('spotify:artist') !== -1) {
-                return <Artist uri={uri} player={player} setUri={setUri} setTopBar={setTopBar} currentTrack={currentTrack} />
+                return <Artist />
             } else {
-                return <h3>{uri}</h3>
+                return <Grid />
             }
         }
     }
@@ -191,7 +189,11 @@ const Main = () => {
                 onScroll={onScroll}
             >
                 <TopBar scroll={scroll} title={title} />
-                {renderView()}
+                <SpotifyContext.Provider
+                    value={{uri,setUri,setTopBar,player,currentTrack}}
+                >
+                    {renderView()}
+                </SpotifyContext.Provider>
             </div>
             <div className="now-playing-wrapper">
                 <NowPlayingBar currentTrack={currentTrack} player={player} />

@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from 'prop-types';
 import Styled from 'styled-components';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const StyledGrid = Styled.div`
     width:90%;
@@ -68,22 +69,28 @@ const Grid = ({grid, player, setUri}) => {
         return (
             <div className="album col-xs-12 col-sm-6 col-md-4 col-lg-3" key={id}>
                 <div className="image"
-                    onClick={() => { setUri(uri) }}
+                    onClick={() => {
+                        if(uri.indexOf('spotify:track') !== -1) {
+                            player.play({uri})
+                        } else {
+                            setUri(uri)
+                        }
+                     }}
                     style={
                         { backgroundImage: `url(${images.length && images[0].url})`, backgroundSize :'cover', backgroundPosition:'center center' }
                     }
                 >
                 </div>
-                <div className="overlay">
-                    {/* <button
+                {/* <div className="overlay">
+                    <button
                         className="btn btn-outline-secondary control-button play"
                         onClick={() => {
                             console.log(uri)
                         }}
                     >
                         <FontAwesomeIcon icon="play" />
-                    </button> */}
-                </div>
+                    </button>
+                </div> */}
                 <div className="card-body">
                     <p className="card-text">{ artists && artists[0].name}</p>
                     <p className="card-title">{name}</p>

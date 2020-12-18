@@ -17,6 +17,8 @@ import {
     get_artist_top_tracks,
     get_playlists,
     get_user,
+    get_following,
+    get_new_releases
 } from './spotify';
 
 /**
@@ -26,23 +28,60 @@ import {
  * @return {Object} data for the view
  */
 export const getViewRoute = async ({uri}) => {
+    console.log(uri)
     let content;
     if(uri === 'home') {
         content = await getHome();
+    } else if(uri === 'browse') {
+        content = await getBrowse({uri});
     } else if(uri === 'featured-playlists-countries') {
         content = await getCountries();
+    } else if(uri === 'liked-songs') {
+        content = await getSavedTracks();
     } else if(uri === 'recently-played') {
         content = await getRecentlyTracks();
-    } else if(uri.split(':').indexOf('album') >= 0) {
+    } else if(uri.indexOf('spotify:album') >= 0) {
         content = await fetchAlbum(uri);
-    } else if(uri.split(':').indexOf('playlist') >= 0) {
+    } else if(uri.indexOf('spotify:playlist') >= 0) {
         content = await fetchPlaylist(uri);
-    } else if(uri.split(':').indexOf('artist') >= 0) {
+    } else if(uri.indexOf('spotify:artist') >= 0) {
         content = await fetchArtist(uri);
+    } else if(uri === 'artist') {
+        content = await getFollowing(uri)
     }
     return content;
 }
 
+/**
+ * Retrieves browse list
+ *
+ * @function getBrowse
+ * @return {Void}
+ */
+export const getBrowse = async ({uri,country}) => {
+    try {
+        const promises = [get_new_releases(country)];
+        let [{data}] = await Promise.all(Object.values(promises));
+
+        data = Object.values(data)[0];
+
+        const newReleasesFactory = (response) => {
+            return {
+                type : uri,
+                message : 'New Releases',
+                items : response.items
+            }
+        }
+        return {
+            type : 'browse',
+            grid : {
+                newReleases : newReleasesFactory(data)
+            }
+        }
+    } catch(e) {
+        throw new Error(e);
+    }
+}
 /**
  * Retrieves home data
  *
@@ -174,48 +213,46 @@ export const getCountries = async () => {
  * @function getSavedTracks
  * @return {Void}
  */
-export const getSavedTracks = () => {
-    return dispatch => {
-        get_saved_tracks().then( ({data}) => {
-            /**
-             * Model array of recently tracks to albums for the saved tracks
-             *
-             * @function savedTracksFactory
-             * @return {Void}
-             */
-            const savedTracksFactory = (response) => {
-                let tracks = response.items.map(item => item.track);
+export const getSavedTracks = async() => {
+    try {
+        const { data } = await get_saved_tracks();
+        /**
+         * Model array of recently tracks to albums for the saved tracks
+         *
+         * @function savedTracksFactory
+         * @return {Void}
+         */
+        const savedTracksFactory = (response) => {
+            let tracks = response.items.map(item => item.track);
 
-                tracks = tracks.map(item => {
-                    return {
-                        images : item.album.images,
-                        name : item.name,
-                        uri : item.uri,
-                        album : {
-                            uri : item.album.uri
-                        },
-                        artists : item.artists
-                    };
-                });
-
+            tracks = tracks.map(item => {
                 return {
-                    savedTracks : {
-                        message : 'Saved Tracks',
-                        type : 'saved-tracks',
-                        items : tracks
-                    }
+                    images : item.album.images,
+                    name : item.name,
+                    uri : item.uri,
+                    album : {
+                        uri : item.album.uri
+                    },
+                    artists : item.artists
+                };
+            });
+
+            return {
+                savedTracks : {
+                    message : 'Saved Tracks',
+                    type : 'saved-tracks',
+                    items : tracks
                 }
             }
+        }
 
-            dispatch({
-                type : 'GET_VIEW',
-                payload : {
-                    grid : savedTracksFactory(data)
-                }
-            });
-        })
-        .catch(err => console.log(err));
+        return {
+            grid : savedTracksFactory(data)
+        }
+    } catch(e) {
+        throw new Error(e);
     }
+
 }
 
 /**
@@ -509,6 +546,35 @@ export const getRecentlyTracks = async () => {
     }
 }
 
+
+/**
+ * Retrieves user's followings
+ *
+ * @function getFollowing
+ * @return {Object} User info
+ */
+export const getFollowing = async (uri) => {
+    try {
+        const { data } = await get_following(uri);
+
+        const followingFactory = (response) => {
+            const data = Object.values(response)[0];
+            return {
+                following : {
+                    type : uri,
+                    message : uri,
+                    items : data.items
+                }
+            }
+        }
+
+        return {
+            grid : followingFactory(data)
+        }
+    } catch(e) {
+        console.log(e)
+    }
+}
 
 /**
  * Retrieves user's info

@@ -1,13 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import PropTypes from 'prop-types';
+
 import { getViewRoute } from './../api';
+import { SpotifyContext } from "../components/main";
 
 import TracklistHeader from "./../components/tracklistHeader";
 import Tracklist from "./../components/tracklist";
 import Loading from "../components/loading";
 import Grid from "../components/grid";
 
-const Album = ({uri,player,setUri,setTopBar}) => {
+const Album = () => {
+    const {uri,player,setUri,setTopBar} = useContext(SpotifyContext);
     const [data,setData] = useState(null);
 
     useEffect(() => {

@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { getViewRoute } from './../api';
 
+import { SpotifyContext } from "../components/main";
 import TracklistHeader from "./../components/tracklistHeader";
 import RelatedArtists from "./../components/relatedArtists";
 import Tracklist from "./../components/tracklist";
@@ -31,7 +32,8 @@ const StyledArtist = Styled.div`
     }
 `
 
-const Artist = ({uri, setUri, player, setTopBar}) => {
+const Artist = () => {
+    const { uri, setUri, player, setTopBar } = useContext(SpotifyContext)
     const [data,setData] = useState(null);
 
     useEffect(() => {

@@ -127,16 +127,8 @@ let  menuItems = [
         uri: "liked-songs"
     },
     {
-        name: "Albums",
-        uri: "albums"
-    },
-    {
-        name: "Bands",
-        uri: "bands"
-    },
-    {
-        name: "Podcasts",
-        uri: "podcasts"
+        name: "Artists",
+        uri: "artist"
     },
     {
         el: <hr key="sep" className="separator"></hr>

@@ -6,7 +6,7 @@ import { getSession } from '../utils';
  * Scope to provide the right acess to information
  * @type scope
  */
-export const scope = 'user-read-private user-library-read user-read-playback-state user-read-playback-position user-modify-playback-state user-top-read user-read-recently-played streaming user-read-email'
+export const scope = 'user-read-private user-library-read user-read-playback-state user-read-playback-position user-modify-playback-state user-top-read user-read-recently-played streaming user-read-email user-follow-read'
 
 /**
  * Basic request with the token provided
@@ -257,7 +257,7 @@ export const get_related_artists = ({uri}) => {
 }
 
 /**
- * Request for a playlist
+ * Request for a track
  * @function get_track
  * @return {Promise}
  */
@@ -270,3 +270,33 @@ export const get_track = ({uri}) => {
         }
     });
 }
+
+/**
+ * Request for user's following list
+ * @function get_following
+ * @return {Promise}
+ */
+export const get_following = (type) => {
+    return axios.get('https://api.spotify.com/v1/me/following?type=' + type + '&limit=20', {
+        headers : {
+            'content-type' : 'application/json',
+            'Authorization' : `Bearer ${getSession().access_token}`
+        }
+    });
+}
+
+/**
+ * Request for country's new releases
+ * @function get_new_releases
+ * @return {Promise}
+ */
+export const get_new_releases = (country='BR') => {
+    return axios.get('https://api.spotify.com/v1/browse/new-releases?country='+country+'&limit=10', {
+        headers : {
+            'content-type' : 'application/json',
+            'Authorization' : `Bearer ${getSession().access_token}`
+        }
+    });
+}
+
+
