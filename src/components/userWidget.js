@@ -24,6 +24,21 @@ const StyledUserWidget = Styled.div`
 
 const UserWidget = () => {
     const [data,setData] = useState(null);
+    const getImage = () => {
+        if(data.images.length) {
+            return <img src={data.images[0].url} alt="userimage" />
+        } else {
+            return ''
+        }
+    }
+
+    const setAlert = () => {
+        return (
+            <div class="alert alert-danger" role="alert">
+                You need a premium account to play the songs. =(
+            </div>
+        )
+    }
 
     useEffect(() => {
         if(!data) {
@@ -31,11 +46,13 @@ const UserWidget = () => {
                 .then(setData);
         }
     },[data]);
+
     if(!data) { return <div></div> }
     return (
         <StyledUserWidget className="user-widget">
+            {data.product !== 'premium' && setAlert()}
             <div className="avatar">
-                <img src={data.images[0].url} alt="userimage" />
+                {getImage()}
             </div>
             <div className="user">
                 {data.display_name}

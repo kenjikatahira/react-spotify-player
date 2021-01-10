@@ -10,6 +10,7 @@ import Playlist from "../pages/playlist";
 import Album from "../pages/album";
 import Artist from "../pages/artist";
 import TopBar from "./topBar";
+import Search from "../pages/search";
 import Grid from "../pages/gridTemplate";
 
 export const SpotifyContext = React.createContext();
@@ -165,6 +166,8 @@ const Main = () => {
                 return <Album />
             } else if(uri.indexOf('spotify:artist') !== -1) {
                 return <Artist />
+            } else if(uri.indexOf('search') !== -1) {
+                return <Search />
             } else {
                 return <Grid />
             }
@@ -185,7 +188,7 @@ const Main = () => {
                 className="browser-wrapper"
                 onScroll={onScroll}
             >
-                <TopBar scroll={scroll} title={title} />
+                <TopBar scroll={scroll} title={title} setUri={setUri} />
                 <SpotifyContext.Provider
                     value={{uri,setUri,setTopBar,player,currentTrack}}
                 >
