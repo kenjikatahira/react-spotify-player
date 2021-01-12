@@ -3,6 +3,7 @@ import Styled from 'styled-components';
 
 import { label, set_device_id } from './../utils';
 import Player from './../api/player';
+import { get_current_track,get_devices } from './../api/spotify';
 
 import Menu from './menu';
 import NowPlayingBar from './nowPlayingBar';
@@ -111,12 +112,28 @@ const Main = () => {
     const [scroll,setScroll] = useState(0);
     const [title,setTopBar] = useState(null);
 
+    const getPlayingNow = () => {
+        get_devices().then((response) => {
+            let { devices } = response.data;
+            [devices] = devices.filter(i => i.is_active);
+            get_current_track().then(({data}) => {
+                if(data) {
+                    const { actions : { disallows }} = data;
+                    if((data || {}).item) {
+                        setCurrentTrack({...data.item, device: devices, disallows });
+                    }
+                }
+            });
+        })
+    }
+
     // init - adds the sdk spotify player lib
     useEffect(() => {
         const script = document.createElement("script");
         script.src = "https://sdk.scdn.co/spotify-player.js";
         script.async = true;
         document.body.appendChild(script);
+        getPlayingNow();
     }, [])
 
     // uri
@@ -142,6 +159,7 @@ const Main = () => {
         window.onSpotifyWebPlaybackSDKReady = () => {
             setPlayer(Player.init());
         };
+
         if(player) {
             const onReady = ({device_id}) => {
                 set_device_id(device_id);
@@ -158,6 +176,7 @@ const Main = () => {
             player.connect();
         }
     },[player])
+
     const renderView = () => {
         if(uri) {
             if(uri.indexOf('spotify:playlist') !== -1) {
