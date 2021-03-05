@@ -60,17 +60,18 @@ const StyledtopBar = Styled.div`
 
 `
 
-const TopBar = ({scroll,title,setUri}) => {
+const TopBar = ({scroll,title,setUri,onSearch}) => {
     const threshold = 250;
 
-    const onSearch = () => {
+    const search = (ev) => {
         setUri('search');
+        onSearch(ev.target.value);
     }
 
     const renderContent = () => {
         return (
             <>
-                <input onKeyPress={onSearch} className="search" type="search"></input>
+                <input onKeyUp={search} className="search" type="search"></input>
                 <UserWidget />
                 <div className="additional-bar">
                     <h2>{title}</h2>

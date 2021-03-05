@@ -111,6 +111,7 @@ const Main = () => {
     const [currentTrack,setCurrentTrack] = useState(null);
     const [scroll,setScroll] = useState(0);
     const [title,setTopBar] = useState(null);
+    const [searchTerm,setSearchTerm] = useState(null);
 
     const getPlayingNow = () => {
         get_devices().then((response) => {
@@ -195,6 +196,8 @@ const Main = () => {
 
     const onScroll = (e) => setScroll(e.target.scrollTop);
 
+    const onSearch = term => setSearchTerm(term);
+
     return (
         <StyledMain className="main">
             <div className="menu-wrapper">
@@ -207,9 +210,9 @@ const Main = () => {
                 className="browser-wrapper"
                 onScroll={onScroll}
             >
-                <TopBar scroll={scroll} title={title} setUri={setUri} />
+                <TopBar scroll={scroll} title={title} setUri={setUri} onSearch={onSearch} />
                 <SpotifyContext.Provider
-                    value={{uri,setUri,setTopBar,player,currentTrack}}
+                    value={{uri,setUri,setTopBar,player,currentTrack,searchTerm}}
                 >
                     {renderView()}
                 </SpotifyContext.Provider>

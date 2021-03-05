@@ -47,7 +47,7 @@ const StyledPlayingBar = Styled.div`
                     display: flex;
                     justify-content: center;
                     align-items: center;
-                    border: 1px solid #b3b3b3;
+                    border: none;
                     border-radius: 32px;
                     svg {
                         position: relative;
@@ -58,6 +58,7 @@ const StyledPlayingBar = Styled.div`
                     svg {
                         height: 15px;
                         width: 15px;
+                        left: 2px;
                     }
                 }
 
@@ -65,6 +66,7 @@ const StyledPlayingBar = Styled.div`
                     svg {
                         height: 15px;
                         width: 15px;
+                        left: 2px;
                     }
                 }
             }

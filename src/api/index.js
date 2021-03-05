@@ -18,7 +18,8 @@ import {
     get_playlists,
     get_user,
     get_following,
-    get_new_releases
+    get_new_releases,
+    get_search
 } from './spotify';
 
 /**
@@ -49,6 +50,24 @@ export const getViewRoute = async ({uri}) => {
         content = await fetchFollowing(uri)
     }
     return content;
+}
+
+export const fetchSearchTerm = async ({searchTerm}) => {
+    try {
+        const promises = [get_search({query: searchTerm,type:'artist'}),get_search({query: searchTerm,type:'album'}),get_search({query: searchTerm,type:'track'})];
+        let [{data:artist},{data:album},{data:track}] = await Promise.all(Object.values(promises));
+        return {
+            value : [artist,album,track]
+        }
+        // return {
+        //     type : 'browse',
+        //     grid : {
+        //         newReleases : newReleasesFactory(data)
+        //     }
+        // }
+    } catch(e) {
+        throw new Error(e);
+    }
 }
 
 /**
