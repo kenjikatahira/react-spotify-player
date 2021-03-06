@@ -20,7 +20,7 @@ for the Spotify Data Catalogue
 
 ## Spotify Web Playback SDK
 
-[Doc](https://developer.spotify.com/documentation/web-playback-sdk/reference/) to play the songs inside the browser
+[Doc](https://developer.spotify.com/documentation/web-playback-sdk/reference/) to play the songs
 
 ## Packages
 
