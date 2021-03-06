@@ -63,15 +63,37 @@ const StyledtopBar = Styled.div`
 const TopBar = ({scroll,title,setUri,onSearch}) => {
     const threshold = 250;
 
-    const search = (ev) => {
-        setUri('search');
-        onSearch(ev.target.value);
+    const search = (e) => {
+        e.persist();
+        if (e.key === 'Enter') {
+            setUri('search');
+            onSearch(e.target.value);
+        }
+    }
+
+    const throttle = (fn, ms) => {
+        let timeout
+        function exec() {
+            fn.apply()
+        }
+        function clear() {
+            return timeout == undefined ? null : clearTimeout(timeout)
+        }
+        if(fn !== undefined && ms !== undefined) {
+            timeout = setTimeout(exec, ms)
+        } else {
+            console.error('callback function and the timeout must be supplied')
+        }
+        // API to clear the timeout
+        throttle.clearTimeout = function() {
+            clear();
+        }
     }
 
     const renderContent = () => {
         return (
             <>
-                <input onKeyUp={search} className="search" type="search"></input>
+                <input onKeyDown={search} className="search" type="search"></input>
                 <UserWidget />
                 <div className="additional-bar">
                     <h2>{title}</h2>

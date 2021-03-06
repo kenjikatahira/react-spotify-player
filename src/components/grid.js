@@ -76,7 +76,7 @@ const Grid = ({grid, player, setUri}) => {
                         }
                      }}
                     style={
-                        { backgroundImage: `url(${images.length && images[0].url})`, backgroundSize :'cover', backgroundPosition:'center center' }
+                        { backgroundImage: `url(${(images || {}).length && images[0].url})`, backgroundSize :'cover', backgroundPosition:'center center' }
                     }
                 >
                 </div>

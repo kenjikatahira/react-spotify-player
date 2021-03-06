@@ -4,8 +4,6 @@ import { getViewRoute } from '../api';
 import { SpotifyContext } from "../components/main";
 
 import Pages from '../constants';
-
-// import Loading from "../components/loading";
 import Grid from "../components/grid";
 
 const StyledGridTemplate = Styled.div`

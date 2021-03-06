@@ -52,19 +52,47 @@ export const getViewRoute = async ({uri}) => {
     return content;
 }
 
+/**
+ * Retrieves data based on search term
+ *
+ * @function fetchSearchTerm
+ * @return {Object} grid layout with artist,album and track suggestions
+ */
 export const fetchSearchTerm = async ({searchTerm}) => {
     try {
-        const promises = [get_search({query: searchTerm,type:'artist'}),get_search({query: searchTerm,type:'album'}),get_search({query: searchTerm,type:'track'})];
-        let [{data:artist},{data:album},{data:track}] = await Promise.all(Object.values(promises));
-        return {
-            value : [artist,album,track]
+        const promises = [
+            get_search({query: searchTerm,type:'artist'}),
+            get_search({query: searchTerm,type:'album'}),
+            get_search({query: searchTerm,type:'track'})
+        ];
+
+        const [
+            {data:artist},
+            {data:album},
+            {data:track}
+        ] = await Promise.all(Object.values(promises));
+
+        const searchFactory = (response) => {
+            let n;
+            Object.entries(response).forEach(([key,value]) => {
+                n = {
+                    message : key,
+                    items : value.items
+                }
+            });
+            return n;
         }
-        // return {
-        //     type : 'browse',
-        //     grid : {
-        //         newReleases : newReleasesFactory(data)
-        //     }
-        // }
+
+
+        return {
+            type : 'search',
+            grid : {
+                artist : searchFactory(artist),
+                album : searchFactory(album),
+                track : searchFactory(track),
+            }
+        }
+
     } catch(e) {
         throw new Error(e);
     }
@@ -520,7 +548,7 @@ export const fetchPlaylists = async () => {
         const { data } = await get_playlists();
         return data;
     } catch(e) {
-        console.log(e);
+        console.error(e);
     }
 }
 
@@ -560,7 +588,7 @@ export const fetchRecentlyTracks = async () => {
         };
 
     } catch(e) {
-        console.log(e);
+        console.error(e);
     }
 }
 
@@ -590,7 +618,7 @@ export const fetchFollowing = async (uri) => {
             grid : followingFactory(data)
         }
     } catch(e) {
-        console.log(e)
+        console.error(e)
     }
 }
 
@@ -605,6 +633,6 @@ export const getUser = async () => {
         const { data } = await get_user();
         return data;
     } catch(e) {
-        console.log(e)
+        console.error(e)
     }
 }

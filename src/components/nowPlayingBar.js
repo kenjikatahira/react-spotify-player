@@ -54,21 +54,6 @@ const StyledPlayingBar = Styled.div`
                     }
                 }
 
-                &.play {
-                    svg {
-                        height: 15px;
-                        width: 15px;
-                        left: 2px;
-                    }
-                }
-
-                &.pause {
-                    svg {
-                        height: 15px;
-                        width: 15px;
-                        left: 2px;
-                    }
-                }
             }
         }
 
