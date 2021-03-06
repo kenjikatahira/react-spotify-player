@@ -73,25 +73,6 @@ const TopBar = ({scroll,title,setUri,onSearch}) => {
         }
     }
 
-    const throttle = (fn, ms) => {
-        let timeout
-        function exec() {
-            fn.apply()
-        }
-        function clear() {
-            return timeout == undefined ? null : clearTimeout(timeout)
-        }
-        if(fn !== undefined && ms !== undefined) {
-            timeout = setTimeout(exec, ms)
-        } else {
-            console.error('callback function and the timeout must be supplied')
-        }
-        // API to clear the timeout
-        throttle.clearTimeout = function() {
-            clear();
-        }
-    }
-
     const renderContent = () => {
         return (
             <>
