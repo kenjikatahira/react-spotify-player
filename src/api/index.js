@@ -61,9 +61,9 @@ export const getViewRoute = async ({uri}) => {
 export const fetchSearchTerm = async ({searchTerm}) => {
     try {
         const promises = [
-            get_search({query: searchTerm,type:'artist'}),
+            get_search({query: searchTerm,type:'artist',size: 3}),
             get_search({query: searchTerm,type:'album'}),
-            get_search({query: searchTerm,type:'track'})
+            get_search({query: searchTerm,type:'track',size: 4})
         ];
 
         const [
@@ -87,9 +87,9 @@ export const fetchSearchTerm = async ({searchTerm}) => {
         return {
             type : 'search',
             grid : {
+                track : searchFactory(track),
                 artist : searchFactory(artist),
                 album : searchFactory(album),
-                track : searchFactory(track),
             }
         }
 

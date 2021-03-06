@@ -68,6 +68,8 @@ const TopBar = ({scroll,title,setUri,onSearch}) => {
         if (e.key === 'Enter') {
             setUri('search');
             onSearch(e.target.value);
+            e.target.value = '';
+            e.target.blur();
         }
     }
 

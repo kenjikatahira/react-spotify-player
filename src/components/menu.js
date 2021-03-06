@@ -31,7 +31,7 @@ const StyledMenu = Styled.ul`
             padding: 10px 0;
             margin-left: 5px;
             align-self: center;
-            font-size: 14px;
+            font-size: 12px;
             text-align: center;
         }
     }
@@ -42,12 +42,12 @@ const StyledMenu = Styled.ul`
         li {
             padding: 0;
             margin-bottom: 15px;
-            font-size: 14px;
+            font-size: 12px;
             font-weight: 700;
             svg {
                 margin-right: 10px;
                 font-weight: 500;
-                font-size: 18px;
+                font-size: 16px;
             }
         }
     }
@@ -66,7 +66,7 @@ const StyledMenu = Styled.ul`
         position:relative;
         padding: 0;
         cursor: pointer;
-        font-size: 13px;
+        font-size: 12px;
         font-weight: 800;
         margin-bottom: 8px;
 

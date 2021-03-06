@@ -42,8 +42,9 @@ export const get_user = () => {
  * @function get_search
  * @return {Promise}
  */
-export const get_search = ({query,type}) => {
-    return axios.get(`https://api.spotify.com/v1/search?q=${query}&type=${type}&limit=8`, {
+export const get_search = ({query,type,size}) => {
+    size = size ? size : 8;
+    return axios.get(`https://api.spotify.com/v1/search?q=${query}&type=${type}&limit=${size}`, {
         headers : {
             'content-type' : 'application/json',
             'Authorization' : `Bearer ${getSession().access_token}`

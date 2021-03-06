@@ -14,7 +14,7 @@ const Search = () => {
     const { searchTerm, setUri, uri, player } = useContext(SpotifyContext);
     const [data,setData] = useState(null);
     useEffect(() => {
-        if(searchTerm !== '') {
+        if(searchTerm && searchTerm !== '') {
             fetchSearchTerm({searchTerm}).then(data => {
                 setData(data);
             });

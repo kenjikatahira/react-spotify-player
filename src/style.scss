@@ -8,6 +8,17 @@ body {
     -ms-user-select:none;
     user-select:none;
     -o-user-select:none;
+
+    input,button {
+        &:focus {
+            outline: none;
+        }
+    }
+
+    .app {
+        margin: 0 2vw;
+        padding: 3vh 0;
+    }
 }
 
 @keyframes slide-top {

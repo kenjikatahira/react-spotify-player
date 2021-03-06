@@ -26,9 +26,10 @@ const StyledMain = Styled.div`
       "footer footer footer footer footer footer"
       "devicesBar devicesBar devicesBar devicesBar devicesBar devicesBar";
     overflow: hidden;
-    font-family: "Lato";
+    font-family: "Montserrat";
     color: #F5F5F5;
     overflow: none;
+    border-radius: 10px;
 
     a {
         color: #F5F5F5;
@@ -47,7 +48,7 @@ const StyledMain = Styled.div`
     }
 
     .search {
-        padding: 8px 69px;
+        padding: 0 8px;
         input {
             width: 176px;
             height: 25px;
@@ -60,7 +61,7 @@ const StyledMain = Styled.div`
         position: relative;
         overflow-x: hidden;
         overflow-y: auto;
-        height: 92vh;
+        height: 86vh;
         background-repeat: no-repeat;
         background-attachment: local;
 

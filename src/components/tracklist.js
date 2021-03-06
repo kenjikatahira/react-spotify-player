@@ -34,7 +34,7 @@ const StyledTracklist = Styled.div`
 
         th {
             color: #d1d1d1;
-            font-size: 13px;
+            font-size: 12px;
             text-transform: uppercase;
             border-top: none;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
@@ -50,6 +50,7 @@ const StyledTracklist = Styled.div`
         }
 
         td {
+            font-size: 13px;
             &:nth-child(1) {
                 width: 20px;
             }

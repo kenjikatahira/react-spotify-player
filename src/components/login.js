@@ -16,10 +16,12 @@ const StyledLogin = styled.div`
     overflow: hidden;
     font-family: "Cooper Black";
     background: rgba(28,28,28);
-    border: 2em solid #ffffff;
+    border-radius:30px;
     color: #fff;
     overflow: none;
-    height: 100vh;
+    margin:0 auto;
+    width:80vw;
+    height: 94vh;
     text-align: center;
 
     .title {
