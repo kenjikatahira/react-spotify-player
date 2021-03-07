@@ -30,13 +30,15 @@ body {
         z-index: 3;
     }
 
-    input,button {
+    input,button,.btn {
         &:focus {
             outline: none;
+            box-shadow: none;
         }
     }
 
     .app {
+        max-width: 1600px;
         width: 88vw;
         margin: 5vh auto;
         -webkit-box-shadow: 0 0 20px 0px rgba(0, 0, 0, 0.8);

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 const StyledNowPlayingInfo = Styled.div`
     display: grid;
-    grid-template-columns: 33%;
+    grid-template-columns: 18%;
     grid-template-rows: auto;
     grid-template-areas:
       "sidebar main main";
@@ -14,7 +14,6 @@ const StyledNowPlayingInfo = Styled.div`
     height:8vh;
 
     .image {
-        grid-area: sidebar;
         align-self: center;
         img {
             height:7vh;
@@ -23,7 +22,6 @@ const StyledNowPlayingInfo = Styled.div`
     }
 
     .info {
-        grid-area: main;
         align-self: center;
         justify-self: start;
         text-align: left;

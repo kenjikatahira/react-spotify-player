@@ -78,7 +78,7 @@ const StyledMain = Styled.div`
 
     .menu-wrapper {
         grid-area: sidebar;
-        background: #000;
+        background: #111;
         justify-content: stretch;
         &::-webkit-scrollbar {
             background: #000;
@@ -138,10 +138,12 @@ const Main = () => {
         getPlayingNow();
     }, [])
 
-    // uri
-    useEffect(() => {
+    const onChangeUri = () => {
         setUri(uri);
+
         localStorage.setItem('lastUri',uri);
+        document.querySelector('.browser-wrapper').scroll(0,0);
+
         if(
             uri.indexOf('playlist') === -1 &&
             uri.indexOf('album') === -1 &&
@@ -154,7 +156,10 @@ const Main = () => {
         return () => {
             setUri(null);
         }
-    }, [uri])
+    }
+
+    // uri
+    useEffect(onChangeUri, [uri])
 
     // player
     useEffect(() => {
@@ -178,6 +183,8 @@ const Main = () => {
             player.connect();
         }
     },[player])
+
+
 
     const renderView = () => {
         if(uri) {

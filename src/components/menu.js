@@ -11,7 +11,7 @@ const StyledMenu = Styled.ul`
     padding: 15px;
     white-space: nowrap;
     color : #B3B3B3;
-    background: #000;
+    margin-bottom: 0;
 
     .logo-wrapper {
         display:flex;
@@ -82,7 +82,7 @@ const StyledMenu = Styled.ul`
             border-left: 3px solid #1db954;
             position: absolute;
             height: 17px;
-            left: -8px;
+            left: -14px;
             top: 0;
         }
 

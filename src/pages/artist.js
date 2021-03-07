@@ -55,6 +55,7 @@ const Artist = () => {
             <StyledArtist className="artist">
                 <TracklistHeader header={header}
                     player={player}
+                    isPlaying={((currentTrack || {}).disallows || {}).resuming}
                 />
                 <div className="artist-top-related">
                     <Tracklist

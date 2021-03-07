@@ -33,6 +33,7 @@ const Album = () => {
                 <TracklistHeader
                     player={player}
                     header={header}
+                    isPlaying={((currentTrack || {}).disallows || {}).resuming}
                 />
                 <Tracklist
                     table={table}

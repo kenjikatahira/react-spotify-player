@@ -19,10 +19,12 @@ const StyledTracklist = Styled.div`
         }
     }
     .toggleShow {
-        padding: 16px;
+        font-size: 13px;
+        padding: 15px;
+        padding-left: 0;
         background: none;
         border: none;
-        color: hsla(0,0%,100%,.7);
+        color: #fff;
     }
     .copyright {
         margin: 15px 0;

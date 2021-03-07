@@ -3,9 +3,10 @@ import Styled from 'styled-components';
 import PropTypes from 'prop-types';
 
 const StyledHeader = Styled.div`
-        padding: 15px 32px;
-        margin-bottom: 15px;
         display: flex;
+        width: 90%;
+        margin: 0 auto;
+        margin-bottom: 15px;
         align-items: center;
         .artwork-wrapper {
             overflow: auto;
@@ -40,6 +41,7 @@ const StyledHeader = Styled.div`
             .info-details {
                 padding: 1px 0px 13px;
                 color:#aaa;
+                font-size: 12px;
             }
             .info-tracks {
                 margin-right: 4px;
@@ -68,7 +70,7 @@ const StyledHeader = Styled.div`
         }
 
         .info-interactive {
-            .play {
+            .play,.pause {
                 cursor: pointer;
                 background: #1DB954;
                 border-radius: 15px;
@@ -82,7 +84,7 @@ const StyledHeader = Styled.div`
         }
 `
 
-const TracklistHeader = ({player,header}) => {
+const TracklistHeader = ({player,header,isPlaying}) => {
     const getDescription = (description) => {
         return (
             <>
@@ -119,6 +121,18 @@ const TracklistHeader = ({player,header}) => {
         type
     } = header;
 
+    const buttonLabel = (isPlaying) => {
+        if(!isPlaying) {
+            return (
+                <div className="play" onClick={ () => { player.play({uris : (tracks || []) })}}> PLAY </div>
+            )
+        } else {
+            return (
+                <div className="pause" onClick={ () => { player.pause({uris : (tracks || []) })}}> PAUSE </div>
+            )
+        }
+    }
+
     return (
         <StyledHeader className="tracklist-header">
             {(image && image.url &&
@@ -152,7 +166,7 @@ const TracklistHeader = ({player,header}) => {
                     { type !== 'artist' && total_duration && tracksDuration(total_duration) }
                 </div>
                 <div className="info-interactive">
-                    <div className="play" onClick={ () => { player.play({uris : (tracks || []) })}}> PLAY </div>
+                    {buttonLabel(isPlaying)}
                 </div>
             </div>
         </StyledHeader>

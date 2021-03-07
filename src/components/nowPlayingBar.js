@@ -14,8 +14,8 @@ const StyledPlayingBar = Styled.div`
     grid-template-columns: 20%;
     grid-template-rows: auto;
     grid-template-areas:
-      "sidebar main main ."
-      "footer footer footer footer";
+        "sidebar sidebar main main . ."
+        "footer footer footer footer footer footer";
 
     .playing-wrapper {
         grid-area: sidebar;
@@ -32,6 +32,7 @@ const StyledPlayingBar = Styled.div`
             justify-content: space-around;
             align-self: center;
             width: 150px;
+            margin-bottom: 8px;
 
             .control-button {
                 display: flex;
@@ -52,6 +53,9 @@ const StyledPlayingBar = Styled.div`
                     svg {
                         position: relative;
                     }
+                    &:hover {
+                        background: none;
+                    }
                 }
 
             }
@@ -61,15 +65,27 @@ const StyledPlayingBar = Styled.div`
             display: flex;
             flex-direction: row;
             justify-content: center;
-            width: 45%;
+            width: 80%;
             max-width: 722px;
             align-self: center;
             align-items: center;
+                position: relative;
+
+            .timer-label {
+                position:absolute;
+                &:first-child {
+                    left: -30px;
+                }
+                &:last-child {
+                    right: -30px;
+                }
+            }
 
             .playback-progress-bar {
                 width: 100%;
                 margin: 0 10px;
                 background-color:#1a1a1a;
+
                 .progress-bar-inner {
                     background-color: #b3b3b3;
                     border-radius: 2px;
@@ -128,13 +144,15 @@ const NowPlaying = ({player, currentTrack, setUri}) => {
                     </button>
                 </div>
                 <div className="playback-bar">
-                    <TimerContainer currentTrack={currentTrack || {}} onChangePosition={onChangePosition} />
+                    <span className="timer-label"><TimerContainer currentTrack={currentTrack || {}} onChangePosition={onChangePosition} /></span>
                     <div className="playback-progress-bar">
                         <div className="progress-bar-inner" style={{width: barTracking+'%'}}></div>
                     </div>
+                    <span className="timer-label">
                     {
                         (currentTrack || {}).duration_ms && <Timer fixed={(currentTrack || {}).duration_ms} />
                     }
+                    </span>
                 </div>
             </div>
         </StyledPlayingBar>
