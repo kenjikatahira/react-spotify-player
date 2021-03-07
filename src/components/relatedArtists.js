@@ -11,8 +11,9 @@ const StyledRelatedArtists = Styled.div`
             flex-direction: row;
             align-items : center;
             list-style:none;
-            height: 50px;
+            height: 44px;
             cursor: pointer;
+            font-size: 12px;
             .image {
                 height:30px;
                 width: 30px;

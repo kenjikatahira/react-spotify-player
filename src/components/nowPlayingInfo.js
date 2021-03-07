@@ -10,14 +10,14 @@ const StyledNowPlayingInfo = Styled.div`
       "sidebar main main";
 
     text-align: center;
-    font-size: 13px;
+    font-size: 11px;
     height:8vh;
 
     .image {
         grid-area: sidebar;
         align-self: center;
         img {
-            height:8vh;
+            height:7vh;
             padding: 6px;
         }
     }
@@ -26,26 +26,39 @@ const StyledNowPlayingInfo = Styled.div`
         grid-area: main;
         align-self: center;
         justify-self: start;
-        white-space: nowrap;
+        text-align: left;
         .playing-artist {
-            text-align: left;
             color: #999;
+        }
+        .track {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width:100%;
+        }
+        .playing-artist,.track {
+            cursor: pointer;
+            margin-bottom: 2px;
+            &:last-child {
+                margin-bottom: 0;
+            }
         }
     }
 `
 
-const NowPlayingInfo = ({currentTrack}) => {
+const NowPlayingInfo = ({currentTrack,setUri}) => {
     const image = ((((currentTrack || {}).album || {}).images || [])[0] || {}).url;
-    const track = (currentTrack || {}).name;
-    const artist = (((currentTrack || {}).artists || [])[0] || {}).name;
+    const { name: trackName } = (currentTrack || {});
+    const { uri: albumUri } = ((currentTrack || {}).album || {});
+    const { name: artistName, uri: artistUri } = (((currentTrack || {}).artists || [])[0] || {});
     return (
         <StyledNowPlayingInfo className="now-playing-info">
             <div className="image">
                 <img src={image} alt={image} />
             </div>
             <div className="info">
-                <div className="track"><b>{track}</b></div>
-                <div className="playing-artist">{artist}</div>
+                <div className="track" onClick={() => setUri(albumUri)}><b>{trackName}</b></div>
+                <div className="playing-artist" onClick={() => setUri(artistUri)}>{artistName}</div>
             </div>
         </StyledNowPlayingInfo>
     )

@@ -9,7 +9,7 @@ import Loading from "../components/loading";
 import Grid from "../components/grid";
 
 const Album = () => {
-    const {uri,player,setUri,setTopBar} = useContext(SpotifyContext);
+    const {uri,player,setUri,setTopBar, currentTrack} = useContext(SpotifyContext);
     const [data,setData] = useState(null);
 
     useEffect(() => {
@@ -39,6 +39,7 @@ const Album = () => {
                     setUri={setUri}
                     player={player}
                     copyright={`© ${releaseDate} ${label}`}
+                    currentTrack={currentTrack}
                 />
                 <Grid grid={grid} setUri={setUri} player={player} />
             </div>

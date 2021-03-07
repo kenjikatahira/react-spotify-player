@@ -29,7 +29,7 @@ const StyledMain = Styled.div`
     font-family: "Montserrat";
     color: #F5F5F5;
     overflow: none;
-    border-radius: 10px;
+    border-radius: 15px;
 
     a {
         color: #F5F5F5;
@@ -61,18 +61,18 @@ const StyledMain = Styled.div`
         position: relative;
         overflow-x: hidden;
         overflow-y: auto;
-        height: 86vh;
+        height: 82vh;
         background-repeat: no-repeat;
         background-attachment: local;
 
         &::-webkit-scrollbar {
             width: 1em;
-            background: hsla(0,0%,100%,.3);
+            background-color: hsla(0,0%,100%,.3);
         }
         &::-webkit-scrollbar-thumb {
             min-height: 30px;
             max-height: none;
-            background: hsla(0,0%,100%,.3);
+            background-color: hsla(0,0%,100%,.3);
         }
     }
 
@@ -219,7 +219,7 @@ const Main = () => {
                 </SpotifyContext.Provider>
             </div>
             <div className="now-playing-wrapper">
-                <NowPlayingBar currentTrack={currentTrack} player={player} />
+                <NowPlayingBar currentTrack={currentTrack} setUri={setUri} player={player} />
             </div>
         </StyledMain>
     );

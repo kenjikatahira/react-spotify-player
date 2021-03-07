@@ -9,19 +9,20 @@ const StyledLogin = styled.div`
         font-family: 'Cooper Black';
         src: url(${process.env.PUBLIC_URL}/assets/cooper_black.ttf);
     }
-
+    position:relative;
     display:flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     overflow: hidden;
     font-family: "Cooper Black";
     background: rgba(28,28,28);
-    border-radius:30px;
+    border-radius:20px;
     color: #fff;
     overflow: none;
     margin:0 auto;
-    width:80vw;
-    height: 94vh;
+    width:100%;
+    height: 90vh;
     text-align: center;
 
     .title {
@@ -37,6 +38,18 @@ const StyledLogin = styled.div`
         font-size: 17px;
         color: #ffffff;
     }
+
+    footer {
+        position: absolute;
+        bottom: 10px;
+        right: 15px;
+        font-family: 'helvetica';
+        font-size: 11px;
+        opacity: 0.7;
+        a {
+            color :#fff;
+        }
+    }
 `
 
 class Login extends React.Component {
@@ -48,7 +61,7 @@ class Login extends React.Component {
     }
     render() {
         return (
-            <StyledLogin style={{backgroundImage : `url('${process.env.PUBLIC_URL}/assets/background.jpg')`, backgroundSize : 'cover'}}>
+            <StyledLogin style={{backgroundImage : `url('${process.env.PUBLIC_URL}/assets/unsplash.jpg')`, backgroundSize : 'cover'}}>
                 <div className="login container">
                     <SpotifyLogin
                         className="btn"
@@ -59,6 +72,10 @@ class Login extends React.Component {
                         scope={scope}
                     />
                 </div>
+                <footer>
+                    <span>Photo by <a href="https://unsplash.com/@florenciaviadana?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Florencia Viadana</a> on <a href="https://unsplash.com/s/photos/vynil?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a>
+                    </span>
+                </footer>
             </StyledLogin>
         )
     }

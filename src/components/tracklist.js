@@ -4,7 +4,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import PropTypes from 'prop-types';
 
 const StyledTracklist = Styled.div`
-    padding: 0 32px 24px;
+    width: 90%;
+    margin: 0 auto;
+    margin-bottom: 20px;
     .filter {
         padding: 3px;
         input {
@@ -46,11 +48,17 @@ const StyledTracklist = Styled.div`
         tr {
             &:not(.header):hover td {
                 background: rgba(255, 255, 255, 0.1);
+
+                .top-number {
+                    visibility: hidden;
+                }
             }
         }
 
         td {
             font-size: 13px;
+            vertical-align: middle;
+
             &:nth-child(1) {
                 width: 20px;
             }
@@ -68,11 +76,39 @@ const StyledTracklist = Styled.div`
             white-space: nowrap;
             max-width: 220px;
             overflow: hidden;
+            text-overflow: ellipsis;
 
             &:hover {
                 .action {
                     visibility: visible;
                 }
+            }
+
+            &.has-image {
+                height:40px;
+                padding: 1px 0;
+
+                .list-image {
+                    width: 40px;
+                    margin-right: 15px;
+                }
+
+                .top-number {
+                    visibility: visible;
+                }
+
+                span {
+                    vertical-align: middle;
+                    svg {
+                        position: relative;
+                        top: 2px;
+                        right: 10px;
+                    }
+                }
+            }
+
+            .top-number {
+                visibility: hidden;
             }
 
             .action {
@@ -119,12 +155,24 @@ const Tracklist = ({table,player,limit : hasLimit,setUri, copyright,currentTrack
         setUri(item.album.uri);
     }
 
-    const renderIcon = (uri='') => {
+    const renderIcon = (uri='',hasImage) => {
         if(uri === (currentTrack || {}).uri) {
-            return <FontAwesomeIcon className="action selected" icon="pause" />
+            return <FontAwesomeIcon className={hasImage ? 'action' : 'action selected'} icon="pause" />
         } else{
             return <FontAwesomeIcon className="action" icon="play" />
         }
+    }
+
+    const getArtistTd = ({albumImage,name},index) => {
+        if(!albumImage) return;
+        return (
+            <>
+                <span>
+                    <img className="list-image" src={albumImage} alt={name} />
+                </span>
+                <span className="top-number">{index+1}</span>
+            </>
+        )
     }
 
     const renderList = (item,index) => {
@@ -138,8 +186,11 @@ const Tracklist = ({table,player,limit : hasLimit,setUri, copyright,currentTrack
                     });
                 }}
             >
-                <td>
-                    <span>{renderIcon(item.uri)}</span>
+                <td className={item.albumImage ? 'has-image' : ''}>
+                    <span>{getArtistTd(item,index)}</span>
+                    <span>
+                        {renderIcon(item.uri,!!item.albumImage)}
+                    </span>
                 </td>
                 {
                     item.name &&

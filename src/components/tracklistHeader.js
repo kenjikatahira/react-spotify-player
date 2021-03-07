@@ -9,7 +9,7 @@ const StyledHeader = Styled.div`
         align-items: center;
         .artwork-wrapper {
             overflow: auto;
-            width: 300px;
+            width: 260px;
             .artwork {
                 width: 100%;
                 padding-bottom: 100%;
@@ -28,9 +28,9 @@ const StyledHeader = Styled.div`
                 font-size: 15px;
             }
             .info-name {
-                font-size: 64px;
-                line-height: 64px;
-                padding: 0.08em 0px;
+                font-size: 48px;
+                line-height: 60px;
+                padding: 0.1em 0px;
                 font-weight: 600;
                 margin-bottom: 0;
             }
@@ -45,6 +45,7 @@ const StyledHeader = Styled.div`
                 margin-right: 4px;
             }
             .info-owner {
+                font-size: 14px;
                 strong { color:#fff; }
                 &:after {
                     content: "•";

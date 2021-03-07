@@ -32,7 +32,7 @@ const StyledArtist = Styled.div`
 `
 
 const Artist = () => {
-    const { uri, setUri, player, setTopBar } = useContext(SpotifyContext)
+    const { uri, setUri, player, setTopBar, currentTrack } = useContext(SpotifyContext)
     const [data,setData] = useState(null);
 
     useEffect(() => {
@@ -62,6 +62,7 @@ const Artist = () => {
                         limit="5"
                         player={player}
                         setUri={setUri}
+                        currentTrack={currentTrack}
                     />
                     <RelatedArtists relatedArtists={relatedArtists} setUri={setUri} />
                 </div>

@@ -47,7 +47,6 @@ const StyledMenu = Styled.ul`
             svg {
                 margin-right: 10px;
                 font-weight: 500;
-                font-size: 16px;
             }
         }
     }
@@ -66,7 +65,7 @@ const StyledMenu = Styled.ul`
         position:relative;
         padding: 0;
         cursor: pointer;
-        font-size: 12px;
+        font-size: 11px;
         font-weight: 800;
         margin-bottom: 8px;
 
@@ -91,7 +90,6 @@ const StyledMenu = Styled.ul`
                 content: attr(data-owner);
                 position: relative;
                 height:10px;
-                font-size: 12px;
                 left: 0px;
                 color: #ccc;
                 white-space: nowrap;

@@ -466,6 +466,8 @@ const fetchArtist = async (uri) => {
             artist.tracks = topTracks.tracks;
         }
 
+        console.log(topTracks)
+
         const artistAlbumsFactory = (albums) => {
             const ids = [];
             const artistAlbums = {}
@@ -510,7 +512,8 @@ const fetchArtist = async (uri) => {
                     id : i.id,
                     name : i.name,
                     duration_ms : formatTrackDuration(i.duration_ms),
-                    uri : i.uri
+                    uri : i.uri,
+                    albumImage : i.album.images[2].url
                 }
             }
             return {

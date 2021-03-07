@@ -50,7 +50,7 @@ const StyledtopBar = Styled.div`
         .additional-bar {
             opacity: 1;
             background: rgba(0,0,0,1);
-            height: 70px;
+            height: auto;
 
             h2 {
                 animation: fade-in .4s cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.4s both;

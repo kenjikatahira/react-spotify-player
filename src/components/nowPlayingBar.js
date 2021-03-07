@@ -81,7 +81,7 @@ const StyledPlayingBar = Styled.div`
     }
 `
 
-const NowPlaying = ({player,currentTrack}) => {
+const NowPlaying = ({player, currentTrack, setUri}) => {
 
     const [barTracking,setBarTracking] = useState(0);
 
@@ -115,7 +115,7 @@ const NowPlaying = ({player,currentTrack}) => {
     return(
         <StyledPlayingBar className="now-playing">
             <div className="playing-wrapper">
-                <NowPlayingInfo currentTrack={currentTrack} />
+                <NowPlayingInfo currentTrack={currentTrack} setUri={setUri} />
             </div>
             <div className="inner-now-playing">
                 <div className="controls-buttons">
