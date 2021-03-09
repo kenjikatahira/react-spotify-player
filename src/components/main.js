@@ -27,6 +27,7 @@ const StyledMain = Styled.div`
     font-family: "Montserrat";
     color: #F5F5F5;
     overflow: none;
+    border-radius: 12px;
 
     a {
         color: #F5F5F5;

@@ -12,6 +12,7 @@ const StyledHeader = Styled.div`
     .artwork-wrapper {
         overflow: auto;
         width: 260px;
+        height: 260px;
         .artwork {
             width: 100%;
             padding-bottom: 100%;
@@ -87,7 +88,7 @@ const StyledHeader = Styled.div`
 
 const TracklistHeader = ({player,header,isPlaying, setSticky}) => {
     const [ ref, inView, entry ] = useInView({
-        threshold: 0.8
+        threshold: 1
     });
 
     const getDescription = (description) => {
@@ -139,14 +140,16 @@ const TracklistHeader = ({player,header,isPlaying, setSticky}) => {
     }
 
     useEffect(()=>{
-        setSticky(!inView);
+        if(entry) {
+            setSticky(!inView);
+        }
     },[inView])
 
     return (
         <StyledHeader className="tracklist-header">
             {(image && image.url &&
-                <div className="artwork-wrapper">
-                    <div className="artwork" ref={ref} style={
+                <div className="artwork-wrapper" ref={ref}>
+                    <div className="artwork" style={
                         { backgroundImage: `url(${image.url})`, backgroundSize :'cover', backgroundPosition:'center center' }
                     }></div>
                 </div>

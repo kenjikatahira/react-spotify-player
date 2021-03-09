@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Styled from 'styled-components';
 import { getUser } from '../api';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const StyledUserWidget = Styled.div`
     display: flex;
@@ -10,9 +11,17 @@ const StyledUserWidget = Styled.div`
 
     .avatar {
         margin-right: 10px;
-        img {
+        img,.placeholder {
             border-radius: 50%;
             width: 28px;
+            height: 28px;
+            background: #212121;
+            border: 1px solid #fefefe;
+
+            svg {
+                width: 20px;
+                height: 20px;
+            }
         }
     }
 
@@ -25,11 +34,13 @@ const StyledUserWidget = Styled.div`
 const UserWidget = () => {
     const [data,setData] = useState(null);
     const getImage = () => {
-        if(data.images.length) {
-            return <img src={data.images[0].url} alt="userimage" />
-        } else {
-            return ''
+        if((data || {}).images.length === 0) {
+            return (
+                <FontAwesomeIcon icon="user" />
+            )
         }
+
+        return <img src={data.images[0].url} alt="userimage" />
     }
 
     const setAlert = () => {

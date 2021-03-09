@@ -87,12 +87,12 @@ const StyledMenu = Styled.ul`
         }
 
         &:hover:after {
-                content: attr(data-owner);
-                position: relative;
-                height:10px;
-                left: 0px;
-                color: #ccc;
-                white-space: nowrap;
+            content: attr(data-owner);
+            position: relative;
+            height:10px;
+            left: 0px;
+            color: #ccc;
+            white-space: nowrap;
         }
     }
 `

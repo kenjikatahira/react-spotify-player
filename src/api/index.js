@@ -61,7 +61,7 @@ export const getViewRoute = async ({uri}) => {
 export const fetchSearchTerm = async ({searchTerm}) => {
     try {
         const promises = [
-            get_search({query: searchTerm,type:'artist',size: 3}),
+            get_search({query: searchTerm,type:'artist',size: 4}),
             get_search({query: searchTerm,type:'album'}),
             get_search({query: searchTerm,type:'track',size: 4})
         ];
@@ -69,8 +69,16 @@ export const fetchSearchTerm = async ({searchTerm}) => {
         const [
             {data:artist},
             {data:album},
-            {data:track}
+            {data:tracks}
         ] = await Promise.all(Object.values(promises));
+
+        const getTracksImage = (track) => {
+            track.items.forEach(item => {
+                item.images = item.album.images;
+            })
+        }
+
+        Object.values(tracks).forEach(getTracksImage)
 
         const searchFactory = (response) => {
             let n;
@@ -87,7 +95,7 @@ export const fetchSearchTerm = async ({searchTerm}) => {
         return {
             type : 'search',
             grid : {
-                track : searchFactory(track),
+                tracks : searchFactory(tracks),
                 artist : searchFactory(artist),
                 album : searchFactory(album),
             }
