@@ -1,6 +1,6 @@
 const Musixmatch = require("musixmatch");
 const init = {
-    apikey: '',
+    apikey: 'd16756853f45d514d790b880d2131da9',
     baseURL: 'https://api.musixmatch.com/ws/1.1/',
     corsURL: 'http://localhost:3000/',
     format: 'json',

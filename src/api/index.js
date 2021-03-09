@@ -466,8 +466,6 @@ const fetchArtist = async (uri) => {
             artist.tracks = topTracks.tracks;
         }
 
-        console.log(topTracks)
-
         const artistAlbumsFactory = (albums) => {
             const ids = [];
             const artistAlbums = {}
@@ -563,7 +561,6 @@ export const fetchPlaylists = async () => {
  */
 export const fetchRecentlyTracks = async () => {
     try {
-
         const { data } = await get_recently_tracks();
 
         const factoryRecentlyTracks = (response) => {

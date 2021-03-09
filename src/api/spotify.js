@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { getSession } from '../utils';
+import { getSession, get_device_id } from '../utils';
 
 /**
  * Scope to provide the right acess to information
@@ -95,6 +95,20 @@ export const get_current_track = () => {
 }
 
 /**
+ * Request for the current track data
+ * @function get_current_track
+ * @return {Promise}
+ */
+export const set_shuffle = (state) => {
+    return axios.put(`https://api.spotify.com/v1/me/player/shuffle?state=${state}&device_id=${get_device_id()}`, {
+        headers : {
+            'content-type' : 'application/json',
+            'Authorization' : `Bearer ${getSession().access_token}`
+        }
+    });
+}
+
+/**
  * Request for the top artists list
  * @function top_artists
  * @return {Promise}
@@ -142,7 +156,7 @@ export const get_devices = () => {
  * @return {Promise}
  */
 export const get_playlists = () => {
-    return axios.get('https://api.spotify.com/v1/me/playlists?limit=20&offset=0', {
+    return axios.get('https://api.spotify.com/v1/me/playlists?limit=50&offset=0', {
         headers : {
             'content-type' : 'application/json',
             'Authorization' : `Bearer ${getSession().access_token}`
