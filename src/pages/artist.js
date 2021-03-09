@@ -9,6 +9,7 @@ import Tracklist from "./../components/tracklist";
 import Grid from "./../components/grid";
 import Loading from "../components/loading";
 
+
 const StyledArtist = Styled.div`
     padding: 20px 0;
     .container {
@@ -32,7 +33,7 @@ const StyledArtist = Styled.div`
 `
 
 const Artist = () => {
-    const { uri, setUri, player, setTopBar, currentTrack } = useContext(SpotifyContext)
+    const { uri, setUri, player, setTopBar, currentTrack, setSticky } = useContext(SpotifyContext)
     const [data,setData] = useState(null);
 
     useEffect(() => {
@@ -53,9 +54,11 @@ const Artist = () => {
         const { table, header, relatedArtists, grid } = data;
         return (
             <StyledArtist className="artist">
-                <TracklistHeader header={header}
+                <TracklistHeader
+                    header={header}
                     player={player}
                     isPlaying={((currentTrack || {}).disallows || {}).resuming}
+                    setSticky={setSticky}
                 />
                 <div className="artist-top-related">
                     <Tracklist

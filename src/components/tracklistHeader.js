@@ -1,90 +1,95 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Styled from 'styled-components';
 import PropTypes from 'prop-types';
+import { useInView } from 'react-intersection-observer';
 
 const StyledHeader = Styled.div`
-        display: flex;
-        width: 90%;
-        margin: 0 auto;
-        margin-bottom: 15px;
-        align-items: center;
-        .artwork-wrapper {
-            overflow: auto;
-            width: 260px;
-            .artwork {
-                width: 100%;
-                padding-bottom: 100%;
-            }
+    display: flex;
+    width: 90%;
+    margin: 0 auto;
+    margin-bottom: 15px;
+    align-items: center;
+    .artwork-wrapper {
+        overflow: auto;
+        width: 260px;
+        .artwork {
+            width: 100%;
+            padding-bottom: 100%;
         }
+    }
 
-        .info {
-            align-self: flex-end;
-            padding: 0 25px;
-            p { margin: 0; }
-            .info-type {
-                position: relative;
-                top: 5px;
-                text-transform: uppercase;
-                font-weight: 500;
-                font-size: 15px;
-            }
-            .info-name {
-                font-size: 48px;
-                line-height: 60px;
-                padding: 0.1em 0px;
-                font-weight: 600;
-                margin-bottom: 0;
-            }
-            .info-description {
-                max-width: 500px;
-            }
-            .info-details {
-                padding: 1px 0px 13px;
-                color:#aaa;
-                font-size: 12px;
-            }
-            .info-tracks {
-                margin-right: 4px;
-            }
-            .info-owner {
-                font-size: 14px;
-                strong { color:#fff; }
-                &:after {
-                    content: "•";
-                    margin: 0px 4px;
-                }
-            }
-            .info-release-date {
-                &:after {
-                    content: "•";
-                    margin: 0px 4px;
-                }
-            }
-            .info-artist {
-                display: block;
-                strong { color:#fff; }
-                &:after {
-                    padding: 0 6px;
-                }
+    .info {
+        align-self: flex-end;
+        padding: 0 25px;
+        p { margin: 0; }
+        .info-type {
+            position: relative;
+            top: 5px;
+            text-transform: uppercase;
+            font-weight: 500;
+            font-size: 15px;
+        }
+        .info-name {
+            font-size: 48px;
+            line-height: 60px;
+            padding: 0.1em 0px;
+            font-weight: 600;
+            margin-bottom: 0;
+        }
+        .info-description {
+            max-width: 500px;
+        }
+        .info-details {
+            padding: 1px 0px 13px;
+            color:#aaa;
+            font-size: 12px;
+        }
+        .info-tracks {
+            margin-right: 4px;
+        }
+        .info-owner {
+            font-size: 14px;
+            strong { color:#fff; }
+            &:after {
+                content: "•";
+                margin: 0px 4px;
             }
         }
+        .info-release-date {
+            &:after {
+                content: "•";
+                margin: 0px 4px;
+            }
+        }
+        .info-artist {
+            display: block;
+            strong { color:#fff; }
+            &:after {
+                padding: 0 6px;
+            }
+        }
+    }
 
-        .info-interactive {
-            .play,.pause {
-                cursor: pointer;
-                background: #1DB954;
-                border-radius: 15px;
-                font-size: 11px;
-                letter-spacing: 2px;
-                font-weight: bold;
-                width: 106px;
-                padding: 4px;
-                text-align: center;
-            }
+    .info-interactive {
+        .play,.pause {
+            cursor: pointer;
+            background: #1DB954;
+            border-radius: 15px;
+            font-size: 11px;
+            letter-spacing: 2px;
+            font-weight: bold;
+            width: 106px;
+            padding: 4px;
+            text-align: center;
         }
+    }
 `
 
-const TracklistHeader = ({player,header,isPlaying}) => {
+const TracklistHeader = ({player,header,isPlaying, setSticky}) => {
+    const [ ref, inView, entry ] = useInView({
+        threshold: 0.8
+    });
+
     const getDescription = (description) => {
         return (
             <>
@@ -133,11 +138,15 @@ const TracklistHeader = ({player,header,isPlaying}) => {
         }
     }
 
+    useEffect(()=>{
+        setSticky(!inView);
+    },[inView])
+
     return (
         <StyledHeader className="tracklist-header">
             {(image && image.url &&
                 <div className="artwork-wrapper">
-                    <div className="artwork" style={
+                    <div className="artwork" ref={ref} style={
                         { backgroundImage: `url(${image.url})`, backgroundSize :'cover', backgroundPosition:'center center' }
                     }></div>
                 </div>

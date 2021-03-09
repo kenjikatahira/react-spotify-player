@@ -9,7 +9,7 @@ import Loading from "../components/loading";
 import Grid from "../components/grid";
 
 const Album = () => {
-    const {uri,player,setUri,setTopBar, currentTrack} = useContext(SpotifyContext);
+    const {uri,player,setUri,setTopBar, currentTrack,setSticky} = useContext(SpotifyContext);
     const [data,setData] = useState(null);
 
     useEffect(() => {
@@ -34,6 +34,7 @@ const Album = () => {
                     player={player}
                     header={header}
                     isPlaying={((currentTrack || {}).disallows || {}).resuming}
+                    setSticky={setSticky}
                 />
                 <Tracklist
                     table={table}

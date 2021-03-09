@@ -12,7 +12,7 @@ const StyledPlaylist = Styled.div`
 `
 
 const Playlist = () => {
-    const {uri,setUri,player,setTopBar,currentTrack} = useContext(SpotifyContext);
+    const {uri,setUri,player,setTopBar,currentTrack,setSticky} = useContext(SpotifyContext);
     const [data,setData] = useState(null);
 
     useEffect(() => {
@@ -37,6 +37,7 @@ const Playlist = () => {
                     player={player}
                     header={header}
                     isPlaying={((currentTrack || {}).disallows || {}).resuming}
+                    setSticky={setSticky}
                 />
                 <Tracklist
                     table={table}

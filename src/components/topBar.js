@@ -41,15 +41,16 @@ const StyledtopBar = Styled.div`
         height: 0;
         border-bottom: 1px solid #333;
         transition: .3s;
-        padding: 10px 32px;
+        padding: 10px 21px;
         font-weight: bold;
     }
 
     &.sticky {
+        background:#111;
         animation: mushroom-bottom .4s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
         .additional-bar {
             opacity: 1;
-            background: rgba(0,0,0,1);
+            background: #111;
             height: auto;
 
             h2 {
@@ -60,9 +61,7 @@ const StyledtopBar = Styled.div`
 
 `
 
-const TopBar = ({scroll,title,setUri,onSearch}) => {
-    const threshold = 250;
-
+const TopBar = ({sticky,title,setUri,onSearch}) => {
     const search = (e) => {
         e.persist();
         if (e.key === 'Enter') {
@@ -85,25 +84,16 @@ const TopBar = ({scroll,title,setUri,onSearch}) => {
         )
     }
 
-    if(scroll >= 300) {
-        return (
-            <>
-            <StyledtopBar className="top-bar sticky" style={{ backgroundColor : 'rgba(0,0,0,' + 100*scroll/threshold + '%)'}}>
-                {renderContent()}
-            </StyledtopBar>
-            </>
-        )
-    } else {
-        return (
-            <StyledtopBar className="top-bar" style={{ backgroundColor : 'rgba(0,0,0,' + 100*scroll/threshold + '%)'}}>
-                {renderContent()}
-            </StyledtopBar>
-        )
-    }
+    return (
+        <>
+        <StyledtopBar className={sticky ? 'top-bar sticky' : 'top-bar'}>
+            {renderContent()}
+        </StyledtopBar>
+        </>
+    )
 }
 
 TopBar.propTypes = {
-    scroll : PropTypes.number,
     title : PropTypes.string
 }
 
