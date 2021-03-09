@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from 'prop-types';
 import Styled from 'styled-components';
+import { InView } from 'react-intersection-observer';
 
 const StyledGrid = Styled.div`
     width:90%;
@@ -64,10 +65,22 @@ const StyledGrid = Styled.div`
 `
 
 const Grid = ({grid, player, setUri}) => {
+    const onViewPort = (inView, entry) => {
+        if(inView) {
+            const el = entry.target;
+            let { src, loaded } = el.dataset;
+            if(!loaded) {
+                el.style.backgroundImage = `url(${src})`
+                entry.target.dataset.loaded = true;
+            }
+        }
+    }
+
     const renderAlbums = ({images,uri,id,name,artists}) => {
         return (
             <div className="album col-xs-12 col-sm-6 col-md-4 col-lg-3" key={id}>
-                <div className="image"
+                <InView className="image"
+                    as="div" data-src={(images || {}).length && images[0].url} onChange={onViewPort}
                     onClick={() => {
                         if(uri.indexOf('spotify:track') !== -1) {
                             player.play({uri})
@@ -76,20 +89,10 @@ const Grid = ({grid, player, setUri}) => {
                         }
                      }}
                     style={
-                        { backgroundImage: `url(${(images || {}).length && images[0].url})`, backgroundSize :'cover', backgroundPosition:'center center' }
+                        { backgroundColor:'#212121', backgroundSize :'cover', backgroundPosition:'center center' }
                     }
                 >
-                </div>
-                {/* <div className="overlay">
-                    <button
-                        className="btn btn-outline-secondary control-button play"
-                        onClick={() => {
-                            console.log(uri)
-                        }}
-                    >
-                        <FontAwesomeIcon icon="play" />
-                    </button>
-                </div> */}
+                </InView>
                 <div className="card-body">
                     <p className="card-text">{ artists && artists[0].name}</p>
                     <p className="card-title">{name}</p>
