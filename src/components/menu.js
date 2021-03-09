@@ -42,7 +42,7 @@ const StyledMenu = Styled.ul`
         li {
             padding: 0;
             margin-bottom: 15px;
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 700;
             svg {
                 margin-right: 10px;

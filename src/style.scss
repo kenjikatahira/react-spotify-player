@@ -39,11 +39,23 @@ body {
 
     .app {
         max-width: 1600px;
-        width: 88vw;
+        width: 90vw;
+        height: 82vh;
         margin: 5vh auto;
         -webkit-box-shadow: 0 0 20px 0px rgba(0, 0, 0, 0.8);
         box-shadow: 0 0 20px 0px rgba(0, 0, 0, 0.8);
-        border-radius: 20px;
+
+        .main {
+            .menu-wrapper {
+                border-radius:0;
+            }
+        }
+
+        &.login {
+            width:100vw;
+            margin: 0 auto;
+            height: 100vh;
+        }
     }
 }
 

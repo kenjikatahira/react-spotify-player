@@ -3,6 +3,8 @@ import Styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
+import { set_shuffle } from './../api/spotify';
+
 import NowPlayingInfo from './nowPlayingInfo';
 import TimerContainer from './timer/timerContainer';
 import Timer from './timer';
@@ -14,52 +16,62 @@ const StyledPlayingBar = Styled.div`
     grid-template-columns: 20%;
     grid-template-rows: auto;
     grid-template-areas:
-        "sidebar sidebar main main . ."
+        "sidebar sidebar main main . rightbar"
         "footer footer footer footer footer footer";
 
     .playing-wrapper {
         grid-area: sidebar;
     }
+
+    .controls-buttons {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-self: center;
+        width: 150px;
+        margin-bottom: 8px;
+
+        &.right {
+            grid-area: rightbar;
+            width: 100%;
+            display:flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding-right:20px;
+            margin-bottom: 0;
+        }
+
+        .control-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #b3b3b3;
+            position: relative;
+            width: 32px;
+            min-width: 32px;
+            height: 32px;
+
+            &.play,&.pause {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border: none;
+                border-radius: 32px;
+                svg {
+                    position: relative;
+                }
+                &:hover {
+                    background: none;
+                }
+            }
+        }
+    }
+
     .inner-now-playing {
         grid-area: main;
         display: flex;
         flex-direction: column;
         justify-content: center;
-
-        .controls-buttons {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-around;
-            align-self: center;
-            width: 150px;
-            margin-bottom: 8px;
-
-            .control-button {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                color: #b3b3b3;
-                position: relative;
-                width: 32px;
-                min-width: 32px;
-                height: 32px;
-
-                &.play,&.pause {
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    border: none;
-                    border-radius: 32px;
-                    svg {
-                        position: relative;
-                    }
-                    &:hover {
-                        background: none;
-                    }
-                }
-
-            }
-        }
 
         .playback-bar {
             display: flex;
@@ -127,6 +139,12 @@ const NowPlaying = ({player, currentTrack, setUri}) => {
 
     const onChangePosition = (position) => setBarTracking(Math.floor(100*position/(currentTrack || {}).duration_ms))
 
+    const shuffle = () => {
+        set_shuffle(true).then(data => {
+            console.log('shuffle',data)
+        });
+    }
+
     if(Object.keys((player || {})).length === 0 && (currentTrack || {})) return (<div className="now-playing"></div>)
     return(
         <StyledPlayingBar className="now-playing">
@@ -154,6 +172,17 @@ const NowPlaying = ({player, currentTrack, setUri}) => {
                     }
                     </span>
                 </div>
+            </div>
+            <div className="controls-buttons right">
+                {/* <button className="btn control-button" onClick={player.prev}>
+                    <FontAwesomeIcon icon="microphone" />
+                </button> */}
+                <button className="btn control-button" onClick={() => shuffle()}>
+                    <FontAwesomeIcon icon="random" />
+                </button>
+                {/* <button className="btn control-button" onClick={player.next}>
+                    <FontAwesomeIcon icon="redo-alt" />
+                </button> */}
             </div>
         </StyledPlayingBar>
     )

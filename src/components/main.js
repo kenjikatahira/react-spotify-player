@@ -1,6 +1,5 @@
-import React, {useState,useEffect} from "react";
+import React, {useState, useEffect} from "react";
 import Styled from 'styled-components';
-
 import { label, set_device_id } from './../utils';
 import Player from './../api/player';
 import { get_current_track,get_devices } from './../api/spotify';
@@ -16,10 +15,9 @@ import Grid from "../pages/gridTemplate";
 
 export const SpotifyContext = React.createContext();
 
-
 const StyledMain = Styled.div`
     display: grid;
-    grid-template-columns: 14vw;
+    grid-template-columns: 15vw;
     grid-template-rows: auto;
     grid-template-areas:
       "sidebar main main main main main"
@@ -29,7 +27,6 @@ const StyledMain = Styled.div`
     font-family: "Montserrat";
     color: #F5F5F5;
     overflow: none;
-    border-radius: 15px;
 
     a {
         color: #F5F5F5;
@@ -56,7 +53,6 @@ const StyledMain = Styled.div`
         }
     }
 
-
     .menu-wrapper, .browser-wrapper {
         position: relative;
         overflow-x: hidden;
@@ -78,16 +74,16 @@ const StyledMain = Styled.div`
 
     .menu-wrapper {
         grid-area: sidebar;
-        background: #111;
         justify-content: stretch;
         &::-webkit-scrollbar {
-            background: #000;
+            background: #212121;
         }
     }
 
     .browser-wrapper {
         grid-area: main;
-        linear-gradient(0deg, #0c0c0c 0%, #0c0c0c 80%, #0c0c0c 100%)
+        background: #202020;
+        /* background: linear-gradient(0deg, #0c0c0c 0%, #0c0c0c 40%, #212121 100%); */
         .browser-inner-wrapper {
             max-width: 100%;
             margin-bottom: 1em;
@@ -110,8 +106,8 @@ const Main = () => {
     const [player,setPlayer] = useState(null);
     const [uri,setUri] = useState(localStorage.getItem('lastUri') || 'home');
     const [currentTrack,setCurrentTrack] = useState(null);
-    const [scroll,setScroll] = useState(0);
     const [title,setTopBar] = useState(null);
+    const [sticky,setSticky] = useState(false);
     const [searchTerm,setSearchTerm] = useState(null);
 
     const getPlayingNow = () => {
@@ -138,7 +134,7 @@ const Main = () => {
         getPlayingNow();
     }, [])
 
-    const onChangeUri = () => {
+    const onChangeUri = (prevProps) => {
         setUri(uri);
 
         localStorage.setItem('lastUri',uri);
@@ -153,6 +149,7 @@ const Main = () => {
                 label(uri)
             );
         }
+
         return () => {
             setUri(null);
         }
@@ -202,8 +199,6 @@ const Main = () => {
         }
     }
 
-    const onScroll = (e) => setScroll(e.target.scrollTop);
-
     const onSearch = term => setSearchTerm(term);
 
     return (
@@ -216,11 +211,10 @@ const Main = () => {
             </div>
             <div
                 className="browser-wrapper"
-                onScroll={onScroll}
             >
-                <TopBar scroll={scroll} title={title} setUri={setUri} onSearch={onSearch} />
+                <TopBar title={title} setUri={setUri} onSearch={onSearch} sticky={sticky} />
                 <SpotifyContext.Provider
-                    value={{uri,setUri,setTopBar,player,currentTrack,searchTerm}}
+                    value={{uri,setUri,setTopBar,player,currentTrack,searchTerm,setSticky}}
                 >
                     {renderView()}
                 </SpotifyContext.Provider>

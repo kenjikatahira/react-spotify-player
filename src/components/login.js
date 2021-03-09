@@ -17,13 +17,13 @@ const StyledLogin = styled.div`
     overflow: hidden;
     font-family: "Cooper Black";
     background: rgba(28,28,28);
-    border-radius:20px;
     color: #fff;
     overflow: none;
     margin:0 auto;
     width:100%;
-    height: 90vh;
+    height: 100vh;
     text-align: center;
+    background-position: center center;
 
     .title {
         padding: 20px;
@@ -61,8 +61,8 @@ class Login extends React.Component {
     }
     render() {
         return (
-            <StyledLogin style={{backgroundImage : `url('${process.env.PUBLIC_URL}/assets/unsplash.jpg')`, backgroundSize : 'cover'}}>
-                <div className="login container">
+            <StyledLogin className="login" style={{backgroundImage : `url('${process.env.PUBLIC_URL}/assets/unsplash.jpg')`, backgroundSize : 'cover'}}>
+                <div className="login-button container">
                     <SpotifyLogin
                         className="btn"
                         clientId={clientId}
@@ -73,8 +73,7 @@ class Login extends React.Component {
                     />
                 </div>
                 <footer>
-                    <span>Photo by <a href="https://unsplash.com/@florenciaviadana?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Florencia Viadana</a> on <a href="https://unsplash.com/s/photos/vynil?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a>
-                    </span>
+                    <span>Photo by <a href="https://unsplash.com/@simonweisser?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText" target="_blank">Simon Weisser</a> on <a href="https://unsplash.com/s/photos/music?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText" target="_blank">Unsplash</a></span>
                 </footer>
             </StyledLogin>
         )

@@ -21,19 +21,23 @@ const App = () => {
         setIsLogged(response.access_token ? true : false)
     }
 
-    if(isLogged) {
-        return (
-            <div className="app">
+    const renderView = () => {
+        if(isLogged) {
+            return (
                 <Main />
-            </div>
-        )
-    } else {
-        return (
-            <div className="app">
+            )
+        } else {
+            return (
                 <Login onLogin={onLogin}/>
-            </div>
-        )
+            )
+        }
     }
+
+    return (
+        <div className={isLogged ? 'app' : 'app login'}>
+            {renderView()}
+        </div>
+    )
 }
 
 export default App;
