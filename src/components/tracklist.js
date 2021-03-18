@@ -191,7 +191,7 @@ const Tracklist = ({table,player,limit : hasLimit,setUri, copyright,currentTrack
                 <td className={item.albumImage ? 'has-image' : ''}>
                     <span>{getArtistTd(item,index)}</span>
                     <span>
-                        {renderIcon(item.uri,!!item.albumImage)}
+                        {renderIcon(item.uri,item.albumImage)}
                     </span>
                 </td>
                 {

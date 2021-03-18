@@ -81,14 +81,16 @@ export const fetchSearchTerm = async ({searchTerm}) => {
         Object.values(tracks).forEach(getTracksImage)
 
         const searchFactory = (response) => {
-            let n;
+            let data;
+
             Object.entries(response).forEach(([key,value]) => {
-                n = {
+                data = {
                     message : key,
                     items : value.items
                 }
             });
-            return n;
+
+            return data;
         }
 
 

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useRef} from "react";
 import Styled from 'styled-components';
 import { label, set_device_id } from './../utils';
 import Player from './../api/player';
@@ -105,11 +105,12 @@ const StyledMain = Styled.div`
 
 const Main = () => {
     const [player,setPlayer] = useState(null);
-    const [uri,setUri] = useState(localStorage.getItem('lastUri') || 'home');
+    const [uri,setUri] = useState(localStorage.getItem('lastUri') != 'search' && localStorage.getItem('lastUri') || 'home');
     const [currentTrack,setCurrentTrack] = useState(null);
     const [title,setTopBar] = useState(null);
-    const [sticky,setSticky] = useState(false);
     const [searchTerm,setSearchTerm] = useState(null);
+    const [scroll,setScroll] = useState(null);
+    const browser = useRef(null);
 
     const getPlayingNow = () => {
         get_devices().then((response) => {
@@ -126,7 +127,32 @@ const Main = () => {
         })
     }
 
-    // init - adds the sdk spotify player lib
+    const renderView = () => {
+        if(uri) {
+            if(uri.indexOf('spotify:playlist') !== -1) {
+                return <Playlist />
+            } else if(uri.indexOf('spotify:album') !== -1) {
+                return <Album />
+            } else if(uri.indexOf('spotify:artist') !== -1) {
+                return <Artist />
+            } else if(uri.indexOf('search') !== -1) {
+                return <Search />
+            } else {
+                return <Grid />
+            }
+        }
+    }
+
+    const onSearch = term => setSearchTerm(term);
+
+    const onScroll = e => setScroll(e.target.scrollTop);
+
+    useEffect(() => {
+        if(browser) {
+            browser.current.addEventListener('scroll',onScroll);
+        }
+    },[browser])
+
     useEffect(() => {
         const script = document.createElement("script");
         script.src = "https://sdk.scdn.co/spotify-player.js";
@@ -135,7 +161,7 @@ const Main = () => {
         getPlayingNow();
     }, [])
 
-    const onChangeUri = (prevProps) => {
+    useEffect(() => {
         setUri(uri);
 
         localStorage.setItem('lastUri',uri);
@@ -154,12 +180,8 @@ const Main = () => {
         return () => {
             setUri(null);
         }
-    }
+    }, [uri])
 
-    // uri
-    useEffect(onChangeUri, [uri])
-
-    // player
     useEffect(() => {
         window.onSpotifyWebPlaybackSDKReady = () => {
             setPlayer(Player.init());
@@ -182,26 +204,6 @@ const Main = () => {
         }
     },[player])
 
-
-
-    const renderView = () => {
-        if(uri) {
-            if(uri.indexOf('spotify:playlist') !== -1) {
-                return <Playlist />
-            } else if(uri.indexOf('spotify:album') !== -1) {
-                return <Album />
-            } else if(uri.indexOf('spotify:artist') !== -1) {
-                return <Artist />
-            } else if(uri.indexOf('search') !== -1) {
-                return <Search />
-            } else {
-                return <Grid />
-            }
-        }
-    }
-
-    const onSearch = term => setSearchTerm(term);
-
     return (
         <StyledMain className="main">
             <div className="menu-wrapper">
@@ -210,12 +212,10 @@ const Main = () => {
                     uri={uri}
                 />
             </div>
-            <div
-                className="browser-wrapper"
-            >
-                <TopBar title={title} setUri={setUri} onSearch={onSearch} sticky={sticky} />
+            <div className="browser-wrapper" ref={browser}>
+                <TopBar title={title} setUri={setUri} onSearch={onSearch} scroll={scroll} />
                 <SpotifyContext.Provider
-                    value={{uri,setUri,setTopBar,player,currentTrack,searchTerm,setSticky}}
+                    value={{uri,setUri,setTopBar,player,currentTrack,searchTerm}}
                 >
                     {renderView()}
                 </SpotifyContext.Provider>

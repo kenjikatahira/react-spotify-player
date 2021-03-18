@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import Styled from 'styled-components';
 import PropTypes from 'prop-types';
-import { useInView } from 'react-intersection-observer';
 
 const StyledHeader = Styled.div`
     display: flex;
@@ -87,10 +86,6 @@ const StyledHeader = Styled.div`
 `
 
 const TracklistHeader = ({player,header,isPlaying, setSticky}) => {
-    const [ ref, inView, entry ] = useInView({
-        threshold: 1
-    });
-
     const getDescription = (description) => {
         return (
             <>
@@ -139,16 +134,10 @@ const TracklistHeader = ({player,header,isPlaying, setSticky}) => {
         }
     }
 
-    useEffect(()=>{
-        if(entry) {
-            setSticky(!inView);
-        }
-    },[inView])
-
     return (
         <StyledHeader className="tracklist-header">
             {(image && image.url &&
-                <div className="artwork-wrapper" ref={ref}>
+                <div className="artwork-wrapper">
                     <div className="artwork" style={
                         { backgroundImage: `url(${image.url})`, backgroundSize :'cover', backgroundPosition:'center center' }
                     }></div>

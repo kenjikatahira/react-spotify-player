@@ -140,9 +140,7 @@ const NowPlaying = ({player, currentTrack, setUri}) => {
     const onChangePosition = (position) => setBarTracking(Math.floor(100*position/(currentTrack || {}).duration_ms))
 
     const shuffle = () => {
-        set_shuffle(true).then(data => {
-            console.log('shuffle',data)
-        });
+        set_shuffle(true)
     }
 
     if(Object.keys((player || {})).length === 0 && (currentTrack || {})) return (<div className="now-playing"></div>)
@@ -177,9 +175,9 @@ const NowPlaying = ({player, currentTrack, setUri}) => {
                 {/* <button className="btn control-button" onClick={player.prev}>
                     <FontAwesomeIcon icon="microphone" />
                 </button> */}
-                <button className="btn control-button" onClick={() => shuffle()}>
+                {/* <button className="btn control-button" onClick={() => shuffle()}>
                     <FontAwesomeIcon icon="random" />
-                </button>
+                </button> */}
                 {/* <button className="btn control-button" onClick={player.next}>
                     <FontAwesomeIcon icon="redo-alt" />
                 </button> */}

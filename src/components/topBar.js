@@ -3,7 +3,6 @@ import Styled from 'styled-components';
 import UserWidget from "./userWidget";
 import PropTypes from 'prop-types';
 
-
 const StyledtopBar = Styled.div`
     width:100%;
     height:60px;
@@ -37,31 +36,30 @@ const StyledtopBar = Styled.div`
     .additional-bar {
         width: 100%;
         opacity : 0;
+        height: auto;
         grid-area: additional-bar;
         height: 0;
         border-bottom: 1px solid #333;
         transition: .3s;
-        padding: 10px 21px;
+        padding: 9px 21px;
         font-weight: bold;
+        height: auto;
     }
 
     &.sticky {
-        background:#111;
-        animation: mushroom-bottom .4s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+        transition: .5s;
+        height:120px;
+        background: #111;
         .additional-bar {
-            opacity: 1;
-            background: #111;
             height: auto;
-
-            h2 {
-                animation: fade-in .4s cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.4s both;
-            }
+            transition: 1s;
+            opacity: 1;
         }
     }
-
 `
 
-const TopBar = ({sticky,title,setUri,onSearch}) => {
+const TopBar = ({scroll,title,setUri,onSearch}) => {
+
     const search = (e) => {
         e.persist();
         if (e.key === 'Enter') {
@@ -85,11 +83,9 @@ const TopBar = ({sticky,title,setUri,onSearch}) => {
     }
 
     return (
-        <>
-        <StyledtopBar className={sticky ? 'top-bar sticky' : 'top-bar'}>
+        <StyledtopBar className={scroll > 300 ? 'top-bar sticky' : 'top-bar'}>
             {renderContent()}
         </StyledtopBar>
-        </>
     )
 }
 

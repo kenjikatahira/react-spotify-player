@@ -33,6 +33,8 @@ const StyledUserWidget = Styled.div`
 
 const UserWidget = () => {
     const [data,setData] = useState(null);
+    const { images, product, display_name } = data || {};
+
     const getImage = () => {
         if((data || {}).images.length === 0) {
             return (
@@ -40,7 +42,7 @@ const UserWidget = () => {
             )
         }
 
-        return <img src={data.images[0].url} alt="userimage" />
+        return <img src={images[0].url} alt="userimage" />
     }
 
     const setAlert = () => {
@@ -52,6 +54,7 @@ const UserWidget = () => {
     }
 
     useEffect(() => {
+        console.log(data)
         if(!data) {
             getUser()
                 .then(setData);
@@ -61,12 +64,12 @@ const UserWidget = () => {
     if(!data) { return <div></div> }
     return (
         <StyledUserWidget className="user-widget">
-            {data.product !== 'premium' && setAlert()}
+            {product !== 'premium' && setAlert()}
             <div className="avatar">
                 {getImage()}
             </div>
             <div className="user">
-                {data.display_name}
+                {display_name}
             </div>
         </StyledUserWidget>
     )

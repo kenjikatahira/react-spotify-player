@@ -7,7 +7,7 @@ Spotify web player made with react
 ![screenshot_2](https://i.imgur.com/sgM4qvY.png)
 
 ### to play songs you'll need a premium account =(
-[Live Example](https://kenjikatahira.github.io/react-spotify-player/)
+[Live Example](https://asleep-monk.github.io/react-spotify-player/)
 
 ## Technologies & Tools
 

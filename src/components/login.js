@@ -73,7 +73,7 @@ class Login extends React.Component {
                     />
                 </div>
                 <footer>
-                    <span>Photo by <a href="https://unsplash.com/@simonweisser?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText" target="_blank">Simon Weisser</a> on <a href="https://unsplash.com/s/photos/music?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText" target="_blank">Unsplash</a></span>
+                    <span>Photo by <a href="https://unsplash.com/@simonweisser?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText" target="_blank" rel="noopener noreferrer">Simon Weisser</a> on <a href="https://unsplash.com/s/photos/music?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText" target="_blank" rel="noopener noreferrer">Unsplash</a></span>
                 </footer>
             </StyledLogin>
         )
