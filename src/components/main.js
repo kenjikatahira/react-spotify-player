@@ -1,9 +1,8 @@
 import React, {useState, useEffect, useRef} from "react";
 import Styled from 'styled-components';
-import { label, set_device_id } from './../utils';
+import { label, set_device_id, getURLParams } from './../utils';
 import Player from './../api/player';
 import { get_current_track,get_devices } from './../api/spotify';
-
 import Menu from './menu';
 import NowPlayingBar from './nowPlayingBar';
 import Playlist from "../pages/playlist";
@@ -14,6 +13,13 @@ import Search from "../pages/search";
 import Grid from "../pages/gridTemplate";
 
 export const SpotifyContext = React.createContext();
+
+const appendSDK = () => {
+    const script = document.createElement("script");
+    script.src = "https://sdk.scdn.co/spotify-player.js";
+    script.async = true;
+    document.body.appendChild(script);
+}
 
 const StyledMain = Styled.div`
     display: grid;
@@ -102,10 +108,10 @@ const StyledMain = Styled.div`
         grid-area: devicesBar;
     }
 `
-
 const Main = () => {
+    const paramUri = getURLParams().uri;
     const [player,setPlayer] = useState(null);
-    const [uri,setUri] = useState(localStorage.getItem('lastUri') != 'search' && localStorage.getItem('lastUri') || 'home');
+    const [uri,setUri] = useState(paramUri ? paramUri : localStorage.getItem('lastUri') != 'search' && localStorage.getItem('lastUri') || 'home');
     const [currentTrack,setCurrentTrack] = useState(null);
     const [title,setTopBar] = useState(null);
     const [searchTerm,setSearchTerm] = useState(null);
@@ -154,10 +160,7 @@ const Main = () => {
     },[browser])
 
     useEffect(() => {
-        const script = document.createElement("script");
-        script.src = "https://sdk.scdn.co/spotify-player.js";
-        script.async = true;
-        document.body.appendChild(script);
+        appendSDK();
         getPlayingNow();
     }, [])
 

@@ -169,7 +169,7 @@ const Menu = ({uri, setUri}) => {
             <StyledMenu className="menu">
                 <div className="logo-wrapper">
                     <SpotifyLogo />
-                    <span className="made"><a target="_blank" rel="noopener noreferrer" href="https://github.com/asleep-monk/react-spotify-player/">github</a></span>
+                    <span className="made"><a target="_blank" rel="noopener noreferrer" href="https://github.com/sleepy-monk/react-spotify-player/">github</a></span>
                 </div>
                 <hr className="separator"></hr>
                 <div className="fixed-pages">
@@ -185,7 +185,7 @@ const Menu = ({uri, setUri}) => {
             <StyledMenu className="menu">
                 <div className="logo-wrapper">
                     <SpotifyLogo />
-                    <span className="made"><a target="_blank" rel="noopener noreferrer" href="https://github.com/asleep-monk/react-spotify-player/">github</a></span>
+                    <span className="made"><a target="_blank" rel="noopener noreferrer" href="https://github.com/sleepy-monk/react-spotify-player/">github</a></span>
                 </div>
                 <hr className="separator"></hr>
                 <div className="fixed-pages">

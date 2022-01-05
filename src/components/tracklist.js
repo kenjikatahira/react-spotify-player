@@ -218,6 +218,20 @@ const Tracklist = ({table,player,limit : hasLimit,setUri, copyright,currentTrack
                     <span> {item.duration_ms} </span>
                 </td>
                 }
+                <td>
+                    <FontAwesomeIcon icon="guitar" onClick={(ev) => {
+                        ev.stopPropagation()
+                        let query = '';
+                        //open new tab
+                        if(item.artists) {
+                            query = Object.values(item.artists).map(i => i.name + ' ').join('')  + ' ' + item.name;
+                        } else {
+                            query = item.name;
+                        }
+
+                        window.open('https://www.ultimate-guitar.com/search.php?search_type=title&value=' + query , '_blank' )
+                    }} />
+                </td>
             </tr>
         );
     }

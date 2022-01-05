@@ -26,11 +26,11 @@ const TimerContainer = ({currentTrack,fixed,onChangePosition}) => {
         const _timer = {
             start : () => setTimeout(() => {
                 setState({
-                    count : state.count + 1000,
+                    count : state.count + 500,
                     currentTrack
                 });
                 onChangePosition(state.count);
-            }, 1000),
+            }, 500),
             stop : () => {
                 if((this || {}).start) {
                     clearTimeout(this.start);

@@ -1,6 +1,8 @@
 import axios from 'axios';
-
+import setupCache from './cache';
 import { getSession, get_device_id } from '../utils';
+
+setupCache()
 
 /**
  * Scope to provide the right acess to information

@@ -30,6 +30,9 @@ import {
  */
 export const getViewRoute = async ({uri}) => {
     let content;
+    // add a new route here
+    // window.history.pushState({}, '', '?uri=' + uri );
+
     if(uri === 'home') {
         content = await fetchHome();
     } else if(uri === 'browse') {
@@ -331,7 +334,7 @@ const totalDuration = (tracks) => {
  * @function fetchPlaylist
  * @return {Object} playlist's data
  */
-const fetchPlaylist = async (uri) => {
+export const fetchPlaylist = async (uri) => {
     try {
         let playlistData = {};
         const promises = {

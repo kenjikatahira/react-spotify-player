@@ -1,7 +1,6 @@
 import { orderList, getSession, get_device_id } from "../utils";
 
 const init = () => {
-    console.log('____init___');
     const player = new window.Spotify.Player({
         playerInstance: new window.Spotify.Player({ name: 'Kenjicas Player' }),
         name: 'Kenjicas Player',

@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './style.scss';
-
 import { setSession,getSession } from './utils';
-
 import Login from './components/login';
 import Main from './components/main';
 

@@ -81,3 +81,18 @@ export const label = (uri) => {
     }
     return dict[uri]
 }
+
+export const getURLParams = () => {
+    var params= new Object();
+    var query = window.location.search.substring(1);
+    var pairs = query.split('&');
+    for (var i=0; i<pairs.length; i++) {
+        var pos = pairs[i].indexOf('=');
+        if (pos > 0) {
+            var key = pairs[i].substring(0,pos);
+            var val = pairs[i].substring(pos+1);
+            params[key] = val;
+        }
+    }
+    return params;
+}

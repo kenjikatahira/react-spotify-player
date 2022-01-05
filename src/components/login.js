@@ -1,7 +1,7 @@
 import React from 'react';
 import SpotifyLogin from 'react-spotify-login';
 import styled from 'styled-components';
-import { clientId, redirectUri } from '../config';
+import { redirectUri } from '../config';
 import { scope } from '../api/spotify';
 
 const StyledLogin = styled.div`
@@ -51,7 +51,6 @@ const StyledLogin = styled.div`
         }
     }
 `
-
 class Login extends React.Component {
     onSuccess(response) {
         this.props.onLogin(response);
@@ -65,7 +64,7 @@ class Login extends React.Component {
                 <div className="login-button container">
                     <SpotifyLogin
                         className="btn"
-                        clientId={clientId}
+                        clientId={process.env.REACT_APP_SPOTIFY_CLIEND_ID}
                         redirectUri={redirectUri}
                         onSuccess={(response) => { this.onSuccess(response) }}
                         onFailure={this.onFailure}

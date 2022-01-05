@@ -139,6 +139,12 @@ const NowPlaying = ({player, currentTrack, setUri}) => {
 
     const onChangePosition = (position) => setBarTracking(Math.floor(100*position/(currentTrack || {}).duration_ms))
 
+    const setPosition = (ev) => {
+        // console.log(ev.pageX)
+        // console.log(ev.target.offsetLeft)
+        // console.log(ev.target.offsetTop)
+    }
+
     const shuffle = () => {
         set_shuffle(true)
     }
@@ -159,10 +165,10 @@ const NowPlaying = ({player, currentTrack, setUri}) => {
                         <FontAwesomeIcon icon="forward" />
                     </button>
                 </div>
-                <div className="playback-bar">
+                <div className="playback-bar" onClick={setPosition}>
                     <span className="timer-label"><TimerContainer currentTrack={currentTrack || {}} onChangePosition={onChangePosition} /></span>
                     <div className="playback-progress-bar">
-                        <div className="progress-bar-inner" style={{width: barTracking+'%'}}></div>
+                        <div className="progress-bar-inner" style={{width: barTracking + '%'}}></div>
                     </div>
                     <span className="timer-label">
                     {
