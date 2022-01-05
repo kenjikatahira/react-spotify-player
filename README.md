@@ -21,7 +21,6 @@ for the Spotify Data Catalogue
 [Doc](https://developer.spotify.com/documentation/web-playback-sdk/reference/) to play the songs
 
 ## Packages
-
 react-spotify-login
 https://www.npmjs.com/package/react-spotify-login
 
