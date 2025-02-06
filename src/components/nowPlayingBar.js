@@ -137,7 +137,13 @@ const NowPlaying = ({player, currentTrack, setUri}) => {
         }
     }
 
-    const onChangePosition = (position) => setBarTracking(Math.floor(100*position/(currentTrack || {}).duration_ms))
+    // const onChangePosition = (position) => setBarTracking(Math.floor(100*position/(currentTrack || {}).duration_ms))
+
+    const onChangePosition = (position) => {
+        if (!currentTrack?.duration_ms || typeof position !== "number") return;
+        const progress = Math.floor(100 * position / currentTrack.duration_ms);
+        setBarTracking(Math.min(100, Math.max(0, progress)));
+    };
 
     const setPosition = (ev) => {
         // console.log(ev.pageX)
