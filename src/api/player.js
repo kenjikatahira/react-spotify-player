@@ -12,6 +12,22 @@ const init = () => {
     player.previous = previous;
     player.pause = pause;
     player.resume = resume;
+    // Adiciona método seek
+    player.seek = (position_ms) => {
+        // O SDK já tem player.seek, mas pode não estar bound ao objeto customizado
+        if (typeof player._options?.id === 'string' && typeof position_ms === 'number') {
+            // Se o SDK já está pronto, use o método nativo
+            return player._options.id && player.seek(position_ms);
+        }
+        // Fallback: faz request manual para API Web
+        fetch(`https://api.spotify.com/v1/me/player/seek?position_ms=${position_ms}&device_id=${get_device_id()}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${getSession().access_token}`
+            }
+        });
+    };
 
     return player;
 }

@@ -1,6 +1,7 @@
 import React, {useState, useEffect, useRef} from "react";
+import DevicesBar from './devicesBar';
 import Styled from 'styled-components';
-import { label, set_device_id, getURLParams } from './../utils';
+import { label, set_device_id, getURLParams, get_device_id } from './../utils';
 import Player from './../api/player';
 import { get_current_track,get_devices } from './../api/spotify';
 import Menu from './menu';
@@ -113,20 +114,23 @@ const Main = () => {
     const [player,setPlayer] = useState(null);
     const [uri,setUri] = useState(paramUri ? paramUri : localStorage.getItem('lastUri') != 'search' && localStorage.getItem('lastUri') || 'home');
     const [currentTrack,setCurrentTrack] = useState(null);
+    const [currentDeviceId, setCurrentDeviceId] = useState(null);
     const [title,setTopBar] = useState(null);
     const [searchTerm,setSearchTerm] = useState(null);
     const [scroll,setScroll] = useState(null);
+    const [deviceMessage, setDeviceMessage] = useState("");
     const browser = useRef(null);
 
     const getPlayingNow = () => {
         get_devices().then((response) => {
             let { devices } = response.data;
-            [devices] = devices.filter(i => i.is_active);
+            const active = devices.find(i => i.is_active);
+            setCurrentDeviceId(active ? active.id : null);
             get_current_track().then(({data}) => {
                 if(data) {
                     const { actions : { disallows }} = data;
                     if((data || {}).item) {
-                        setCurrentTrack({...data.item, device: devices, disallows });
+                        setCurrentTrack({...data.item, device: active, disallows });
                     }
                 }
             });
@@ -207,6 +211,34 @@ const Main = () => {
         }
     },[player])
 
+    // Função para trocar dispositivo ativo
+    const handleChangeDevice = (deviceId) => {
+        setDeviceMessage("");
+        fetch(`https://api.spotify.com/v1/me/player`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `${localStorage.getItem('token_type')} ${localStorage.getItem('access_token')}`
+            },
+            body: JSON.stringify({ device_ids: [deviceId], play: true })
+        }).then(() => {
+            // Se for o player local, conecta e dá play
+            if (player && deviceId === get_device_id()) {
+                player.connect();
+                setTimeout(() => {
+                    if (player.resume) {
+                        player.resume();
+                        setTimeout(() => {
+                            setDeviceMessage("Se a música não começar, clique em play no navegador para ativar o player local.");
+                        }, 1000);
+                    }
+                }, 500);
+            }
+            // Atualiza player e track
+            getPlayingNow();
+        });
+    };
+
     return (
         <StyledMain className="main">
             <div className="menu-wrapper">
@@ -226,6 +258,15 @@ const Main = () => {
             <div className="now-playing-wrapper">
                 <NowPlayingBar currentTrack={currentTrack} setUri={setUri} player={player} />
             </div>
+            <DevicesBar
+                onChangeDevice={handleChangeDevice}
+                currentDeviceId={currentDeviceId}
+            />
+            {deviceMessage && (
+                <div style={{textAlign: 'center', color: '#ffb300', background: '#222', padding: 8, fontSize: 14}}>
+                    {deviceMessage}
+                </div>
+            )}
         </StyledMain>
     );
 }

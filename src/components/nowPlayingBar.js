@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import Styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -111,7 +111,9 @@ const StyledPlayingBar = Styled.div`
 
 const NowPlaying = ({player, currentTrack, setUri}) => {
 
-    const [barTracking,setBarTracking] = useState(0);
+    const [barTracking, setBarTracking] = useState(0);
+    const [isSeeking, setIsSeeking] = useState(false);
+    const progressBarRef = useRef(null);
 
     const togglePlayButton =() => {
         if(((currentTrack || {}).disallows || {}).resuming) {
@@ -139,17 +141,57 @@ const NowPlaying = ({player, currentTrack, setUri}) => {
 
     // const onChangePosition = (position) => setBarTracking(Math.floor(100*position/(currentTrack || {}).duration_ms))
 
+    // Atualiza barra conforme o progresso do timer
     const onChangePosition = (position) => {
         if (!currentTrack?.duration_ms || typeof position !== "number") return;
-        const progress = Math.floor(100 * position / currentTrack.duration_ms);
-        setBarTracking(Math.min(100, Math.max(0, progress)));
+        if (!isSeeking) {
+            const progress = Math.floor(100 * position / currentTrack.duration_ms);
+            setBarTracking(Math.min(100, Math.max(0, progress)));
+        }
     };
 
+    // Função para calcular e setar a posição ao clicar/arrastar na barra
     const setPosition = (ev) => {
-        // console.log(ev.pageX)
-        // console.log(ev.target.offsetLeft)
-        // console.log(ev.target.offsetTop)
-    }
+        if (!currentTrack?.duration_ms || !player) return;
+        const bar = progressBarRef.current;
+        if (!bar) return;
+        const rect = bar.getBoundingClientRect();
+        const x = ev.type.startsWith('touch') ? ev.touches[0].clientX : ev.clientX;
+        let percent = (x - rect.left) / rect.width;
+        percent = Math.max(0, Math.min(1, percent));
+        const newPosition = Math.floor(currentTrack.duration_ms * percent);
+        setBarTracking(percent * 100);
+        player.seek(newPosition);
+        setIsSeeking(false);
+    };
+
+    // Para arrastar o progresso
+    const handleSeekStart = (ev) => {
+        setIsSeeking(true);
+        updateSeek(ev);
+        window.addEventListener('mousemove', updateSeek);
+        window.addEventListener('mouseup', handleSeekEnd);
+        window.addEventListener('touchmove', updateSeek);
+        window.addEventListener('touchend', handleSeekEnd);
+    };
+
+    const updateSeek = (ev) => {
+        if (!currentTrack?.duration_ms || !progressBarRef.current) return;
+        const bar = progressBarRef.current;
+        const rect = bar.getBoundingClientRect();
+        const x = ev.type.startsWith('touch') ? ev.touches[0].clientX : ev.clientX;
+        let percent = (x - rect.left) / rect.width;
+        percent = Math.max(0, Math.min(1, percent));
+        setBarTracking(percent * 100);
+    };
+
+    const handleSeekEnd = (ev) => {
+        window.removeEventListener('mousemove', updateSeek);
+        window.removeEventListener('mouseup', handleSeekEnd);
+        window.removeEventListener('touchmove', updateSeek);
+        window.removeEventListener('touchend', handleSeekEnd);
+        setPosition(ev);
+    };
 
     const shuffle = () => {
         set_shuffle(true)
@@ -171,15 +213,20 @@ const NowPlaying = ({player, currentTrack, setUri}) => {
                         <FontAwesomeIcon icon="forward" />
                     </button>
                 </div>
-                <div className="playback-bar" onClick={setPosition}>
+                <div className="playback-bar">
                     <span className="timer-label"><TimerContainer currentTrack={currentTrack || {}} onChangePosition={onChangePosition} /></span>
-                    <div className="playback-progress-bar">
+                    <div
+                        className="playback-progress-bar"
+                        ref={progressBarRef}
+                        onClick={setPosition}
+                        onMouseDown={handleSeekStart}
+                        onTouchStart={handleSeekStart}
+                        style={{cursor: 'pointer'}}
+                    >
                         <div className="progress-bar-inner" style={{width: barTracking + '%'}}></div>
                     </div>
                     <span className="timer-label">
-                    {
-                        (currentTrack || {}).duration_ms && <Timer fixed={(currentTrack || {}).duration_ms} />
-                    }
+                        {(currentTrack || {}).duration_ms && <Timer fixed={(currentTrack || {}).duration_ms} />}
                     </span>
                 </div>
             </div>
