@@ -23,8 +23,8 @@ const init = () => {
         fetch(`https://api.spotify.com/v1/me/player/seek?position_ms=${position_ms}&device_id=${get_device_id()}`, {
             method: 'PUT',
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${getSession().access_token}`
+                'content-type': 'application/json',
+                'authorization': `${getSession().token_type} ${getSession().access_token}`
             }
         });
     };
@@ -71,8 +71,8 @@ const resume = async () => {
    fetch(`https://api.spotify.com/v1/me/player/play?device_id=${get_device_id()}`, {
        method: 'PUT',
        headers: {
-           'Content-Type': 'application/json',
-           'Authorization': `Bearer ${getSession().access_token}`
+           'content-type': 'application/json',
+           'authorization': `${getSession().token_type} ${getSession().access_token}`
        }
    });
 }
@@ -83,8 +83,8 @@ const play = async ({uri,uris}) => {
         method: 'PUT',
         body: JSON.stringify({ uris : queue.length ? queue : [uri] }),
         headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${getSession().access_token}`
+            'content-type': 'application/json',
+            'authorization': `${getSession().token_type} ${getSession().access_token}`
         }
     });
 }

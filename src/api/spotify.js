@@ -20,7 +20,7 @@ export const get = (url) => {
     return axios.get(url, {
         headers : {
             'content-type' : 'application/json',
-            'Authorization' : `Bearer ${getSession().access_token}`
+            'Authorization' : `${getSession().token_type} ${getSession().access_token}`
         }
     });
 }
@@ -34,7 +34,7 @@ export const get_user = () => {
     return axios.get('https://api.spotify.com/v1/me', {
         headers : {
             'content-type' : 'application/json',
-            'Authorization' : `Bearer ${getSession().access_token}`
+            'Authorization' : `${getSession().token_type} ${getSession().access_token}`
         }
     });
 }
@@ -49,7 +49,7 @@ export const get_search = ({query,type,size}) => {
     return axios.get(`https://api.spotify.com/v1/search?q=${query}&type=${type}&limit=${size}`, {
         headers : {
             'content-type' : 'application/json',
-            'Authorization' : `Bearer ${getSession().access_token}`
+            'Authorization' : `${getSession().token_type} ${getSession().access_token}`
         }
     });
 }
@@ -63,7 +63,7 @@ export const get_saved_tracks = () => {
     return axios.get('https://api.spotify.com/v1/me/tracks?limit=30', {
         headers : {
             'content-type' : 'application/json',
-            'Authorization' : `Bearer ${getSession().access_token}`
+            'Authorization' : `${getSession().token_type} ${getSession().access_token}`
         }
     });
 }
@@ -77,7 +77,7 @@ export const get_featured_playlist = (country='CA') => {
     return axios.get('https://api.spotify.com/v1/browse/featured-playlists?country='+country+'&limit=8', {
         headers : {
             'content-type' : 'application/json',
-            'Authorization' : `Bearer ${getSession().access_token}`
+            'Authorization' : `${getSession().token_type} ${getSession().access_token}`
         }
     });
 }
@@ -91,7 +91,7 @@ export const get_current_track = () => {
     return axios.get('https://api.spotify.com/v1/me/player/currently-playing', {
         headers : {
             'content-type' : 'application/json',
-            'Authorization' : `Bearer ${getSession().access_token}`
+            'Authorization' : `${getSession().token_type} ${getSession().access_token}`
         }
     });
 }
@@ -105,7 +105,7 @@ export const set_shuffle = (state) => {
     return axios.put(`https://api.spotify.com/v1/me/player/shuffle?state=${state}&device_id=${get_device_id()}`, {
         headers : {
             'content-type' : 'application/json',
-            'Authorization' : `Bearer ${getSession().access_token}`
+            'Authorization' : `${getSession().token_type} ${getSession().access_token}`
         }
     });
 }
@@ -119,7 +119,7 @@ export const top_artists = () => {
     return axios.get('https://api.spotify.com/v1/me/top/artists', {
         headers : {
             'content-type' : 'application/json',
-            'Authorization' : `Bearer ${getSession().access_token}`
+            'Authorization' : `${getSession().token_type} ${getSession().access_token}`
         }
     });
 }
@@ -133,7 +133,7 @@ export const get_recently_tracks = () => {
     return axios.get('https://api.spotify.com/v1/me/player/recently-played', {
         headers : {
             'content-type' : 'application/json',
-            'Authorization' : `Bearer ${getSession().access_token}`
+            'Authorization' : `${getSession().token_type} ${getSession().access_token}`
         }
     });
 }
@@ -147,7 +147,7 @@ export const get_devices = () => {
     return axios.get('https://api.spotify.com/v1/me/player/devices', {
         headers : {
             'content-type' : 'application/json',
-            'Authorization' : `Bearer ${getSession().access_token}`
+            'Authorization' : `${getSession().token_type} ${getSession().access_token}`
         }
     });
 }
@@ -161,7 +161,7 @@ export const get_playlists = () => {
     return axios.get('https://api.spotify.com/v1/me/playlists?limit=50&offset=0', {
         headers : {
             'content-type' : 'application/json',
-            'Authorization' : `Bearer ${getSession().access_token}`
+            'Authorization' : `${getSession().token_type} ${getSession().access_token}`
         }
     });
 }
@@ -176,7 +176,7 @@ export const get_album = ({uri}) => {
     return axios.get('https://api.spotify.com/v1/albums/' + id[id.length-1], {
         headers : {
             'content-type' : 'application/json',
-            'Authorization' : `Bearer ${getSession().access_token}`
+            'Authorization' : `${getSession().token_type} ${getSession().access_token}`
         }
     });
 }
@@ -191,7 +191,7 @@ export const get_artists_albums = ({uri}) => {
     return axios.get(`https://api.spotify.com/v1/artists/${id[id.length-1]}/albums`, {
         headers : {
             'content-type' : 'application/json',
-            'Authorization' : `Bearer ${getSession().access_token}`
+            'Authorization' : `${getSession().token_type} ${getSession().access_token}`
         }
     });
 }
@@ -206,7 +206,7 @@ export const get_playlist_cover_image = ({uri}) => {
     return axios.get(`https://api.spotify.com/v1/playlists/${id[id.length-1]}/images`, {
         headers : {
             'content-type' : 'application/json',
-            'Authorization' : `Bearer ${getSession().access_token}`
+            'Authorization' : `${getSession().token_type} ${getSession().access_token}`
         }
     });
 }
@@ -221,7 +221,7 @@ export const get_playlist_items = ({uri}) => {
     return axios.get(`https://api.spotify.com/v1/playlists/${id[id.length-1]}/tracks`, {
         headers : {
             'content-type' : 'application/json',
-            'Authorization' : `Bearer ${getSession().access_token}`
+            'Authorization' : `${getSession().token_type} ${getSession().access_token}`
         }
     });
 }
@@ -236,7 +236,7 @@ export const get_a_playlist = ({uri}) => {
     return axios.get('https://api.spotify.com/v1/playlists/' + id[id.length-1], {
         headers : {
             'content-type' : 'application/json',
-            'Authorization' : `Bearer ${getSession().access_token}`
+            'Authorization' : `${getSession().token_type} ${getSession().access_token}`
         }
     });
 }
@@ -252,7 +252,7 @@ export const get_artist_top_tracks = ({uri}) => {
     return axios.get(`https://api.spotify.com/v1/artists/${id[id.length-1]}/top-tracks?country=BR`, {
         headers : {
             'content-type' : 'application/json',
-            'Authorization' : `Bearer ${getSession().access_token}`
+            'Authorization' : `${getSession().token_type} ${getSession().access_token}`
         }
     });
 }
@@ -267,7 +267,7 @@ export const get_artist = ({uri}) => {
     return axios.get('https://api.spotify.com/v1/artists/' + id[id.length-1], {
         headers : {
             'content-type' : 'application/json',
-            'Authorization' : `Bearer ${getSession().access_token}`
+            'Authorization' : `${getSession().token_type} ${getSession().access_token}`
         }
     });
 }
@@ -282,7 +282,7 @@ export const get_related_artists = ({uri}) => {
     return axios.get('https://api.spotify.com/v1/artists/' + id[id.length-1] + '/related-artists', {
         headers : {
             'content-type' : 'application/json',
-            'Authorization' : `Bearer ${getSession().access_token}`
+            'Authorization' : `${getSession().token_type} ${getSession().access_token}`
         }
     });
 }
@@ -297,7 +297,7 @@ export const get_track = ({uri}) => {
     return axios.get('https://api.spotify.com/v1/tracks/' + id[id.length-1], {
         headers : {
             'content-type' : 'application/json',
-            'Authorization' : `Bearer ${getSession().access_token}`
+            'Authorization' : `${getSession().token_type} ${getSession().access_token}`
         }
     });
 }
@@ -311,7 +311,7 @@ export const get_following = () => {
     return axios.get('https://api.spotify.com/v1/me/following?type=artist&limit=20', {
         headers : {
             'content-type' : 'application/json',
-            'Authorization' : `Bearer ${getSession().access_token}`
+            'Authorization' : `${getSession().token_type} ${getSession().access_token}`
         }
     });
 }
@@ -325,7 +325,7 @@ export const get_new_releases = (country='BR') => {
     return axios.get('https://api.spotify.com/v1/browse/new-releases?country='+country+'&limit=10', {
         headers : {
             'content-type' : 'application/json',
-            'Authorization' : `Bearer ${getSession().access_token}`
+            'Authorization' : `${getSession().token_type} ${getSession().access_token}`
         }
     });
 }
